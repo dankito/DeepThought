@@ -30,7 +30,6 @@ import net.dankito.service.search.Search
 import net.dankito.service.search.util.SortOption
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
-import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.dankito.utils.ui.dialogs.IDialogService
 import tornadofx.*
 import java.text.DateFormat
@@ -84,7 +83,7 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
     init {
         AppComponent.component.inject(this)
 
-        presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService, threadPool)
+        presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, dialogService, clipboardService, threadPool)
         searchBar = ItemsSearchBar(this, presenter, dataManager)
 
         (router as? JavaFXRouter)?.itemsListView = this // TODO: this is bad code design
@@ -246,10 +245,10 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
     private fun handleDeleteKeyReleased(selectedItems: List<Item>) {
         if (selectedItems.size == 1) {
-            askIfShouldDeleteItem(selectedItems[0])
+            presenter.confirmDeleteItemAsync(selectedItems[0])
         }
         else if (selectedItems.isNotEmpty()) {
-            askIfShouldDeleteItems(selectedItems)
+            presenter.confirmDeleteItemsAsync(selectedItems)
         }
     }
 
@@ -282,36 +281,20 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
         contextMenu.separator()
 
         contextMenu.item(messages["context.menu.item.delete"]) {
-            action { askIfShouldDeleteItem(item) }
+            action { presenter.confirmDeleteItemAsync(item) }
         }
 
         return contextMenu
-    }
-
-    private fun askIfShouldDeleteItem(item: Item) {
-        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.item")) { selectedButton ->
-            if(selectedButton == ConfirmationDialogButton.Confirm) {
-                presenter.deleteItemAsync(item)
-            }
-        }
     }
 
     private fun createContextMenuForMultipleItems(items: List<Item>): ContextMenu {
         val contextMenu = ContextMenu()
 
         contextMenu.item(messages["context.menu.item.delete"]) {
-            action { askIfShouldDeleteItems(items) }
+            action { presenter.confirmDeleteItemsAsync(items) }
         }
 
         return contextMenu
-    }
-
-    private fun askIfShouldDeleteItems(items: List<Item>) {
-        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.items", items.size)) { selectedButton ->
-            if(selectedButton == ConfirmationDialogButton.Confirm) {
-                presenter.deleteItemsAsync(items)
-            }
-        }
     }
 
 

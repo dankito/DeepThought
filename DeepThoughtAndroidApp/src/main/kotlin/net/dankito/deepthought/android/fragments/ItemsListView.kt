@@ -18,6 +18,7 @@ import net.dankito.service.search.FieldName
 import net.dankito.service.search.util.SortOption
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.dialogs.IDialogService
 import javax.inject.Inject
 
 
@@ -28,6 +29,9 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
@@ -46,7 +50,7 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
     init {
         AppComponent.component.inject(this)
 
-        presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, clipboardService, threadPool)
+        presenter = ItemsListPresenter(this, router, searchEngine, deleteEntityService, dialogService, clipboardService, threadPool)
         itemAdapter = ItemRecyclerAdapter(presenter)
     }
 
@@ -71,11 +75,20 @@ class ItemsListView : EntitiesListViewFragment<Item>(R.menu.item_contextual_acti
                 return true
             }
             R.id.mnDeleteItem -> {
-                presenter.deleteItemsAsync(selectedItems)
+                confirmDeleteItems(ArrayList(selectedItems))
                 mode.finish()
                 return true
             }
             else -> return false
+        }
+    }
+
+    private fun confirmDeleteItems(items: List<Item>) {
+        if (items.size == 1) {
+            presenter.confirmDeleteItemAsync(items[0])
+        }
+        else if (items.isNotEmpty()) {
+            presenter.confirmDeleteItemsAsync(items)
         }
     }
 

@@ -62,8 +62,8 @@ class ItemRecyclerAdapter(private val presenter: ItemsListPresenterBase): MultiS
         }
 
         viewHolder.btnDeleteItem.setOnClickListener {
-            presenter.deleteItemAsync(item)
             closeSwipeView(viewHolder)
+            presenter.confirmDeleteItemAsync(item)
         }
     }
 

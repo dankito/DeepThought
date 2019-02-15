@@ -14,14 +14,15 @@ import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.service.search.util.SortOption
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.dialogs.IDialogService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
 class ItemsListPresenter(private val itemsListView: IItemsListView, router: IRouter, private val searchEngine: ISearchEngine,
-                         deleteEntityService: DeleteEntityService, clipboardService: IClipboardService, threadPool: IThreadPool)
-    : ItemsListPresenterBase(deleteEntityService, clipboardService, router, threadPool), IMainViewSectionPresenter {
+                         deleteEntityService: DeleteEntityService, dialogService: IDialogService, clipboardService: IClipboardService, threadPool: IThreadPool)
+    : ItemsListPresenterBase(deleteEntityService, dialogService, clipboardService, router, threadPool), IMainViewSectionPresenter {
 
     private var tagsFilter: List<Tag> = listOf()
 

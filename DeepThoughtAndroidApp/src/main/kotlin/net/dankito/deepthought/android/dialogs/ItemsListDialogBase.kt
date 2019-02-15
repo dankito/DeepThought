@@ -17,6 +17,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.android.ui.dialogs.FullscreenDialogFragment
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.dialogs.IDialogService
 import javax.inject.Inject
 
 
@@ -37,6 +38,9 @@ abstract class ItemsListDialogBase : FullscreenDialogFragment() {
     protected lateinit var eventBus: IEventBus
 
     @Inject
+    protected lateinit var dialogService: IDialogService
+
+    @Inject
     protected lateinit var clipboardService: IClipboardService
 
     @Inject
@@ -49,7 +53,7 @@ abstract class ItemsListDialogBase : FullscreenDialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EntityItemsListPresenter(deleteEntityService, clipboardService, router, threadPool)
+        presenter = EntityItemsListPresenter(deleteEntityService, dialogService, clipboardService, router, threadPool)
 
         adapter = ItemRecyclerAdapter(presenter)
     }
