@@ -17,8 +17,7 @@ abstract class LocalSettingsStoreBase : ILocalSettingsStore {
 
         const val DefaultDatabaseDataModelVersion = Versions.DataModelVersion
 
-//        const val DefaultSearchEngineIndexVersion = Versions.SearchEngineIndexVersion // TODO: undo
-        const val DefaultSearchEngineIndexVersion = 2 // currently needed for first app run as otherwise Versions.SearchEngineIndexVersion gets returned and index therefore not updated
+        const val DefaultSearchEngineIndexVersion = Versions.SearchEngineIndexVersion
 
 
         private val log = LoggerFactory.getLogger(LocalSettingsStoreBase::class.java)
