@@ -264,9 +264,9 @@ abstract class MultiSelectListRecyclerSwipeAdapter<T, THolder : RecyclerView.Vie
 
     private fun placeActionModeBarInAppBarLayout(activity: Activity, actionModeBar: ActionBarContextView) {
         (actionModeBar.parent as? ViewGroup)?.let { parent ->
-            parent.removeView(actionModeBar)
-
             (activity.findViewById(layoutToPlaceActionModeBarInResourceId) as? ViewGroup)?.let { layout ->
+                parent.removeView(actionModeBar)
+
                 layout.addView(actionModeBar)
             }
         }
