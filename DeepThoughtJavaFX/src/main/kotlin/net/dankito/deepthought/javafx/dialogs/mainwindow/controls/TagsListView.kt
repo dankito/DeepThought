@@ -5,6 +5,8 @@ import javafx.collections.ObservableList
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableView
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.TagViewModel
@@ -124,6 +126,8 @@ class TagsListView : EntitiesListView(), ITagsListView {
             // don't know why but selectionModel.selectedItemProperty() doesn't work reliably. Another tag gets selected but selectedItemProperty() doesn't fire this change
             selectionModel.selectedIndexProperty().addListener { _, _, newValue -> tagSelected(newValue.toInt()) }
 
+            setOnKeyReleased { event -> handleKeyReleasedEvent(this, event) }
+
             var currentMenu: ContextMenu? = null
             setOnContextMenuRequested { event ->
                 currentMenu?.hide()
@@ -131,6 +135,22 @@ class TagsListView : EntitiesListView(), ITagsListView {
                 currentMenu = createContextMenuForItems(selectionModel.selectedItems)
                 currentMenu?.show(this, event.screenX, event.screenY)
             }
+        }
+    }
+
+
+    private fun handleKeyReleasedEvent(tableView: TableView<Tag>, event: KeyEvent) {
+        if (event.code == KeyCode.DELETE) {
+            handleDeleteKeyReleased(tableView.selectionModel.selectedItems)
+        }
+    }
+
+    private fun handleDeleteKeyReleased(selectedTags: List<Tag>) {
+        if (selectedTags.size == 1) {
+            presenter.confirmDeleteTagAsync(selectedTags[0])
+        }
+        else if (selectedTags.isNotEmpty()) {
+            presenter.confirmDeleteTagsAsync(selectedTags)
         }
     }
 
