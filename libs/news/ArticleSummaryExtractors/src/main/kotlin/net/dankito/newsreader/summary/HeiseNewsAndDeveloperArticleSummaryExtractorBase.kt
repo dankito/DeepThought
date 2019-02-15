@@ -75,6 +75,8 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
 
         articleElement.select(".a-article-teaser__synopsis").first()?.let { article.summary = it.text() }
 
+        checkForHeisePlusArticle(article, articleElement)
+
         return article
     }
 
@@ -136,6 +138,16 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
         }
 
         return null
+    }
+
+    private fun checkForHeisePlusArticle(article: ArticleSummaryItem, articleElement: Element) {
+        if (isHeisePlusArticle(articleElement)) {
+            article.title = "heise+ " + article.title
+        }
+    }
+
+    private fun isHeisePlusArticle(articleElement: Element): Boolean {
+        return articleElement.selectFirst("footer svg.heiseplus-logo, footer .a-article-meta__item--heiseplus") != null
     }
 
 
