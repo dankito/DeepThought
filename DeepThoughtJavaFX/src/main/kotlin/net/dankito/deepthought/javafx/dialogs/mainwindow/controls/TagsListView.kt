@@ -3,11 +3,11 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.control.ContextMenu
+import javafx.scene.control.SelectionMode
 import javafx.scene.control.TableView
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.TagViewModel
-import net.dankito.deepthought.javafx.service.extensions.findClickedTableRow
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.model.CalculatedTag
 import net.dankito.deepthought.model.Tag
@@ -119,6 +119,8 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
             vgrow = Priority.ALWAYS
 
+            selectionModel.selectionMode = SelectionMode.MULTIPLE
+
             // don't know why but selectionModel.selectedItemProperty() doesn't work reliably. Another tag gets selected but selectedItemProperty() doesn't fire this change
             selectionModel.selectedIndexProperty().addListener { _, _, newValue -> tagSelected(newValue.toInt()) }
 
@@ -126,25 +128,32 @@ class TagsListView : EntitiesListView(), ITagsListView {
             setOnContextMenuRequested { event ->
                 currentMenu?.hide()
 
-                val tableRow = event.pickResult?.findClickedTableRow<Tag>()
-                tableRow?.item?.let { clickedItem ->
-                    currentMenu = createContextMenuForItem(clickedItem)
-                    currentMenu?.show(this, event.screenX, event.screenY)
-                }
+                currentMenu = createContextMenuForItems(selectionModel.selectedItems)
+                currentMenu?.show(this, event.screenX, event.screenY)
             }
         }
     }
 
-    private fun createContextMenuForItem(clickedTag: Tag): ContextMenu? {
-        if(clickedTag is CalculatedTag) {
+    private fun createContextMenuForItems(tags: List<Tag>): ContextMenu? {
+        val nonCalculatedTags = tags.filter { it is CalculatedTag == false }
+
+        if (nonCalculatedTags.isEmpty()) {
             return null
         }
+        else if (tags.size == 1) {
+            return createContextMenuForSingleTag(nonCalculatedTags[0])
+        }
+        else {
+            return createContextMenuForMultipleTags(nonCalculatedTags)
+        }
+    }
 
+    private fun createContextMenuForSingleTag(tag: Tag): ContextMenu? {
         val contextMenu = ContextMenu()
 
         contextMenu.item(messages["action.edit"]) {
             action {
-                presenter.editTag(clickedTag)
+                presenter.editTag(tag)
             }
         }
 
@@ -152,7 +161,27 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
         contextMenu.item(messages["action.delete"]) {
             action {
-                presenter.deleteTagAsync(clickedTag)
+                presenter.deleteTagAsync(tag)
+            }
+        }
+
+        return contextMenu
+    }
+
+    private fun createContextMenuForMultipleTags(tags: List<Tag>): ContextMenu? {
+        val contextMenu = ContextMenu()
+
+        contextMenu.item(messages["action.edit"]) {
+            action {
+                tags.forEach { presenter.editTag(it) }
+            }
+        }
+
+        separator()
+
+        contextMenu.item(messages["action.delete"]) {
+            action {
+                presenter.deleteTagsAsync(tags)
             }
         }
 
