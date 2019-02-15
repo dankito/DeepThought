@@ -6,6 +6,7 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
 
 
 abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebClient) : ArticleSummaryExtractorBase(webClient), IArticleSummaryExtractor {
@@ -30,6 +31,9 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
             if(weitereMeldungenElements.size == 0) { // starting with page 2 the 'Weitere Meldungen' link changes
                 weitereMeldungenElements = document.body().select("a.seite_weiter")
             }
+        }
+        else if (weitereMeldungenElements.first().attr("href").contains("/newsticker/archiv/")) {
+            weitereMeldungenElements = Elements(0) // next page would be archive -> no more articles to load
         }
 
         summary.canLoadMoreItems = weitereMeldungenElements.size == 1
