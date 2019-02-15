@@ -17,6 +17,7 @@ import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.dankito.utils.ui.dialogs.IDialogService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
@@ -125,10 +126,27 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
         }
     }
 
+
+    fun confirmDeleteTagsAsync(tags: List<Tag>) {
+        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.tags", tags.size)) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
+                deleteTagsAsync(tags)
+            }
+        }
+    }
+
     fun deleteTagsAsync(tags: List<Tag>) {
         threadPool.runAsync {
             tags.forEach { tag ->
                 deleteTag(tag)
+            }
+        }
+    }
+
+    fun confirmDeleteTagAsync(tag: Tag) {
+        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.tag", tag.name)) { selectedButton ->
+            if(selectedButton == ConfirmationDialogButton.Confirm) {
+                deleteTagAsync(tag)
             }
         }
     }

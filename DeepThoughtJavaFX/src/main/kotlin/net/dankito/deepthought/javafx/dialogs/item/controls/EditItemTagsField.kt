@@ -235,7 +235,7 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView 
     }
 
     override fun deleteEntity(entity: Tag) {
-        presenter.deleteTagAsync(entity)
+        presenter.confirmDeleteTagAsync(entity)
     }
 
 

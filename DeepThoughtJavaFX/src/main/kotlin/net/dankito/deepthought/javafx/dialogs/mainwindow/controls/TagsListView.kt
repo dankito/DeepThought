@@ -161,7 +161,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
         contextMenu.item(messages["action.delete"]) {
             action {
-                presenter.deleteTagAsync(tag)
+                presenter.confirmDeleteTagAsync(tag)
             }
         }
 
@@ -181,7 +181,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
 
         contextMenu.item(messages["action.delete"]) {
             action {
-                presenter.deleteTagsAsync(tags)
+                presenter.confirmDeleteTagsAsync(tags)
             }
         }
 
