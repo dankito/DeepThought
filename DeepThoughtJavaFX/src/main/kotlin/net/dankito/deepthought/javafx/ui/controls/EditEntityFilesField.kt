@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.collections.FXCollections
 import javafx.geometry.Pos
+import javafx.scene.control.ContextMenu
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
@@ -117,25 +118,45 @@ class EditEntityFilesField : View() {
                 marginTop = 4.0
             }
 
-            contextmenu {
-                item(messages["edit.entity.files.field.files.context.menu.open.containing.directory"]) {
-                    action {
-                        selectedItem?.let { fileListPresenter.openContainingDirectoryOfFile(it) }
-                    }
-                }
+            var currentMenu: ContextMenu? = null
+            setOnContextMenuRequested { event ->
+                currentMenu?.hide()
 
-                separator()
-
-                item(messages["edit.entity.files.field.files.context.menu.remove.file"]) {
-                    action {
-                        selectedItem?.let { removeFile(it) }
-                    }
-                }
+                currentMenu = createContextMenuForItems(this.selectionModel.selectedItems)
+                currentMenu?.show(this, event.screenX, event.screenY)
             }
         }
     }
 
+    private fun createContextMenuForItems(selectedFiles: List<FileLink>): ContextMenu? {
+        if (selectedFiles.size == 1) {
+            return createContextMenuForSingleFile(selectedFiles[0])
+        }
 
+        return null
+    }
+
+    private fun createContextMenuForSingleFile(file: FileLink): ContextMenu? {
+        val contextMenu = ContextMenu()
+
+        if (fileListPresenter.canFileBeOpenedInDeepThought(file)) {
+            contextMenu.item(messages["edit.entity.files.field.files.context.menu.open.in.deep.thought"]) {
+                action { fileListPresenter.openFileInDeepThought(file, sourceForFile) }
+            }
+        }
+
+        contextMenu.item(messages["edit.entity.files.field.files.context.menu.open.containing.directory"]) {
+            action { fileListPresenter.openContainingDirectoryOfFile(file) }
+        }
+
+        contextMenu.separator()
+
+        contextMenu.item(messages["edit.entity.files.field.files.context.menu.remove.file"]) {
+            action { removeFile(file) }
+        }
+
+        return contextMenu
+    }
 
 
     fun setFiles(originalFiles: MutableCollection<FileLink>, sourceForFile: Source? = null) {
