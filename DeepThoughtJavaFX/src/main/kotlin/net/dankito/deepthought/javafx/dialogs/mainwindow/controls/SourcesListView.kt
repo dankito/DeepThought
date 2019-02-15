@@ -4,10 +4,10 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.scene.control.ContextMenu
 import javafx.scene.control.ListView
+import javafx.scene.control.SelectionMode
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.SourceViewModel
-import net.dankito.deepthought.javafx.service.extensions.findClickedListCell
 import net.dankito.deepthought.javafx.ui.controls.cell.SourceListCellFragment
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
@@ -81,6 +81,8 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
         listViewSources = listview<Source>(sources) {
             vgrow = Priority.ALWAYS
 
+            selectionModel.selectionMode = SelectionMode.MULTIPLE
+
             cellFragment(SourceListCellFragment::class)
 
             bindSelected(sourceViewModel)
@@ -92,28 +94,37 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
             setOnContextMenuRequested { event ->
                 currentMenu?.hide()
 
-                val listCell = event.pickResult?.findClickedListCell<Source>()
-                listCell?.item?.let { clickedItem ->
-                    currentMenu = createContextMenuForItem(clickedItem)
-                    currentMenu?.show(this, event.screenX, event.screenY)
-                }
+                currentMenu = createContextMenuForItems(this.selectionModel.selectedItems)
+                currentMenu?.show(this, event.screenX, event.screenY)
             }
         }
     }
 
-    private fun createContextMenuForItem(clickedItem: Source): ContextMenu {
+    private fun createContextMenuForItems(sources: List<Source>): ContextMenu? {
+        if (sources.isEmpty()) {
+            return null
+        }
+        else if (sources.size == 1) {
+            return createContextMenuForSingleSource(sources[0])
+        }
+        else {
+            return createContextMenuForMultipleSources(sources)
+        }
+    }
+
+    private fun createContextMenuForSingleSource(source: Source): ContextMenu {
         val contextMenu = ContextMenu()
 
         contextMenu.item(messages["action.edit"]) {
             action {
-                presenter.editSource(clickedItem)
+                presenter.editSource(source)
             }
         }
 
-        if(clickedItem.url.isNullOrBlank() == false) {
+        if(source.url.isNullOrBlank() == false) {
             contextMenu.item(messages["context.menu.item.copy.url.to.clipboard"]) {
                 action {
-                    presenter.copySourceUrlToClipboard(clickedItem)
+                    presenter.copySourceUrlToClipboard(source)
                 }
             }
         }
@@ -122,7 +133,27 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
 
         contextMenu.item(messages["action.delete"]) {
             action {
-                presenter.confirmDeleteSourceAsync(clickedItem)
+                presenter.confirmDeleteSourceAsync(source)
+            }
+        }
+
+        return contextMenu
+    }
+
+    private fun createContextMenuForMultipleSources(sources: List<Source>): ContextMenu {
+        val contextMenu = ContextMenu()
+
+        contextMenu.item(messages["action.edit"]) {
+            action {
+                sources.forEach { presenter.editSource(it) }
+            }
+        }
+
+        separator()
+
+        contextMenu.item(messages["action.delete"]) {
+            action {
+                presenter.confirmDeleteSourcesAsync(sources)
             }
         }
 
