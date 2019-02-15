@@ -230,8 +230,17 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
 
     private fun handleKeyReleaseEvent(tableView: TableView<Item>, event: KeyEvent) {
-        if (event.code == KeyCode.DELETE) {
+        if (event.code == KeyCode.ENTER) {
+            handleEnterKeyReleased(tableView.selectionModel.selectedItems)
+        }
+        else if (event.code == KeyCode.DELETE) {
             handleDeleteKeyReleased(tableView.selectionModel.selectedItems)
+        }
+    }
+
+    private fun handleEnterKeyReleased(selectedItems: List<Item>) {
+        selectedItems.forEach { item ->
+            presenter.showItem(item)
         }
     }
 
