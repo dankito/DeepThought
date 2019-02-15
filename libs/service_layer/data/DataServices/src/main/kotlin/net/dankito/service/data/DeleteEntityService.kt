@@ -91,6 +91,12 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
     }
 
 
+    fun deleteSourcesAsync(sources: List<Source>) {
+        threadPool.runAsync {
+            sources.forEach { deleteSource(it) }
+        }
+    }
+
     fun deleteSourceAsync(source: Source) {
         threadPool.runAsync { deleteSource(source) }
     }

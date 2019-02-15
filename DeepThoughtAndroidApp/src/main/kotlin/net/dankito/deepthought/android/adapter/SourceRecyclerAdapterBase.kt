@@ -74,7 +74,7 @@ abstract class SourceRecyclerAdapterBase(private val presenter: SourcePresenterB
         }
 
         viewHolder.btnDeleteSource.setOnClickListener {
-            presenter.deleteSource(item)
+            presenter.confirmDeleteSourceAsync(item)
             closeSwipeView(viewHolder)
         }
     }

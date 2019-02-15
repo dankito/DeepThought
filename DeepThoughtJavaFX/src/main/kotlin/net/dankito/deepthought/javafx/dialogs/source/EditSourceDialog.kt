@@ -21,6 +21,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.datetime.asLocalDate
 import net.dankito.utils.datetime.asUtilDate
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.dialogs.IDialogService
 import tornadofx.*
 import javax.inject.Inject
 
@@ -37,6 +38,9 @@ class EditSourceDialog : DialogFragment() {
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
@@ -80,7 +84,7 @@ class EditSourceDialog : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        presenter = EditSourcePresenter(router, clipboardService, deleteEntityService, sourcePersister)
+        presenter = EditSourcePresenter(router, dialogService, clipboardService, deleteEntityService, sourcePersister)
 
         publishingDateField = EditSourcePublishingDateField(presenter, source.publishingDate.asLocalDate())
     }

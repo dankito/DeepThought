@@ -17,6 +17,7 @@ import net.dankito.deepthought.ui.view.ISourcesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SourceService
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.dialogs.IDialogService
 import javax.inject.Inject
 
 
@@ -28,6 +29,9 @@ class SourcesListView : EntitiesListViewFragment<Source>(R.menu.source_contextua
 
     @Inject
     protected lateinit var router: IRouter
+
+    @Inject
+    protected lateinit var dialogService: IDialogService
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
@@ -44,7 +48,7 @@ class SourcesListView : EntitiesListViewFragment<Source>(R.menu.source_contextua
     init {
         AppComponent.component.inject(this)
 
-        presenter = SourcesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
+        presenter = SourcesListPresenter(this, searchEngine, router, dialogService, clipboardService, deleteEntityService)
 
         adapter = SourceRecyclerAdapter(presenter)
     }
@@ -71,11 +75,20 @@ class SourcesListView : EntitiesListViewFragment<Source>(R.menu.source_contextua
                 return true
             }
             R.id.mnDeleteSource -> {
-                selectedItems.forEach { presenter.deleteSource(it) }
+                confirmDeleteSources(ArrayList(selectedItems))
                 mode.finish()
                 return true
             }
             else -> return false
+        }
+    }
+
+    private fun confirmDeleteSources(sources: ArrayList<Source>) {
+        if (sources.size == 1) {
+            presenter.confirmDeleteSourceAsync(sources[0])
+        }
+        else if (sources.isNotEmpty()) {
+            presenter.confirmDeleteSourcesAsync(sources)
         }
     }
 

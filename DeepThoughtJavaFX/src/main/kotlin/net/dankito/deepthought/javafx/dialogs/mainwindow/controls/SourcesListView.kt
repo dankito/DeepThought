@@ -17,6 +17,7 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.dialogs.IDialogService
 import tornadofx.*
 import javax.inject.Inject
 
@@ -44,6 +45,9 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
     protected lateinit var router: IRouter
 
     @Inject
+    protected lateinit var dialogService: IDialogService
+
+    @Inject
     protected lateinit var clipboardService: IClipboardService
 
     @Inject
@@ -53,7 +57,7 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
     init {
         AppComponent.component.inject(this)
 
-        presenter = SourcesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
+        presenter = SourcesListPresenter(this, searchEngine, router, dialogService, clipboardService, deleteEntityService)
         searchBar = SourcesSearchBar(this)
     }
 
@@ -118,7 +122,7 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
 
         contextMenu.item(messages["action.delete"]) {
             action {
-                presenter.deleteSource(clickedItem)
+                presenter.confirmDeleteSourceAsync(clickedItem)
             }
         }
 

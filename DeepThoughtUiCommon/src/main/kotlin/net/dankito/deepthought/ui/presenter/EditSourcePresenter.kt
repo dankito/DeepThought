@@ -7,13 +7,14 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.dialogs.IDialogService
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class EditSourcePresenter(router: IRouter, clipboardService: IClipboardService, deleteEntityService: DeleteEntityService,
-                          private val sourcePersister: SourcePersister) : SourcePresenterBase(router, clipboardService, deleteEntityService) {
+class EditSourcePresenter(router: IRouter, dialogService: IDialogService, clipboardService: IClipboardService, deleteEntityService: DeleteEntityService,
+                          private val sourcePersister: SourcePersister) : SourcePresenterBase(router, dialogService, clipboardService, deleteEntityService) {
 
     companion object {
         private val ShortDateFormat = DateFormat.getDateInstance(DateFormat.SHORT)

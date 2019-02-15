@@ -11,14 +11,15 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.specific.SourceSearch
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.dialogs.IDialogService
 import net.engio.mbassy.listener.Handler
 import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class SourcesListPresenter(private var view: ISourcesListView, private val searchEngine: ISearchEngine, router: IRouter,
+class SourcesListPresenter(private var view: ISourcesListView, private val searchEngine: ISearchEngine, router: IRouter, dialogService: IDialogService,
                            clipboardService: IClipboardService, deleteEntityService: DeleteEntityService)
-    : SourcePresenterBase(router, clipboardService, deleteEntityService), IMainViewSectionPresenter {
+    : SourcePresenterBase(router, dialogService, clipboardService, deleteEntityService), IMainViewSectionPresenter {
 
 
     @Inject

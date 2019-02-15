@@ -23,6 +23,7 @@ import net.dankito.service.data.SourceService
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.dialogs.IDialogService
 import javax.inject.Inject
 
 
@@ -56,6 +57,9 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
     protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
+    protected lateinit var dialogService: IDialogService
+
+    @Inject
     protected lateinit var clipboardService: IClipboardService
 
     @Inject
@@ -86,7 +90,7 @@ class EditItemSourceField : EditEntityEntityReferenceField, ISourcesListView {
 
         setFieldNameOnUiThread(R.string.edit_entity_source_field_source_label)
 
-        presenter = SourcesListPresenter(this, searchEngine, router, clipboardService, deleteEntityService)
+        presenter = SourcesListPresenter(this, searchEngine, router, dialogService, clipboardService, deleteEntityService)
 
         existingSourcesSearchResultsAdapter = SourceOnItemRecyclerAdapter(presenter)
         existingSourcesSearchResultsAdapter.itemClickListener = { item -> existingSourceSelected(item) }

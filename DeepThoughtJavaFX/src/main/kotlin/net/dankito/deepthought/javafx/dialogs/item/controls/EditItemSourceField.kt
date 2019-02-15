@@ -15,6 +15,7 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.ui.IClipboardService
+import net.dankito.utils.ui.dialogs.IDialogService
 import net.engio.mbassy.listener.Handler
 import tornadofx.*
 import javax.inject.Inject
@@ -49,6 +50,9 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     protected lateinit var searchEngine: ISearchEngine
 
     @Inject
+    protected lateinit var dialogService: IDialogService
+
+    @Inject
     protected lateinit var clipboardService: IClipboardService
 
     @Inject
@@ -70,7 +74,7 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
                 retrievedSearchResults(entities)
             }
 
-        }, searchEngine, router, clipboardService, deleteEntityService)
+        }, searchEngine, router, dialogService, clipboardService, deleteEntityService)
 
 
         this.showSecondaryInformation.value = true
@@ -85,7 +89,7 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     }
 
     override fun deleteEntity(entity: Source) {
-        presenter.deleteSource(entity)
+        presenter.confirmDeleteSourceAsync(entity)
     }
 
     override fun searchEntities(searchTerm: String) {
