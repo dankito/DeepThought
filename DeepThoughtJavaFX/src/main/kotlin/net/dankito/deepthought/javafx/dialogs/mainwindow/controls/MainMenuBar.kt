@@ -155,7 +155,7 @@ class MainMenuBar(private val dataManager: DataManager) : View() {
 
 
     private fun addImporterAndExporterIfInitialized() {
-        if (isDataManagerInitialized == isUiInitialized) {
+        if (isDataManagerInitialized && isUiInitialized) {
             addImporterAndExporter()
         }
     }
