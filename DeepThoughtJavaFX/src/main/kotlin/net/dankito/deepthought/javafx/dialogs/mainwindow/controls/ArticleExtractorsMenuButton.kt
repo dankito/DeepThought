@@ -160,7 +160,9 @@ class ArticleExtractorsMenuButton : View() {
         else { // cache icon so that it only gets retrieved once
             imageCache.getCachedForRetrieveIconForUrlAsync(iconUrl) { result ->
                 result.result?.let { iconPath ->
-                    setMenuItemIcon(graphicPane, iconPath.toURI().toString())
+                    runLater {
+                        setMenuItemIcon(graphicPane, iconPath.toURI().toString())
+                    }
                 }
             }
         }
