@@ -13,13 +13,11 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_article_summary.*
-import net.dankito.utils.AsyncResult
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.ArticleSummaryActivityParameters
 import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter
 import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -29,7 +27,9 @@ import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.utils.AsyncResult
 import net.dankito.utils.ImageCache
+import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.IDialogService
 import org.slf4j.LoggerFactory
@@ -319,7 +319,8 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun showExtractorIcon(config: ArticleSummaryExtractorConfig) {
-        config.iconUrl?.let { imageCache.getCachedForRetrieveIconForUrlAsync(it) { result ->
+        config.iconUrl?.let {
+            imageCache.getCachedForRetrieveIconForUrlAsync(it) { result ->
                 result.result?.let { iconPath ->
                     showExtractorIconInActionBar(iconPath, config)
                 }
