@@ -8,6 +8,7 @@ import net.dankito.deepthought.di.CommonModule
 import net.dankito.deepthought.javafx.DeepThoughtJavaFXApplication
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
+import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
 import net.dankito.deepthought.javafx.dialogs.item.EditItemExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.item.EditItemViewBase
@@ -50,6 +51,8 @@ interface AppComponent : CommonComponent {
     fun inject(messagePopupPane: MessagePopupPane)
 
     fun inject(articleExtractorsMenuButton: ArticleExtractorsMenuButton)
+
+    fun inject(dialogFragment: DialogFragment)
 
     fun inject(itemsListView: ItemsListView)
 
