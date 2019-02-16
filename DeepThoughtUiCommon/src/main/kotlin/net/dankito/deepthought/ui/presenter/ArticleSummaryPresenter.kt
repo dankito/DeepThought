@@ -84,7 +84,7 @@ class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, protec
         articleExtractorManager.extractArticleUserDidNotSeeBeforeAndAddDefaultDataAsync(item) { result ->
             result.result?.let { showArticle(it) }
 
-            callback?.invoke(true)
+            callback?.invoke(result.successful)
         }
     }
 
