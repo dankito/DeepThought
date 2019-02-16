@@ -18,6 +18,7 @@ import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ReadLaterArticleSearch
+import net.dankito.utils.ImageCache
 import net.engio.mbassy.listener.Handler
 import tornadofx.*
 import javax.inject.Inject
@@ -35,6 +36,9 @@ class ArticleExtractorsMenuButton : View() {
 
     @Inject
     protected lateinit var extractorsConfigManager: ArticleSummaryExtractorConfigManager
+
+    @Inject
+    protected lateinit var imageCache: ImageCache
 
     @Inject
     protected lateinit var router: IRouter
@@ -145,7 +149,20 @@ class ArticleExtractorsMenuButton : View() {
         item.graphic = graphicPane
 
         iconUrl?.let {
+            retrieveAndSetMenuItemIcon(graphicPane, iconUrl)
+        }
+    }
+
+    private fun retrieveAndSetMenuItemIcon(graphicPane: HBox, iconUrl: String) {
+        if (iconUrl.startsWith("http", true) == false) { // one of our application icons, e. g. for ReadLaterArticles menu item
             setMenuItemIcon(graphicPane, iconUrl)
+        }
+        else { // cache icon so that it only gets retrieved once
+            imageCache.getCachedForRetrieveIconForUrlAsync(iconUrl) { result ->
+                result.result?.let { iconPath ->
+                    setMenuItemIcon(graphicPane, iconPath.toURI().toString())
+                }
+            }
         }
     }
 
