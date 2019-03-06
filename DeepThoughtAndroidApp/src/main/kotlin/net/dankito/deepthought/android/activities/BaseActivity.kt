@@ -1,18 +1,20 @@
 package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.ui.UiStatePersister
+import net.dankito.deepthought.android.ui.theme.AppThemes
 import net.dankito.utils.android.permissions.IPermissionsService
 import net.dankito.utils.android.permissions.PermissionsService
+import net.dankito.utils.android.ui.activities.ThemeableActivity
+import net.dankito.utils.android.ui.theme.Theme
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 
-open class BaseActivity : AppCompatActivity() {
+open class BaseActivity : ThemeableActivity() {
 
     companion object {
         const val ParametersId = "BASE_ACTIVITY_PARAMETERS_ID"
@@ -91,6 +93,19 @@ open class BaseActivity : AppCompatActivity() {
 
         super.onDestroy()
         log.info("Destroyed Activity $this")
+    }
+
+
+    override fun getThemeForName(themeName: String): Theme? {
+        if (AppThemes.Dark.name == themeName) {
+            return AppThemes.Dark
+        }
+
+        return AppThemes.Light
+    }
+
+    protected fun changeTheme(useDarkTheme: Boolean) {
+        setTheme( if (useDarkTheme) AppThemes.Dark else AppThemes.Light )
     }
 
 

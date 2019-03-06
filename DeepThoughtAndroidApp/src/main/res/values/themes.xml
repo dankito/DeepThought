@@ -19,6 +19,8 @@
 
     <style name="DeepThoughtAppThemeLightBase" parent="RichTextEditorAppThemeLight">
 
+        <item name="themeName">AppThemeLight</item>
+
         <item name="colorPrimaryGradientStart">@color/colorPrimaryGradientEnd</item>
         <item name="colorPrimaryGradientEnd">@color/colorPrimaryGradientEnd</item>
 
@@ -40,6 +42,8 @@
     </style>
 
     <style name="DeepThoughtAppThemeDarkBase" parent="RichTextEditorAppThemeDark">
+
+        <item name="themeName">AppThemeDark</item>
 
         <item name="colorPrimaryGradientStart">@color/colorPrimaryGradientEnd_Dark</item>
         <item name="colorPrimaryGradientEnd">@color/colorPrimaryGradientEnd_Dark</item>

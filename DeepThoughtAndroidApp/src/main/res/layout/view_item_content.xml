@@ -105,7 +105,7 @@
                 android:id="@+id/lytEditorToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/activity_edit_item_html_editor_toolbar_height"
-                android:background="@color/colorAccent"
+                style="@style/ToolbarStyle"
                 android:visibility="gone"
             >
 

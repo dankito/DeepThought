@@ -19,17 +19,15 @@ import net.dankito.deepthought.android.activities.TagsListViewActivity
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.TagsListViewDialog
 import net.dankito.deepthought.android.fragments.ItemsListView
-import net.dankito.deepthought.android.service.ExtractArticleHandler
-import net.dankito.deepthought.android.service.IntentHandler
+import net.dankito.deepthought.android.ui.theme.AppThemes
 import net.dankito.deepthought.android.views.MainActivityFloatingActionMenuButton
 import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.android.permissions.IPermissionsService
 import net.dankito.utils.android.permissions.PermissionsService
-import net.dankito.service.eventbus.IEventBus
-import net.dankito.utils.web.UrlUtil
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -210,8 +208,20 @@ class MainActivity : BaseActivity() {
         return true
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val mnUseDarkTheme = menu.findItem(R.id.mnUseDarkTheme)
+        mnUseDarkTheme.isChecked = getSelectedTheme() == AppThemes.Dark
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            // inverted logic here: if MenuItem is not check an gets click then dark theme should get activated (= afterwards MenuItem is checked)
+            R.id.mnUseDarkTheme -> {
+                changeTheme(!!! item.isChecked)
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
     }

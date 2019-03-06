@@ -53,6 +53,8 @@
     <string name="search_hint_sources">Source title, date, series, issue, …</string>
     <string name="search_hint_read_later_articles">Title, summary, date, series</string>
 
+    <string name="activity_main_menu_use_dark_theme">Dark theme (experimental)</string>
+
     <string name="fragment_items_list_view_menu_sort_title">Sort</string>
     <string name="fragment_items_list_view_menu_sort_by_date_created_ascending_title">Created ascending</string>
     <string name="fragment_items_list_view_menu_sort_by_date_created_descending_title">Created descending</string>
