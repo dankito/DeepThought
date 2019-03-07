@@ -15,6 +15,7 @@ import net.dankito.deepthought.javafx.service.import_export.DataImporterExporter
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.search.IIndexBasedSearchEngine
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.utils.extensions.sortedByStrings
@@ -99,6 +100,12 @@ class MainMenuBar(private val dataManager: DataManager) : View() {
                     mnitmFileImport = menu(messages["main.window.menu.file.import"])
 
                     mnitmFileExport = menu(messages["main.window.menu.file.export"])
+
+                    separator()
+
+                    item(messages["main.window.menu.tools.rebuild.search.index"]) {
+                        action { (searchEngine as? IIndexBasedSearchEngine)?.rebuildIndexAsync() }
+                    }
 
                     separator()
 

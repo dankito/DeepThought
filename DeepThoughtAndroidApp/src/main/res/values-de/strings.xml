@@ -69,6 +69,7 @@
     <string name="search_hint_read_later_articles">Titel, Text, Datum, Reihe</string>
 
     <string name="activity_main_menu_use_dark_theme">Nachtmodus (experimentell)</string>
+    <string name="activity_main_menu_rebuild_search_index">Suchindex neu erstellen</string>
 
     <string name="fragment_items_list_view_menu_sort_title">Sortierung</string>
     <string name="fragment_items_list_view_menu_sort_by_date_created_ascending_title">Erstellt aufsteigend</string>

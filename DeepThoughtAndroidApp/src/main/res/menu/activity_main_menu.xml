@@ -14,4 +14,11 @@
         android:orderInCategory="10000"
     />
 
+    <item
+        android:id="@+id/mnRebuildSearchIndex"
+        android:title="@string/activity_main_menu_rebuild_search_index"
+        app:showAsAction="never"
+        android:orderInCategory="11000"
+    />
+
 </menu>

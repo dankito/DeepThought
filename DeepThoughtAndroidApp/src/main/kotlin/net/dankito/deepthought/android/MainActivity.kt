@@ -26,6 +26,8 @@ import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.eventbus.IEventBus
+import net.dankito.service.search.IIndexBasedSearchEngine
+import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.android.permissions.IPermissionsService
 import net.dankito.utils.android.permissions.PermissionsService
 import org.slf4j.LoggerFactory
@@ -59,6 +61,9 @@ class MainActivity : BaseActivity() {
 
     @Inject
     protected lateinit var summaryExtractorManager: ArticleSummaryExtractorConfigManager
+
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
 
 
     init {
@@ -220,6 +225,10 @@ class MainActivity : BaseActivity() {
             // inverted logic here: if MenuItem is not check an gets click then dark theme should get activated (= afterwards MenuItem is checked)
             R.id.mnUseDarkTheme -> {
                 changeTheme(!!! item.isChecked)
+                return true
+            }
+            R.id.mnRebuildSearchIndex -> {
+                (searchEngine as? IIndexBasedSearchEngine)?.rebuildIndexAsync()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)

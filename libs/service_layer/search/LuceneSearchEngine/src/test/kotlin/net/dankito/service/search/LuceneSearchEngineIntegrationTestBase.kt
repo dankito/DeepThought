@@ -230,7 +230,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
             waitForResultLatch.countDown()
         })
 
-        try { waitForResultLatch.await(4, TimeUnit.MINUTES) } catch (ignored: Exception) { }
+        try { waitForResultLatch.await(4, TimeUnit.SECONDS) } catch (ignored: Exception) { }
 
 
         MatcherAssert.assertThat(resultHolder.get(), CoreMatchers.notNullValue())

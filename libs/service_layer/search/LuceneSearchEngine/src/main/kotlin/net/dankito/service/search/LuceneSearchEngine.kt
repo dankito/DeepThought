@@ -31,7 +31,7 @@ class LuceneSearchEngine(private val settingsStore: ILocalSettingsStore, private
                          osHelper: OsHelper, threadPool: IThreadPool, private val eventBus: IEventBus,
                          itemService: ItemService, tagService: TagService, sourceService: SourceService, seriesService: SeriesService,
                          readLaterArticleService: ReadLaterArticleService, fileService: FileService, localFileInfoService: LocalFileInfoService)
-    : SearchEngineBase(threadPool) {
+    : SearchEngineBase(threadPool), IIndexBasedSearchEngine {
 
     companion object {
         private val log = LoggerFactory.getLogger(LuceneSearchEngine::class.java)
@@ -228,6 +228,10 @@ class LuceneSearchEngine(private val settingsStore: ILocalSettingsStore, private
         }
     }
 
+
+    override fun rebuildIndexAsync() {
+        threadPool.runAsync { rebuildIndex() }
+    }
 
     private fun rebuildIndex() {
         deleteIndex()
