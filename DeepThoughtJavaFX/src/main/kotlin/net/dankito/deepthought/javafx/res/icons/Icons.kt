@@ -5,6 +5,8 @@ class Icons {
 
     companion object {
 
+        const val SearchIconPath = "icons/ic_search_black_24dp.png"
+
         const val ItemsIconPath = "icons/icon_items_primary_24.png"
 
         const val ReadLaterArticlesIconPath = "icons/icon_read_later_articles_black_with_padding_36.png"

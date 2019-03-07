@@ -6,7 +6,10 @@ import javafx.collections.SetChangeListener
 import javafx.geometry.Pos
 import javafx.scene.control.ContentDisplay
 import javafx.scene.image.ImageView
+import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 import net.dankito.deepthought.javafx.res.icons.Icons
+import net.dankito.deepthought.javafx.ui.controls.searchtextfield
 import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
@@ -34,6 +37,16 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
 
         private const val BarHeight = ButtonsHeight + 2 * ButtonsTopAndBottomMargin
 
+        private const val SearchBarWidth = 200.0
+
+        private const val SearchFieldLeftMargin = IconButtonsWidth + 6.0
+
+        private const val SearchFieldWidth = SearchBarWidth - SearchFieldLeftMargin
+
+        private const val SearchFieldHeight = 36
+
+        private const val SearchFieldTopAndBottomMargin = (BarHeight - SearchFieldHeight) / 2.0
+
         private val LastUpdateTimeDateFormat = DateFormat.getDateTimeInstance()
     }
 
@@ -46,6 +59,8 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
     private val countItemsSelectedLabelText = SimpleStringProperty(String.format(messages["count.items.selected"], 0))
 
     private val areSelectedItemsActionButtonsDisabled = SimpleBooleanProperty(true)
+
+    private val isSearchFieldVisible = SimpleBooleanProperty(false)
 
 
     init {
@@ -123,7 +138,73 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
 
             alignment = Pos.CENTER_LEFT
 
-            label(lastUpdateTime) {
+            anchorpane {
+                minWidth = SearchBarWidth
+                maxWidth = SearchBarWidth
+
+                label(lastUpdateTime) {
+                    visibleProperty().bind(isSearchFieldVisible.not())
+
+                    anchorpaneConstraints {
+                        topAnchor = 0.0
+                        rightAnchor = SearchFieldLeftMargin
+                        bottomAnchor = 0.0
+                    }
+                }
+
+                searchtextfield {
+                    minWidth = SearchFieldWidth
+                    maxWidth = SearchFieldWidth
+
+                    visibleProperty().bind(isSearchFieldVisible)
+
+                    textProperty().addListener { _, _, newValue ->
+                        searchArticles(newValue)
+                    }
+
+                    setOnKeyReleased { event ->
+                        if (event.code == KeyCode.ESCAPE && this.text.isEmpty()) { // when pressing escape in empty search field, hide search field
+                            isSearchFieldVisible.set(false)
+                        }
+                        else if (checkShouldToggleSearchFieldVisibility(event) == false) {
+                            this.handleKeyReleased(event)
+                        }
+                    }
+
+                    visibleProperty().addListener { _, _, newValue ->
+                        if (newValue) {
+                            requestFocus()
+                        }
+                        else {
+                            searchArticles("")
+                        }
+                    }
+
+                    anchorpaneConstraints {
+                        topAnchor = SearchFieldTopAndBottomMargin
+                        rightAnchor = SearchFieldLeftMargin
+                        bottomAnchor = SearchFieldTopAndBottomMargin
+                    }
+                }
+
+                togglebutton {
+                    minHeight = ButtonsHeight
+                    maxHeight = ButtonsHeight
+                    minWidth = IconButtonsWidth
+                    maxWidth = IconButtonsWidth
+
+                    graphic = ImageView(Icons.SearchIconPath)
+                    contentDisplay = ContentDisplay.GRAPHIC_ONLY
+
+                    selectedProperty().bindBidirectional(isSearchFieldVisible)
+
+                    anchorpaneConstraints {
+                        topAnchor = ButtonsTopAndBottomMargin
+                        rightAnchor = 0.0
+                        bottomAnchor = ButtonsTopAndBottomMargin
+                    }
+                }
+
                 hboxConstraints {
                     marginLeft = ButtonsLeftMargin
                 }
@@ -141,7 +222,7 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
                 action { presenter.extractArticlesSummary(articleSummaryExtractorConfig) { articleSummaryReceived(it) } }
 
                 hboxConstraints {
-                    marginLeft = 6.0
+                    marginLeft = ButtonsLeftMargin
                     marginTopBottom(ButtonsTopAndBottomMargin)
                 }
             }
@@ -166,6 +247,25 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
                 }
             }
         }
+
+        articleSummaryItemsView.root.setOnKeyReleased { event ->
+            checkShouldToggleSearchFieldVisibility(event)
+        }
+    }
+
+
+    private fun checkShouldToggleSearchFieldVisibility(event: KeyEvent): Boolean {
+        if (event.isControlDown && event.code == KeyCode.F) {
+            isSearchFieldVisible.set(!!! isSearchFieldVisible.get())
+
+            return true
+        }
+
+        return false
+    }
+
+    private fun searchArticles(query: String) {
+        articleSummaryItemsView.showArticlesOnUiThread(presenter.searchArticleSummaryItems(query), 0)
     }
 
 

@@ -416,27 +416,7 @@ class ArticleSummaryActivity : BaseActivity() {
     }
 
     private fun searchArticleSummaryItems(query: String) {
-        presenter.lastLoadedSummary?.let { summary ->
-            if(query.isBlank()) {
-                adapter.items = summary.articles
-            }
-            else {
-                searchArticleSummaryItems(query, summary)
-            }
-        }
-    }
-
-    private fun searchArticleSummaryItems(query: String, summary: ArticleSummary) {
-        val searchResult = ArrayList<ArticleSummaryItem>()
-        val lowerCaseSearchTerm = query.toLowerCase()
-
-        summary.articles.forEach { article ->
-            if (article.summary.toLowerCase().contains(lowerCaseSearchTerm) || article.title.toLowerCase().contains(lowerCaseSearchTerm)) {
-                searchResult.add(article)
-            }
-        }
-
-        adapter.items = searchResult
+        adapter.items = presenter.searchArticleSummaryItems(query)
     }
 
 }

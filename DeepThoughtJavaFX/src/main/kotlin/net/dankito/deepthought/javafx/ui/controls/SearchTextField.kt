@@ -4,6 +4,7 @@ import javafx.beans.value.ObservableValue
 import javafx.event.EventTarget
 import javafx.scene.Cursor
 import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyEvent
 import javafx.scene.input.MouseButton
 import javafx.scene.layout.Region
 import javafx.scene.layout.StackPane
@@ -51,9 +52,13 @@ class SearchTextField : CustomTextField() {
 
     private fun doCustomInitialization() {
         setOnKeyReleased { event ->
-            if(event.code == KeyCode.ESCAPE) {
-                clear()
-            }
+            handleKeyReleased(event)
+        }
+    }
+
+    fun handleKeyReleased(event: KeyEvent) {
+        if (event.code == KeyCode.ESCAPE) {
+            clear()
         }
     }
 

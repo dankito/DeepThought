@@ -177,6 +177,33 @@ class ArticleSummaryPresenter(protected val itemPersister: ItemPersister, protec
     }
 
 
+    fun searchArticleSummaryItems(query: String): List<ArticleSummaryItem> {
+        lastLoadedSummary?.let { summary ->
+            if(query.isBlank()) {
+                return summary.articles
+            }
+            else {
+                return searchArticleSummaryItems(query, summary)
+            }
+        }
+
+        return listOf()
+    }
+
+    private fun searchArticleSummaryItems(query: String, summary: ArticleSummary): List<ArticleSummaryItem> {
+        val searchResult = ArrayList<ArticleSummaryItem>()
+        val lowerCaseSearchTerm = query.toLowerCase()
+
+        summary.articles.forEach { article ->
+            if (article.summary.toLowerCase().contains(lowerCaseSearchTerm) || article.title.toLowerCase().contains(lowerCaseSearchTerm)) {
+                searchResult.add(article)
+            }
+        }
+
+        return searchResult
+    }
+
+
     private fun showError(errorMessageResourceKey: String, error: Exception, vararg errorMessageArguments: String) {
         dialogService.showErrorMessage(localization.getLocalizedString(errorMessageResourceKey, *errorMessageArguments), exception = error)
     }
