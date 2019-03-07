@@ -16,7 +16,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
     companion object {
         private val ContentFilterSelector = ".widget-werbung, .akwa-ad-container, .akwa-ad-container--native, .hinweis_anzeige" +
-                "a-paternoster, a-ad, [name=Teads], .a-teaser-header__heading, .article-footer__content, [name=meldung.newsticker.bottom.zurstartseite]"
+                "a-paternoster, a-ad, [name=Teads], .a-teaser-header__heading, .article-footer__content, [name=meldung.newsticker.bottom.zurstartseite], .a-pvgs"
 
         private val DateTimeFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         private val MultiPageMobileArticleDateTimeFormat = SimpleDateFormat("yyyy-MM-dd")
