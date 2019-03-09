@@ -28,7 +28,7 @@ ext {
 
     daggerVersion = '2.14.1'
 
-    slf4jVersion = '1.7.25'
+    slf4jVersion = '1.7.26'
 
     javaUtilsVersion = '1.0.4'
 
