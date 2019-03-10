@@ -79,17 +79,17 @@ ext {
 
     swipeLayoutVersion = '1.2.0@aar'
 
-    flexboxVersion = '0.3.2'
+    flexboxVersion = '1.0.0'
 
-    picassoVersion = '2.5.2'
+    picassoVersion = '2.5.2' // new version with changed API: '2.71828'
 
     fileChooserVersion = '1.2.0'
 
     pdfBoxAndroidVersion = '1.8.9.1'
 
-    multiDexVersion = '1.0.1'
+    multiDexVersion = '1.0.3'
 
-    leakCanaryVersion = '1.6.2'
+    leakCanaryVersion = '1.6.3'
 
     testFairyVersion = '1.6'
 
