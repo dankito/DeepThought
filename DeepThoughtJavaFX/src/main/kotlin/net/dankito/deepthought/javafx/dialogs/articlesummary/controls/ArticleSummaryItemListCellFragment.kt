@@ -1,6 +1,8 @@
 package net.dankito.deepthought.javafx.dialogs.articlesummary.controls
 
-import javafx.collections.*
+import javafx.beans.property.SimpleStringProperty
+import javafx.collections.ObservableSet
+import javafx.collections.SetChangeListener
 import javafx.geometry.Pos
 import javafx.scene.control.CheckBox
 import javafx.scene.layout.Priority
@@ -16,6 +18,8 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
     val summaryItem = ArticleSummaryItemViewModel().bindTo(this)
 
     var checkedItems: ObservableSet<ArticleSummaryItem>? = null
+
+    private val tooltipText = SimpleStringProperty("")
 
     private lateinit var checkBoxIsItemSelected: CheckBox
 
@@ -33,6 +37,8 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
 
         itemProperty.addListener { _, _, newValue ->
             checkBoxIsItemSelected.isSelected = checkedItems?.contains(newValue) ?: false
+
+            tooltipText.set(if (newValue == null) "" else "${summaryItem.title.value}${System.lineSeparator()}${summaryItem.summary.value}")
         }
     }
 
@@ -45,7 +51,7 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
         minHeight = 100.0
         prefHeight = 100.0
 
-        checkBoxIsItemSelected = checkbox() {
+        checkBoxIsItemSelected = checkbox {
             prefWidth = 30.0
 
             selectedProperty().addListener { _, _, isSelected ->
@@ -87,6 +93,14 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
 
                 isWrapText = true
             }
+        }
+
+        tooltip {
+            textProperty().bind(tooltipText)
+
+            isWrapText = true
+
+            maxWidth = 600.0
         }
     }
 
