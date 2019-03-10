@@ -40,7 +40,6 @@ import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
 import net.dankito.utils.ui.dialogs.IDialogService
-import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -59,8 +58,6 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
         const val ResultId = "EDIT_ITEM_ACTIVITY_RESULT"
 
         private const val ShowHideEditTagsAnimationDurationMillis = 250L
-
-        private val log = LoggerFactory.getLogger(EditItemActivityBase::class.java)
     }
 
 
