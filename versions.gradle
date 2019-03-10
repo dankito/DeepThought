@@ -85,7 +85,7 @@ ext {
 
     fileChooserVersion = '1.2.0'
 
-    pdfBoxAndroidVersion = '1.8.9.1'
+    pdfBoxAndroidVersion = '1.8.10.0'
 
     multiDexVersion = '1.0.3'
 
@@ -102,7 +102,7 @@ ext {
 
     controlsFXVersion = '8.40.14'
 
-    pdfBoxVersion = '2.0.8'
+    pdfBoxVersion = '2.0.14'
 
 
     logbackVersion = '1.2.3'
