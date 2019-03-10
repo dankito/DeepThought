@@ -16,8 +16,10 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.text.TextAlignment
-import net.dankito.deepthought.javafx.util.FXUtils
 import net.dankito.deepthought.model.BaseEntity
+import net.dankito.utils.javafx.ui.controls.AutoCompletionSearchTextField
+import net.dankito.utils.javafx.ui.controls.autocompletionsearchtextfield
+import net.dankito.utils.javafx.util.FXUtils
 import tornadofx.*
 import java.util.*
 

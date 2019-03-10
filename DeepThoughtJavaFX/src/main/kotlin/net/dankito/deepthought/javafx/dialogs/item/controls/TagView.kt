@@ -9,7 +9,7 @@ import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.TextAlignment
-import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.javafx.util.FXUtils
 import tornadofx.*
 
 

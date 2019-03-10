@@ -3,7 +3,7 @@ package net.dankito.deepthought.javafx.dialogs.item.controls
 import javafx.scene.layout.Pane
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.res.icons.Icons
-import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.richtexteditor.command.CommandName
 import net.dankito.richtexteditor.java.fx.JavaFXIcon
 import net.dankito.richtexteditor.java.fx.RichTextEditor

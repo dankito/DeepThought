@@ -16,8 +16,10 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import net.dankito.deepthought.javafx.res.icons.Icons
-import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.richtexteditor.java.fx.extensions.setImageTintColor
+import net.dankito.utils.javafx.ui.controls.AutoCompletionSearchTextField
+import net.dankito.utils.javafx.ui.controls.autocompletionsearchtextfield
 import tornadofx.*
 import kotlin.reflect.KClass
 

@@ -96,11 +96,7 @@ ext {
 
     // JavaFX
 
-    tornadoFXVersion = '1.7.14'
-
-    tornadoFXControlsVersion = '1.0.6'
-
-    controlsFXVersion = '8.40.14'
+    javaFXUtilsVersion = '1.0.0'
 
     pdfBoxVersion = '2.0.14'
 

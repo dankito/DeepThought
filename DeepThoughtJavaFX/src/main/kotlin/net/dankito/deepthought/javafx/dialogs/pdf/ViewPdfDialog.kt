@@ -14,7 +14,7 @@ import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.res.icons.Icons
-import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source

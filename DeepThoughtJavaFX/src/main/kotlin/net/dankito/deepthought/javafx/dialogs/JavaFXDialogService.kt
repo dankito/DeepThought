@@ -7,12 +7,12 @@ import javafx.scene.layout.Region
 import javafx.scene.layout.VBox
 import javafx.stage.Screen
 import javafx.stage.Stage
-import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.ui.dialogs.IDialogService
-import net.dankito.utils.ui.dialogs.InputType
 import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.ui.dialogs.InputType
 import org.slf4j.LoggerFactory
 import java.awt.Desktop
 import java.io.PrintWriter

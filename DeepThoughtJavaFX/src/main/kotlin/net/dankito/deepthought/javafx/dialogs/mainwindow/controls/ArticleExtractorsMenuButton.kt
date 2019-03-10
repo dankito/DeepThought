@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView
 import javafx.scene.layout.HBox
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.res.icons.Icons
-import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter

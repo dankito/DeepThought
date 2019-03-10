@@ -6,7 +6,7 @@ import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
-import net.dankito.deepthought.javafx.ui.controls.searchtextfield
+import net.dankito.utils.javafx.ui.controls.searchtextfield
 import net.dankito.deepthought.model.LocalSettings
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.ItemsListPresenter

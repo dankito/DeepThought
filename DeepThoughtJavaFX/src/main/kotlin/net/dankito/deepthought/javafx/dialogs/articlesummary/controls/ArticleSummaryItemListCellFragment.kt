@@ -8,7 +8,7 @@ import javafx.scene.control.CheckBox
 import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryItemViewModel
-import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.newsreader.model.ArticleSummaryItem
 import tornadofx.*
 

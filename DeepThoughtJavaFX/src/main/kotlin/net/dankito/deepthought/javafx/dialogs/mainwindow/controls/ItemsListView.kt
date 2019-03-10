@@ -14,7 +14,7 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.ItemItemViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.ui.controls.IItemsListViewJavaFX
-import net.dankito.deepthought.javafx.util.LazyLoadingObservableList
+import net.dankito.utils.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag

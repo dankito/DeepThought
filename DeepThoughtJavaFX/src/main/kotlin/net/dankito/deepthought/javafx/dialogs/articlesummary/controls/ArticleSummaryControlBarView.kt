@@ -9,8 +9,8 @@ import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import net.dankito.deepthought.javafx.res.icons.Icons
-import net.dankito.deepthought.javafx.ui.controls.searchtextfield
-import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.javafx.ui.controls.searchtextfield
+import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummary

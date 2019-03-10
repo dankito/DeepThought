@@ -18,7 +18,7 @@ import net.dankito.deepthought.javafx.dialogs.item.controls.EditItemTagsField
 import net.dankito.deepthought.javafx.dialogs.item.controls.InlineHtmlEditor
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
-import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.ui.IRouter

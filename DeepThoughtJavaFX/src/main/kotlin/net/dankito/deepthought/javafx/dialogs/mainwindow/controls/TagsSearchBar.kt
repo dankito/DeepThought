@@ -2,7 +2,7 @@ package net.dankito.deepthought.javafx.dialogs.mainwindow.controls
 
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
-import net.dankito.deepthought.javafx.ui.controls.searchtextfield
+import net.dankito.utils.javafx.ui.controls.searchtextfield
 import tornadofx.*
 
 

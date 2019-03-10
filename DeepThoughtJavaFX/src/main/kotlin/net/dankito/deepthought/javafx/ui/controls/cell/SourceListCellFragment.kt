@@ -4,7 +4,7 @@ import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.SourceViewModel
 import net.dankito.deepthought.javafx.res.Fonts
-import net.dankito.deepthought.javafx.util.FXUtils
+import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.deepthought.model.Source
 import tornadofx.*
 

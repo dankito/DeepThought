@@ -51,6 +51,9 @@ dependencies {
     compile project(':DeepThoughtUiCommon')
     compile project(':JavaCouchbaseLiteEntityManager')
     compile project(':UdpDevicesDiscoverer')
+
+    compile "net.dankito.utils:java-fx-utils:$javaFXUtilsVersion"
+
     compile "net.dankito.richtexteditor:richtexteditor-javafx:$richTextEditorVersion", {
         exclude group: 'net.dankito.utils', module: 'java-utils'
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
@@ -63,13 +66,6 @@ dependencies {
     }
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-
-    compile("no.tornado:tornadofx:$tornadoFXVersion", {
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-    })
-
-    compile "no.tornado:tornadofx-controls:$tornadoFXControlsVersion"
-    compile "org.controlsfx:controlsfx:$controlsFXVersion"
 
     compile project(':JavaPdfImporter')
 

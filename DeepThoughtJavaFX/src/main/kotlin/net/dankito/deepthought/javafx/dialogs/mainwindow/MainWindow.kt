@@ -7,7 +7,7 @@ import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.StackPane
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
-import net.dankito.deepthought.javafx.service.extensions.setAnchorPaneOverallAnchor
+import net.dankito.utils.javafx.ui.extensions.setAnchorPaneOverallAnchor
 import net.dankito.deepthought.service.data.DataManager
 import tornadofx.*
 import tornadofx.FX.Companion.messages
