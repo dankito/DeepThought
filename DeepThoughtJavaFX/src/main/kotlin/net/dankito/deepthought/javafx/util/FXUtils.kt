@@ -22,8 +22,6 @@ import java.util.concurrent.CountDownLatch
 
 object FXUtils {
 
-    val HtmlEditorDefaultText = "<html dir=\"ltr\"><head></head><body contenteditable=\"true\"></body></html>"
-
     val SizeMaxValue: Double = Double.MAX_VALUE
 
 
