@@ -11,7 +11,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.viewholder.ArticleSummaryExtractorViewHolder
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorConfigDialog
-import net.dankito.deepthought.android.service.BitmapCache
+import net.dankito.utils.android.image.BitmapCache
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.utils.image.ImageCache
