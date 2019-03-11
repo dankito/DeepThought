@@ -10,7 +10,7 @@ import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
-import net.dankito.deepthought.javafx.dialogs.JavaFXDialogService
+import net.dankito.utils.javafx.ui.dialogs.JavaFXDialogService
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.JavaFXApplicationsService
