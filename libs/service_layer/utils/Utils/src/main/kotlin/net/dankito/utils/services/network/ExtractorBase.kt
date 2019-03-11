@@ -1,4 +1,4 @@
-package net.dankito.data_access.network.webclient.extractor
+package net.dankito.utils.services.network
 
 import net.dankito.utils.web.UrlUtil
 import net.dankito.utils.web.client.IWebClient
@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-// TODO: find a better library
 abstract class ExtractorBase(val webClient : IWebClient, protected val urlUtil: UrlUtil = UrlUtil()) {
 
     companion object {

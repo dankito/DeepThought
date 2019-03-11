@@ -48,8 +48,6 @@ include ':DataModel'
 
 /*      Data Access Layer       */
 
-include ':WebClient'
-
 include ':DevicesDiscoverer'
 include ':UdpDevicesDiscoverer'
 include ':AndroidUdpDevicesDiscoverer'
@@ -96,8 +94,6 @@ project(':AndroidPdfImporter').projectDir = "$rootDir/libs/service_layer/import_
 
 project(':DataModel').projectDir = "$rootDir/libs/business_logic_layer/DataModel" as File
 
-
-project(':WebClient').projectDir = "$rootDir/libs/data_access_layer/network/WebClient" as File
 
 project(':DevicesDiscoverer').projectDir = "$rootDir/libs/data_access_layer/network/DevicesDiscoverer" as File
 project(':UdpDevicesDiscoverer').projectDir = "$rootDir/libs/data_access_layer/network/UdpDevicesDiscoverer" as File

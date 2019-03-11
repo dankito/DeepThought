@@ -7,7 +7,9 @@ targetCompatibility = "1.7"
 dependencies {
     compile project(':DataModel')
 
-    compile project(':WebClient')
+    compile "net.dankito.utils:java-utils:$javaUtilsVersion"
+
+    compile "org.jsoup:jsoup:$jsoupVersion"
 
 
     compile "com.github.axet:wget:$wgetVersion", {
