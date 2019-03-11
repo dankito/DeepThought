@@ -98,7 +98,7 @@ ext {
 
     // JavaFX
 
-    javaFXUtilsVersion = '1.0.0'
+    javaFXUtilsVersion = '2.0.0-SNAPSHOT'
 
     pdfBoxVersion = '2.0.14'
 
