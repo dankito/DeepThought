@@ -13,7 +13,7 @@ import net.dankito.utils.ThreadPool
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.language.SupportedLanguages
-import net.dankito.utils.services.network.download.IFileDownloader
+import net.dankito.utils.network.download.IFileDownloader
 import net.dankito.utils.services.network.download.WGetFileDownloader
 import net.dankito.utils.web.UrlUtil
 import javax.inject.Singleton

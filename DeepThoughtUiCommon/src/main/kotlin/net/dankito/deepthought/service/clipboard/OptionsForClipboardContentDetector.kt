@@ -13,7 +13,7 @@ import net.dankito.utils.clipboard.ClipboardContent
 import net.dankito.utils.clipboard.ClipboardContentOption
 import net.dankito.utils.clipboard.OptionsForClipboardContent
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.services.network.download.IFileDownloader
+import net.dankito.utils.network.download.IFileDownloader
 import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.web.UrlUtil
 import net.dankito.utils.web.client.IWebClient
