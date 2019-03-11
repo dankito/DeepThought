@@ -8,7 +8,7 @@ import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.network.discovery.AndroidUdpDevicesDiscoverer
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
-import net.dankito.deepthought.android.service.hashing.AndroidBase64Service
+import net.dankito.utils.android.hashing.AndroidBase64Service
 import net.dankito.deepthought.android.service.settings.AndroidPlatformConfiguration
 import net.dankito.deepthought.service.importexport.pdf.PdfImporter
 import net.dankito.filechooserdialog.service.PreviewImageService
