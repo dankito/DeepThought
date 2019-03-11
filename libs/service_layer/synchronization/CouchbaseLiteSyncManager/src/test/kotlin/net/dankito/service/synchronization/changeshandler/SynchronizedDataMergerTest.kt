@@ -4,9 +4,9 @@ import com.couchbase.lite.DocumentChange
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
-import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
+import net.dankito.utils.io.JavaFileStorageService
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.version.Versions
 import org.hamcrest.CoreMatchers.`is`
@@ -49,6 +49,12 @@ class SynchronizedDataMergerTest {
             }
 
             override fun setDatabaseDataModelVersion(newDataModelVersion: Int) { }
+
+            override fun getSearchEngineIndexVersion(): Int {
+                return Versions.SearchEngineIndexVersion
+            }
+
+            override fun setSearchEngineIndexVersion(newSearchIndexVersion: Int) { }
 
         })
 

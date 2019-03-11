@@ -27,7 +27,6 @@ dependencies {
 
     compile project(':JacksonJsonSerializer')
     compile project(':DevicesDiscoverer')
-    compile project(':FileStorageService')
 
     compile project(':Utils')
 

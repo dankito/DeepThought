@@ -8,7 +8,6 @@ dependencies {
     compile project(':DataModel')
 
     compile project(':WebClient')
-    compile project(':FileStorageService')
 
 
     compile "com.github.axet:wget:$wgetVersion", {

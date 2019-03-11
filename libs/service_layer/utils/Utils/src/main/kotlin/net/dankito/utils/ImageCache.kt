@@ -1,6 +1,6 @@
 package net.dankito.utils
 
-import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.utils.io.IFileStorageService
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.web.client.IWebClient
 import net.dankito.utils.web.client.RequestParameters

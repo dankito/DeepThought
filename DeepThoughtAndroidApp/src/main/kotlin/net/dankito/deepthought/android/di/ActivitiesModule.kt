@@ -3,7 +3,6 @@ package net.dankito.deepthought.android.di
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
@@ -29,6 +28,8 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.utils.android.ui.activities.AppLifeCycleListener
+import net.dankito.utils.io.IFileStorageService
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.services.network.INetworkConnectivityManager
@@ -37,7 +38,6 @@ import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.IDialogService
-import net.dankito.utils.android.ui.activities.AppLifeCycleListener
 import javax.inject.Singleton
 
 

@@ -57,9 +57,6 @@ include ':AndroidUdpDevicesDiscoverer'
 include ':ClientCommunicator'
 include ':TcpSocketClientCommunicator'
 
-include ':FileStorageService'
-include ':AndroidFileStorageService'
-
 include ':EntityManager'
 include ':CouchbaseLiteEntityManagerBase'
 include ':JavaCouchbaseLiteEntityManager'
@@ -108,9 +105,6 @@ project(':AndroidUdpDevicesDiscoverer').projectDir = "$rootDir/libs/data_access_
 
 project(':ClientCommunicator').projectDir = "$rootDir/libs/data_access_layer/network/ClientCommunicator" as File
 project(':TcpSocketClientCommunicator').projectDir = "$rootDir/libs/data_access_layer/network/TcpSocketClientCommunicator" as File
-
-project(':FileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/FileStorageService" as File
-project(':AndroidFileStorageService').projectDir = "$rootDir/libs/data_access_layer/filesystem/AndroidFileStorageService" as File
 
 project(':EntityManager').projectDir = "$rootDir/libs/data_access_layer/database/EntityManager" as File
 project(':CouchbaseLiteEntityManagerBase').projectDir = "$rootDir/libs/data_access_layer/database/CouchbaseLiteEntityManagerBase" as File

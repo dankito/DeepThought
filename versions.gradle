@@ -30,7 +30,7 @@ ext {
 
     slf4jVersion = '1.7.26'
 
-    javaUtilsVersion = '1.0.4'
+    javaUtilsVersion = '2.0.0-SNAPSHOT'
 
     commonsLangVersion = '3.7'
 
@@ -82,6 +82,8 @@ ext {
     flexboxVersion = '1.0.0'
 
     picassoVersion = '2.5.2' // new version with changed API: '2.71828'
+
+    androidUtilsVersion = '2.0.0-SNAPSHOT'
 
     fileChooserVersion = '1.2.0'
 

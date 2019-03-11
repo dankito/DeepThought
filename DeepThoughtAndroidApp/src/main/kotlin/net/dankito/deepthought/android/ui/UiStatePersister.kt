@@ -1,7 +1,7 @@
 package net.dankito.deepthought.android.ui
 
 import android.os.Bundle
-import net.dankito.data_access.filesystem.IFileStorageService
+import net.dankito.utils.io.IFileStorageService
 import net.dankito.utils.serialization.ISerializer
 import org.slf4j.LoggerFactory
 import java.io.File

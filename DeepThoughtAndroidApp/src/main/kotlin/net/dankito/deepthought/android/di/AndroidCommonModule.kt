@@ -6,8 +6,6 @@ import dagger.Provides
 import net.dankito.data_access.database.AndroidCouchbaseLiteEntityManager
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.IEntityManager
-import net.dankito.data_access.filesystem.AndroidFileStorageService
-import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.discovery.AndroidUdpDevicesDiscoverer
 import net.dankito.data_access.network.discovery.IDevicesDiscoverer
 import net.dankito.deepthought.android.service.hashing.AndroidBase64Service
@@ -20,6 +18,8 @@ import net.dankito.mime.MimeTypeDetector
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.hashing.IBase64Service
+import net.dankito.utils.io.IFileStorageService
+import net.dankito.utils.android.io.AndroidFileStorageService
 import net.dankito.utils.services.network.INetworkConnectivityManager
 import net.dankito.utils.settings.ILocalSettingsStore
 import javax.inject.Singleton

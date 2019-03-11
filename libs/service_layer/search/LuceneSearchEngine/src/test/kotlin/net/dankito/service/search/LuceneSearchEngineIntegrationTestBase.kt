@@ -3,7 +3,6 @@ package net.dankito.service.search
 import com.nhaarman.mockito_kotlin.mock
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
-import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.deepthought.data.FilePersister
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.data.SourcePersister
@@ -31,6 +30,7 @@ import net.dankito.utils.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.hashing.HashService
+import net.dankito.utils.io.JavaFileStorageService
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase

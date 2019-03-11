@@ -7,7 +7,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.EntityManagerConfiguration
 import net.dankito.data_access.database.JavaCouchbaseLiteEntityManager
-import net.dankito.data_access.filesystem.JavaFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.SocketHandler
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
@@ -47,6 +46,7 @@ import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.hashing.HashService
 import net.dankito.utils.hashing.IBase64Service
+import net.dankito.utils.io.JavaFileStorageService
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.NetworkConnectivityManagerBase

@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import net.dankito.data_access.database.CouchbaseLiteEntityManagerBase
 import net.dankito.data_access.database.IEntityManager
-import net.dankito.data_access.filesystem.IFileStorageService
 import net.dankito.data_access.network.communication.IClientCommunicator
 import net.dankito.data_access.network.communication.TcpSocketClientCommunicator
 import net.dankito.data_access.network.communication.callback.IDeviceRegistrationHandler
@@ -49,6 +48,7 @@ import net.dankito.utils.ImageCache
 import net.dankito.utils.OsHelper
 import net.dankito.utils.hashing.HashService
 import net.dankito.utils.hashing.IBase64Service
+import net.dankito.utils.io.IFileStorageService
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.serialization.ISerializer
