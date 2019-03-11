@@ -1,6 +1,6 @@
 package net.dankito.deepthought.service.clipboard
 
-import net.dankito.deepthought.ui.Image
+import net.dankito.utils.ui.image.Image
 import java.io.File
 
 

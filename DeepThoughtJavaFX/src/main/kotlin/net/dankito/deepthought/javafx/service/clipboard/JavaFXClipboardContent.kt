@@ -1,9 +1,9 @@
 package net.dankito.deepthought.javafx.service.clipboard
 
 import javafx.scene.input.Clipboard
-import net.dankito.deepthought.javafx.ui.JavaFXImage
+import net.dankito.utils.javafx.ui.image.JavaFXImage
 import net.dankito.deepthought.service.clipboard.ClipboardContent
-import net.dankito.deepthought.ui.Image
+import net.dankito.utils.ui.image.Image
 import net.dankito.utils.web.UrlUtil
 import java.io.File
 
