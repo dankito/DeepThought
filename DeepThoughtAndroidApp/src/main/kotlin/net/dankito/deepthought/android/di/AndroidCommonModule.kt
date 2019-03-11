@@ -17,10 +17,10 @@ import net.dankito.mime.MimeTypeCategorizer
 import net.dankito.mime.MimeTypeDetector
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.android.io.AndroidFileStorageService
 import net.dankito.utils.hashing.IBase64Service
 import net.dankito.utils.io.IFileStorageService
-import net.dankito.utils.android.io.AndroidFileStorageService
-import net.dankito.utils.services.network.INetworkConnectivityManager
+import net.dankito.utils.network.INetworkConnectivityManager
 import net.dankito.utils.settings.ILocalSettingsStore
 import javax.inject.Singleton
 

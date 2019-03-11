@@ -11,7 +11,6 @@ import net.dankito.deepthought.android.routing.AndroidRouter
 import net.dankito.deepthought.android.service.*
 import net.dankito.deepthought.android.service.clipboard.AndroidClipboardWatcher
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
-import net.dankito.deepthought.android.service.network.AndroidNetworkConnectivityManager
 import net.dankito.deepthought.android.service.permissions.AndroidPermissionsService
 import net.dankito.deepthought.android.service.settings.AndroidLocalSettingsStore
 import net.dankito.deepthought.android.ui.UiStatePersister
@@ -28,12 +27,13 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.utils.android.network.AndroidNetworkConnectivityManager
 import net.dankito.utils.android.ui.activities.AppLifeCycleListener
 import net.dankito.utils.io.IFileStorageService
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.network.INetworkConnectivityManager
+import net.dankito.utils.network.NetworkHelper
 import net.dankito.utils.serialization.ISerializer
-import net.dankito.utils.services.network.INetworkConnectivityManager
-import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService

@@ -51,8 +51,8 @@ import net.dankito.utils.hashing.IBase64Service
 import net.dankito.utils.io.IFileStorageService
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
+import net.dankito.utils.network.NetworkHelper
 import net.dankito.utils.serialization.ISerializer
-import net.dankito.utils.services.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.web.client.IWebClient

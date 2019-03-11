@@ -3,8 +3,8 @@ package net.dankito.data_access.network.discovery
 
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.ThreadPool
-import net.dankito.utils.services.network.NetworkConnectivityManagerBase
-import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.utils.network.NetworkConnectivityManagerBase
+import net.dankito.utils.network.NetworkHelper
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before

@@ -49,8 +49,8 @@ import net.dankito.utils.hashing.IBase64Service
 import net.dankito.utils.io.JavaFileStorageService
 import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.services.network.NetworkConnectivityManagerBase
-import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.utils.network.NetworkConnectivityManagerBase
+import net.dankito.utils.network.NetworkHelper
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.ui.dialogs.IDialogService

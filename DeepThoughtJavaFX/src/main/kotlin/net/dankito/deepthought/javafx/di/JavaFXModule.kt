@@ -10,7 +10,6 @@ import net.dankito.deepthought.data.SourcePersister
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.javafx.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.javafx.appstart.JavaFXAppInitializer
-import net.dankito.utils.javafx.ui.dialogs.JavaFXDialogService
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.service.JavaFXApplicationsService
@@ -18,7 +17,6 @@ import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardService
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.service.communication.JavaFXDeviceRegistrationHandler
 import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
-import net.dankito.deepthought.javafx.service.network.JavaFXNetworkConnectivityManager
 import net.dankito.deepthought.javafx.service.settings.JavaFXLocalSettingsStore
 import net.dankito.deepthought.model.AllCalculatedTags
 import net.dankito.deepthought.news.article.ArticleExtractorManager
@@ -35,9 +33,11 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.javafx.ui.dialogs.JavaFXDialogService
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.services.network.INetworkConnectivityManager
-import net.dankito.utils.services.network.NetworkHelper
+import net.dankito.utils.network.INetworkConnectivityManager
+import net.dankito.utils.network.NetworkHelper
+import net.dankito.utils.network.PeriodicCheckingNetworkConnectivityManager
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
@@ -116,7 +116,7 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
     @Provides
     @Singleton
     fun provideNetworkConnectivityManager(networkHelper: NetworkHelper) : INetworkConnectivityManager {
-        return JavaFXNetworkConnectivityManager(networkHelper)
+        return PeriodicCheckingNetworkConnectivityManager(networkHelper)
     }
 
 

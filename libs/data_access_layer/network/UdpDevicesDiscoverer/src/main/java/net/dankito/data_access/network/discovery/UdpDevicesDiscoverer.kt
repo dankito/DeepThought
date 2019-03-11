@@ -2,9 +2,9 @@ package net.dankito.data_access.network.discovery
 
 import net.dankito.utils.AsyncProducerConsumerQueue
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.services.network.INetworkConnectivityManager
-import net.dankito.utils.services.network.NetworkHelper
-import net.dankito.utils.services.network.NetworkInterfaceState
+import net.dankito.utils.network.INetworkConnectivityManager
+import net.dankito.utils.network.NetworkHelper
+import net.dankito.utils.network.NetworkInterfaceState
 import org.slf4j.LoggerFactory
 import java.net.*
 import java.nio.charset.Charset

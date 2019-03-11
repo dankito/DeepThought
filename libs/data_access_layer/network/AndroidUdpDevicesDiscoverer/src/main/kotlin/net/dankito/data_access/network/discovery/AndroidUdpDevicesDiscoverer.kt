@@ -3,7 +3,7 @@ package net.dankito.data_access.network.discovery
 import android.content.Context
 import android.net.wifi.WifiManager
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.services.network.INetworkConnectivityManager
+import net.dankito.utils.network.INetworkConnectivityManager
 
 
 class AndroidUdpDevicesDiscoverer(private var context: Context, networkConnectivityManager: INetworkConnectivityManager, threadPool: IThreadPool)

@@ -1,15 +1,13 @@
 package net.dankito.deepthought.android.service.network
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.net.ConnectivityManager
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.services.network.INetworkConnectivityManager
+import net.dankito.utils.android.network.AndroidNetworkConnectivityManager
+import net.dankito.utils.android.network.NetworkConnectivityChangeBroadcastReceiverBase
+import net.dankito.utils.network.INetworkConnectivityManager
 import javax.inject.Inject
 
 
-class NetworkConnectivityChangeBroadcastReceiver : BroadcastReceiver() {
+class NetworkConnectivityChangeBroadcastReceiver : NetworkConnectivityChangeBroadcastReceiverBase() {
 
     @Inject
     protected lateinit var networkConnectivityManager: INetworkConnectivityManager
@@ -19,10 +17,8 @@ class NetworkConnectivityChangeBroadcastReceiver : BroadcastReceiver() {
     }
 
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        if(intent != null && intent.action == ConnectivityManager.CONNECTIVITY_ACTION) {
-            (networkConnectivityManager as? AndroidNetworkConnectivityManager)?.handleConnectivityChangedIntent(intent)
-        }
+    override fun getNetworkConnectivityManager(): net.dankito.utils.android.network.AndroidNetworkConnectivityManager {
+        return networkConnectivityManager as AndroidNetworkConnectivityManager
     }
 
 }
