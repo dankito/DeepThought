@@ -9,7 +9,7 @@ import net.dankito.service.search.FieldName
 import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.service.search.writerandsearcher.sorting.getLuceneSortOptions
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.OsHelper
+import net.dankito.utils.os.OsHelper
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field

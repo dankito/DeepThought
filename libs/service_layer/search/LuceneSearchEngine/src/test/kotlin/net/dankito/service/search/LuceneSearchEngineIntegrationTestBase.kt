@@ -26,7 +26,7 @@ import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.service.search.util.SortOption
-import net.dankito.utils.OsHelper
+import net.dankito.utils.os.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.hashing.HashService

@@ -11,7 +11,7 @@ import net.dankito.service.search.SortOption
 import net.dankito.service.search.SortOrder
 import net.dankito.service.search.specific.SourceSearch
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.OsHelper
+import net.dankito.utils.os.OsHelper
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.*
 import org.apache.lucene.index.Term

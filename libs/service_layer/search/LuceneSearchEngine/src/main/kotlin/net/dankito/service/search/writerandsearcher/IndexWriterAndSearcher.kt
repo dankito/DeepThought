@@ -10,7 +10,7 @@ import net.dankito.service.search.*
 import net.dankito.service.search.results.LazyLoadingLuceneSearchResultsList
 import net.dankito.service.search.writerandsearcher.sorting.CorrectStringComparatorSource
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.OsHelper
+import net.dankito.utils.os.OsHelper
 import net.engio.mbassy.listener.Synchronized
 import org.apache.lucene.analysis.Analyzer
 import org.apache.lucene.document.Document

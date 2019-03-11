@@ -41,7 +41,6 @@ import net.dankito.service.synchronization.*
 import net.dankito.service.synchronization.changeshandler.ISynchronizedChangesHandler
 import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHandler
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
-import net.dankito.utils.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.hashing.HashService
@@ -51,6 +50,7 @@ import net.dankito.utils.language.NoOpLanguageDetector
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.network.NetworkConnectivityManagerBase
 import net.dankito.utils.network.NetworkHelper
+import net.dankito.utils.os.OsHelper
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.ui.dialogs.IDialogService
@@ -326,7 +326,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         localFileService = FileService(localDataManager, localEntityChangedNotifier)
 
-        localSearchEngine = LuceneSearchEngine(localSettingsStore, localDataManager, NoOpLanguageDetector(), OsHelper(localPlatformConfiguration),
+        localSearchEngine = LuceneSearchEngine(localSettingsStore, localDataManager, NoOpLanguageDetector(), OsHelper(),
                 localThreadPool, localEventBus, localItemService, localTagService, localSourceService, localSeriesService, localReadLaterArticleService,
                 localFileService, localLocalFileInfoService)
 
@@ -385,7 +385,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
         remoteFileService = FileService(remoteDataManager, remoteEntityChangedNotifier)
 
-        remoteSearchEngine = LuceneSearchEngine(createLocalSettingsStore(), remoteDataManager, NoOpLanguageDetector(), OsHelper(remotePlatformConfiguration),
+        remoteSearchEngine = LuceneSearchEngine(createLocalSettingsStore(), remoteDataManager, NoOpLanguageDetector(), OsHelper(),
                 remoteThreadPool, remoteEventBus, remoteItemService, remoteTagService, remoteSourceService, remoteSeriesService, remoteReadLaterArticleService,
                 remoteFileService, remoteLocalFileInfoService)
 

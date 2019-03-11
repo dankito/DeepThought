@@ -16,7 +16,7 @@ import net.dankito.service.search.SearchTermMatch
 import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.service.search.writerandsearcher.sorting.getLuceneSortOptions
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.OsHelper
+import net.dankito.utils.os.OsHelper
 import net.dankito.utils.extensions.ofMaxLength
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.*

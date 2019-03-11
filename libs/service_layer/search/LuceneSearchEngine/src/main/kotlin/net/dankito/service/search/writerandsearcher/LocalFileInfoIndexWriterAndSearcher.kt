@@ -8,7 +8,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.FieldName
 import net.dankito.service.search.specific.LocalFileInfoSearch
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.OsHelper
+import net.dankito.utils.os.OsHelper
 import net.engio.mbassy.listener.Handler
 import org.apache.lucene.document.Document
 import org.apache.lucene.document.Field
