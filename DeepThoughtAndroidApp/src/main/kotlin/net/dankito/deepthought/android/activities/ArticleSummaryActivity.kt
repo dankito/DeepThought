@@ -28,7 +28,7 @@ import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.AsyncResult
-import net.dankito.utils.ImageCache
+import net.dankito.utils.image.ImageCache
 import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.IDialogService

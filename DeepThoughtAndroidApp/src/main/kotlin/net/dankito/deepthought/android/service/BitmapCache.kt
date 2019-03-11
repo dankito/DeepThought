@@ -3,9 +3,8 @@ package net.dankito.deepthought.android.service
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import net.dankito.utils.AsyncResult
-import net.dankito.utils.ImageCache
+import net.dankito.utils.image.ImageCache
 import java.io.File
-import java.lang.Exception
 import java.util.concurrent.ConcurrentHashMap
 
 

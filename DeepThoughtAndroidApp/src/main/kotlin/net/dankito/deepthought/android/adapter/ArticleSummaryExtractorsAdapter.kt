@@ -14,7 +14,7 @@ import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorConfigDial
 import net.dankito.deepthought.android.service.BitmapCache
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
-import net.dankito.utils.ImageCache
+import net.dankito.utils.image.ImageCache
 import javax.inject.Inject
 
 

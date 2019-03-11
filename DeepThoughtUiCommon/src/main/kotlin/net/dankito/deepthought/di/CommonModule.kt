@@ -44,7 +44,7 @@ import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHan
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.ImageCache
+import net.dankito.utils.image.ImageCache
 import net.dankito.utils.OsHelper
 import net.dankito.utils.hashing.HashService
 import net.dankito.utils.hashing.IBase64Service

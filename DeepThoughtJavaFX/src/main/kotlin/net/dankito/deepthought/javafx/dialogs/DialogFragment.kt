@@ -7,7 +7,7 @@ import javafx.stage.Stage
 import javafx.stage.StageStyle
 import javafx.stage.Window
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.utils.ImageCache
+import net.dankito.utils.image.ImageCache
 import tornadofx.*
 import javax.inject.Inject
 

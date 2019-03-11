@@ -18,7 +18,7 @@ import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.specific.ReadLaterArticleSearch
-import net.dankito.utils.ImageCache
+import net.dankito.utils.image.ImageCache
 import net.engio.mbassy.listener.Handler
 import tornadofx.*
 import javax.inject.Inject
