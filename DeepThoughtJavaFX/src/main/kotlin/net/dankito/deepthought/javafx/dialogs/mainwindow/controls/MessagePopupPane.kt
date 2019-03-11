@@ -4,8 +4,8 @@ import javafx.geometry.Insets
 import javafx.scene.layout.VBox
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
-import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.utils.clipboard.OptionsForClipboardContent
 import tornadofx.*
 import javax.inject.Inject
 

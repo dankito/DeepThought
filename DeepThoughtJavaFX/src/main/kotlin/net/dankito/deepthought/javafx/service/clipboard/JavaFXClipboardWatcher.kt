@@ -3,8 +3,9 @@ package net.dankito.deepthought.javafx.service.clipboard
 import javafx.scene.input.Clipboard
 import javafx.stage.Stage
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
+import net.dankito.utils.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
+import net.dankito.utils.javafx.clipboard.JavaFXClipboardContent
 import net.dankito.utils.web.UrlUtil
 import tornadofx.*
 import java.util.*

@@ -9,10 +9,9 @@ import javafx.scene.input.KeyCombination
 import javafx.scene.layout.Priority
 import javafx.stage.FileChooser
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardContent
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
 import net.dankito.deepthought.javafx.service.import_export.DataImporterExporterManager
-import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
+import net.dankito.utils.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.search.IIndexBasedSearchEngine
@@ -60,7 +59,7 @@ class MainMenuBar(private val dataManager: DataManager) : View() {
 
             isDataManagerInitialized = true
 
-            clipboardWatcher.addClipboardContentChangedExternallyListener { clipboardContentChangedExternally(it) }
+            clipboardWatcher.addClipboardContentChangedExternallyListener { clipboardContentChangedExternally() }
             clipboardWatcher.addClipboardOptionsChangedListener { clipboardContentOptionsChanged(it) }
 
             addImporterAndExporterIfInitialized()
@@ -200,7 +199,7 @@ class MainMenuBar(private val dataManager: DataManager) : View() {
     }
 
 
-    private fun clipboardContentChangedExternally(clipboardContent: JavaFXClipboardContent) {
+    private fun clipboardContentChangedExternally() {
         mnitmFileClipboard.isDisable = true
 
         mnitmFileClipboard.items.clear()

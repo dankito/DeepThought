@@ -16,8 +16,8 @@ import net.dankito.utils.android.extensions.getDimension
 import net.dankito.utils.android.extensions.setViewsEnabledState
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.deepthought.service.clipboard.ClipboardContentOption
-import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
+import net.dankito.utils.clipboard.ClipboardContentOption
+import net.dankito.utils.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.android.extensions.getColorFromResource
 import net.dankito.utils.android.ui.activities.AppLifeCycleListener

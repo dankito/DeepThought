@@ -1,7 +1,5 @@
 package net.dankito.deepthought.service.clipboard
 
-import net.dankito.utils.web.client.IWebClient
-import net.dankito.utils.web.client.RequestParameters
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.files.MimeTypeService
@@ -11,10 +9,15 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.IPlatformConfiguration
+import net.dankito.utils.clipboard.ClipboardContent
+import net.dankito.utils.clipboard.ClipboardContentOption
+import net.dankito.utils.clipboard.OptionsForClipboardContent
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.services.network.download.IFileDownloader
 import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.web.UrlUtil
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.RequestParameters
 import java.io.File
 import java.util.*
 import javax.inject.Inject

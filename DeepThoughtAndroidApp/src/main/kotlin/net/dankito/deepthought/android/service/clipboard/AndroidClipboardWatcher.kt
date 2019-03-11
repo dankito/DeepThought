@@ -7,9 +7,10 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.utils.android.ui.activities.AppLifeCycleListener
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.SnackbarService
-import net.dankito.deepthought.service.clipboard.OptionsForClipboardContent
+import net.dankito.utils.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.utils.android.clipboard.AndroidClipboardContent
 import net.dankito.utils.web.UrlUtil
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
