@@ -10,9 +10,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.android.image.BitmapCache
 import net.dankito.faviconextractor.Favicon
-import net.dankito.utils.android.ui.adapter.ListAdapter
+import net.dankito.utils.android.image.BitmapCache
+import net.dankito.utils.android.ui.view.listview.ListAdapter
 import net.dankito.utils.image.ImageCache
 import javax.inject.Inject
 

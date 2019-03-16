@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.list_item_found_feed_address.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.feedaddressextractor.FeedAddress
 import net.dankito.feedaddressextractor.FeedType
-import net.dankito.utils.android.ui.adapter.ListAdapter
+import net.dankito.utils.android.ui.view.listview.ListAdapter
 
 
 class FoundFeedAddressesAdapter : ListAdapter<FeedAddress>() {
