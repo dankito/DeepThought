@@ -17,7 +17,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_edit_entity_field.view.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.utils.android.extensions.*
 import net.dankito.utils.android.ui.view.MaxHeightRecyclerView
 
@@ -147,7 +146,7 @@ open class EditEntityField : RelativeLayout {
         btnEntityFieldAction = rootView.btnEntityFieldAction
 
         rcySearchResult = rootView.findViewById(R.id.rcySearchResults) as MaxHeightRecyclerView
-        rcySearchResult.addItemDecoration(HorizontalDividerItemDecoration(context))
+        rcySearchResult.addHorizontalDividerItemDecoration()
 
         rootView.setOnClickListener { viewClicked() }
 

@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_article_summary.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.ArticleSummaryActivityParameters
 import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter
-import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.data.ItemPersister
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
@@ -28,8 +27,9 @@ import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.AsyncResult
-import net.dankito.utils.image.ImageCache
+import net.dankito.utils.android.extensions.addHorizontalDividerItemDecoration
 import net.dankito.utils.android.ui.view.ToolbarUtil
+import net.dankito.utils.image.ImageCache
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.IDialogService
 import org.slf4j.LoggerFactory
@@ -156,7 +156,7 @@ class ArticleSummaryActivity : BaseActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        rcyArticleSummaryItems.addItemDecoration(HorizontalDividerItemDecoration(this))
+        rcyArticleSummaryItems.addHorizontalDividerItemDecoration()
         rcyArticleSummaryItems.disableFullscreenMode = true
         rcyArticleSummaryItems.enterFullscreenModeListener = { recyclerViewEnteredFullscreenMode() }
         rcyArticleSummaryItems.leaveFullscreenModeListener = { recyclerViewLeftFullscreenMode() }

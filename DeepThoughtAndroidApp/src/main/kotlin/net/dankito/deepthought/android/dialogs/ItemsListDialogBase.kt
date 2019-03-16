@@ -6,7 +6,6 @@ import kotlinx.android.synthetic.main.dialog_items_list.*
 import kotlinx.android.synthetic.main.dialog_items_list.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ItemRecyclerAdapter
-import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.ui.IRouter
@@ -15,6 +14,7 @@ import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.android.extensions.addHorizontalDividerItemDecoration
 import net.dankito.utils.android.ui.dialogs.FullscreenDialogFragment
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.IDialogService
@@ -62,8 +62,7 @@ abstract class ItemsListDialogBase : FullscreenDialogFragment() {
     override fun getLayoutId() = R.layout.dialog_items_list
 
     override fun setupUI(rootView: View) {
-        val context = rootView.context
-        rootView.rcyItems.addItemDecoration(HorizontalDividerItemDecoration(context))
+        rootView.rcyItems.addHorizontalDividerItemDecoration()
         rootView.rcyItems.adapter = adapter
 
         adapter.itemClickListener = { item -> router.showEditItemView(item) }

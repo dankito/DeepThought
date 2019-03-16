@@ -18,16 +18,16 @@ import kotlinx.android.synthetic.main.fragment_entities_list_view.*
 import kotlinx.android.synthetic.main.fragment_entities_list_view.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.MultiSelectListRecyclerSwipeAdapter
-import net.dankito.deepthought.android.adapter.viewholder.HorizontalDividerItemDecoration
-import net.dankito.utils.android.extensions.hideKeyboard
 import net.dankito.deepthought.android.views.ContextHelpUtil
-import net.dankito.utils.android.ui.view.FullscreenRecyclerView
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.presenter.IMainViewSectionPresenter
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
+import net.dankito.utils.android.extensions.addHorizontalDividerItemDecoration
 import net.dankito.utils.android.extensions.getSpannedFromHtmlWithImages
+import net.dankito.utils.android.extensions.hideKeyboard
+import net.dankito.utils.android.ui.view.FullscreenRecyclerView
 import javax.inject.Inject
 
 
@@ -128,7 +128,7 @@ abstract class EntitiesListViewFragment<T : BaseEntity>(private val contextualAc
 
     private fun setupListView(rootView: View) {
         recyclerView = rootView.rcyEntities
-        recyclerView?.addItemDecoration(HorizontalDividerItemDecoration(rootView.context))
+        recyclerView?.addHorizontalDividerItemDecoration()
 
         recyclerView?.disableFullscreenMode = true
 //        recyclerView?.enterFullscreenModeListener = { recyclerViewEnteredFullscreenMode() }
