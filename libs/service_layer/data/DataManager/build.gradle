@@ -8,6 +8,4 @@ dependencies {
     compile project(':DataModel')
     compile project(':EntityManager')
     compile project(':Utils')
-
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
 }

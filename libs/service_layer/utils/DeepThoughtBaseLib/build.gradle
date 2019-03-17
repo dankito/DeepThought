@@ -36,8 +36,6 @@ dependencies {
 //    compile project(':NorconexLanguageDetector')
 //    compile project(':OptimaizeLanguageDetector')
 
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
-
     compile "org.apache.commons:commons-lang3:$commonsLangVersion"
 
     compile "net.dankito.utils:mime-utils:$mimeUtilsVersion", {

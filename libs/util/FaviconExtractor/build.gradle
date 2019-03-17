@@ -14,8 +14,6 @@ dependencies {
 
     compile "net.dankito.utils:java-utils:$javaUtilsVersion"
 
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
-
     compile "org.jsoup:jsoup:$jsoupVersion"
 
     testCompile ("junit:junit:$junitVersion", {

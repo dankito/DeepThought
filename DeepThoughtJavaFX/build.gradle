@@ -58,9 +58,6 @@ dependencies {
         exclude group: 'net.dankito.utils', module: 'java-utils'
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
         exclude group: 'com.fasterxml.jackson.module', module: 'jackson-module-kotlin'
-        exclude group: 'org.slf4j', module: 'slf4j-api'
-        exclude group: 'ch.qos.logback', module: 'logback-core'
-        exclude group: 'ch.qos.logback', module: 'logback-classic'
         exclude group: 'no.tornado', module: 'tornadofx'
         exclude group: 'no.tornado', module: 'tornadofx-controls'
     }
