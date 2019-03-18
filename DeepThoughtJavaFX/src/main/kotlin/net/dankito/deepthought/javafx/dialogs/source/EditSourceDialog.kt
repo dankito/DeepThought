@@ -8,12 +8,12 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourcePublishingDateField
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
+import net.dankito.deepthought.javafx.dialogs.source.model.EditSourceWindowData
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.EditEntityField
 import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSourcePresenter
 import net.dankito.service.data.DeleteEntityService
@@ -27,11 +27,6 @@ import javax.inject.Inject
 
 
 class EditSourceDialog : DialogFragment() {
-
-    companion object {
-        private val SeriesNullObject = Series("")
-    }
-
 
     @Inject
     protected lateinit var sourcePersister: SourcePersister
@@ -70,11 +65,7 @@ class EditSourceDialog : DialogFragment() {
     private val presenter: EditSourcePresenter
 
 
-    val source: Source by param()
-
-    val seriesParam: Series? by param(SeriesNullObject) // by param() doesn't seem to like when passing null - on calling get() an exception gets thrown
-
-    val editedSourceTitle: String? by param<String?>(source.title)
+    private lateinit var editSourceWindowData: EditSourceWindowData
 
     protected val hasUnsavedChanges = SimpleBooleanProperty()
 
@@ -86,7 +77,13 @@ class EditSourceDialog : DialogFragment() {
 
         presenter = EditSourcePresenter(router, dialogService, clipboardService, deleteEntityService, sourcePersister)
 
-        publishingDateField = EditSourcePublishingDateField(presenter, source.publishingDate.asLocalDate())
+        publishingDateField = EditSourcePublishingDateField(presenter)
+
+        (windowData as? EditSourceWindowData)?.let { editSourceWindowData ->
+            this.editSourceWindowData = editSourceWindowData
+
+            initFieldValues(editSourceWindowData)
+        }
     }
 
 
@@ -98,23 +95,22 @@ class EditSourceDialog : DialogFragment() {
             isFitToHeight = true
 
             vbox {
-                setupEntityField(titleField, editedSourceTitle ?: source.title, this)
+                setupEntityField(titleField, this)
 
                 add(editSeriesField)
                 editSeriesField.didEntityChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
                 editSeriesField.didTitleChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
-                editSeriesField.setSeriesToEdit(if(seriesParam != SeriesNullObject) seriesParam else source.series)
 
-                setupEntityField(issueField, source.issue ?: "", this)
+                setupEntityField(issueField, this)
 
-                setupEntityField(lengthField, source.length ?: "", this)
+                setupEntityField(lengthField, this)
 
-                setupEntityField(publishingDateField, source.publishingDateString ?: "", this)
+                setupEntityField(publishingDateField, this)
 
-                setupEntityField(webAddressField, source.url ?: "", this)
+                setupEntityField(webAddressField,  this)
 
                 editFilesField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
-                editFilesField.setFiles(source.attachedFiles, source)
+                editFilesField.setFiles(mutableListOf())
                 add(editFilesField)
             }
         }
@@ -123,12 +119,30 @@ class EditSourceDialog : DialogFragment() {
         add(buttons)
     }
 
-    private fun setupEntityField(entityField: EditEntityField, value: String, pane: Parent) {
-        entityField.value = value
-
+    private fun setupEntityField(entityField: EditEntityField, pane: Parent) {
         entityField.didValueChange.addListener { _, _, _ -> updateHasUnsavedChanges() }
 
         pane.add(entityField)
+    }
+
+    private fun initFieldValues(windowData: EditSourceWindowData) {
+        val source = windowData.source
+
+        titleField.value = windowData.editedSourceTitle ?: source.title
+
+        editSeriesField.setSeriesToEdit(windowData.series ?: source.series)
+
+        issueField.value = source.issue ?: ""
+
+        lengthField.value = source.length ?: ""
+
+        publishingDateField.value = source.publishingDateString ?: ""
+
+        webAddressField.value = source.url ?: ""
+
+        publishingDateField.selectedDate = source.publishingDate.asLocalDate()
+
+        editFilesField.setFiles(source.attachedFiles, source)
     }
 
     private fun updateHasUnsavedChanges() {
@@ -140,6 +154,8 @@ class EditSourceDialog : DialogFragment() {
 
 
     private fun saveSource(done: () -> Unit) {
+        val source = editSourceWindowData.source
+
         source.title = titleField.value
         source.issue = if(issueField.value.isBlank()) null else issueField.value
         source.length = if(lengthField.value.isBlank()) null else lengthField.value
@@ -184,5 +200,8 @@ class EditSourceDialog : DialogFragment() {
 
         didPostResult = true
     }
+
+
+    override val windowDataClass = EditSourceWindowData::class.java
 
 }

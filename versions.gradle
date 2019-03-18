@@ -61,6 +61,8 @@ ext {
 
     richTextEditorVersion = '3.0.0-SNAPSHOT'
 
+    windowRegistryVersion = '1.0.0-SNAPSHOT'
+
 
     junitVersion = '4.12'
 

@@ -75,6 +75,12 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
         return JavaFXRouter(mainWindowController)
     }
 
+    @Provides
+    @Singleton
+    fun provideWindowRegistryRouter(deepThoughtRouter: IRouter) : net.dankito.utils.windowregistry.ui.router.IRouter {
+        return deepThoughtRouter
+    }
+
 
     @Provides
     @Singleton

@@ -9,16 +9,15 @@ import javafx.scene.image.ImageView
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import net.dankito.deepthought.javafx.res.icons.Icons
-import net.dankito.utils.javafx.ui.controls.searchtextfield
-import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.utils.AsyncResult
+import net.dankito.utils.javafx.ui.controls.searchtextfield
+import net.dankito.utils.javafx.util.FXUtils
 import tornadofx.*
 import java.text.DateFormat
-import java.util.*
 
 
 class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresenter, private val articleSummaryItemsView: ArticleSummaryItemsView,
@@ -68,7 +67,8 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
             checkedItemsChanged(it)
         })
 
-        presenter.extractArticlesSummary(articleSummaryExtractorConfig) { articleSummaryReceived(it) }
+        presenter.lastLoadedSummary?.let { articleSummaryReceived(it) }
+        ?: presenter.extractArticlesSummary(articleSummaryExtractorConfig) { articleSummaryReceived(it) }
     }
 
 
@@ -303,7 +303,7 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
 
             canLoadMoreItems.set(articleSummary.canLoadMoreItems)
 
-            lastUpdateTime.set(LastUpdateTimeDateFormat.format(Date()))
+            lastUpdateTime.set(LastUpdateTimeDateFormat.format(articleSummary.time))
         }
     }
 

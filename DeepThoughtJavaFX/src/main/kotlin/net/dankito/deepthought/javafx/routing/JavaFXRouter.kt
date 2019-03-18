@@ -2,13 +2,16 @@ package net.dankito.deepthought.javafx.routing
 
 import javafx.stage.FileChooser
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
+import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryWindowData
 import net.dankito.deepthought.javafx.dialogs.item.EditItemExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.item.EditItemView
 import net.dankito.deepthought.javafx.dialogs.item.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.pdf.ViewPdfDialog
+import net.dankito.deepthought.javafx.dialogs.pdf.model.ViewPdfWindowData
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
+import net.dankito.deepthought.javafx.dialogs.source.model.EditSourceWindowData
 import net.dankito.deepthought.javafx.ui.controls.IItemsListViewJavaFX
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.preview
@@ -16,11 +19,13 @@ import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDa
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.newsreader.model.ArticleSummary
+import net.dankito.utils.javafx.ui.image.JavaFXImageReference
+import net.dankito.utils.windowregistry.window.javafx.ui.router.JavaFXRouterBase
 import tornadofx.*
 import java.io.File
 
 
-class JavaFXRouter(private val mainWindowController: MainWindowController) : IRouter {
+class JavaFXRouter(private val mainWindowController: MainWindowController) : JavaFXRouterBase(mainWindowController), IRouter {
 
     lateinit var itemsListView: IItemsListViewJavaFX
 
@@ -43,11 +48,7 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig, summary: ArticleSummary?) {
-        runLater {
-            // TODO: may also pass summary
-            val dialogView = mainWindowController.find(ArticleSummaryView::class, mapOf(ArticleSummaryView::articleSummaryExtractorConfig to extractor))
-            dialogView.show(extractor.name, extractor.iconUrl)
-        }
+        showWindow(ArticleSummaryView::class.java, ArticleSummaryWindowData(extractor, summary), extractor.name, extractor.iconUrl?.let { JavaFXImageReference(it) })
     }
 
     override fun showReadLaterArticlesView() {
@@ -67,23 +68,15 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     private fun showEditItemView(item: Item, title: String?) {
-        runLater {
-            mainWindowController.find(EditItemView::class, mapOf(EditItemView::item to item)).show(title)
-        }
+        showWindow(EditItemView::class.java, item, title)
     }
 
     override fun showEditItemView(article: ReadLaterArticle) {
-        runLater {
-            // TODO: set title when Source is not set
-            mainWindowController.find(EditReadLaterArticleView::class, mapOf(EditReadLaterArticleView::article to article)).show(article.itemExtractionResult.source?.preview)
-        }
+        showWindow(EditReadLaterArticleView::class.java, article, article.itemExtractionResult.source?.preview)
     }
 
     override fun showEditItemView(extractionResult: ItemExtractionResult) {
-        runLater {
-            // TODO: set title when Source is not set
-            mainWindowController.find(EditItemExtractionResultView::class, mapOf(EditItemExtractionResultView::extractionResult to extractionResult)).show(extractionResult.source?.preview)
-        }
+        showWindow(EditItemExtractionResultView::class.java, extractionResult, extractionResult.source?.preview)
     }
 
 
@@ -108,23 +101,19 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
 
 
     override fun showEditSourceView(source: Source) {
-        runLater {
-            mainWindowController.find(EditSourceDialog::class, mapOf(EditSourceDialog::source to source)).show(getEditSourceDialogTitle(source.title))
-        }
+        doShowEditItemSourceView(source)
     }
 
     override fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String?) {
-        runLater {
-            val sourceToEdit = source ?: Source("")
+        val sourceToEdit = source ?: Source("")
 
-            mainWindowController.find(EditSourceDialog::class,
-                    mapOf(EditSourceDialog::source to sourceToEdit, EditSourceDialog::seriesParam to series, EditSourceDialog::editedSourceTitle to editedSourceTitle)
-            ).show(getEditSourceDialogTitle(sourceToEdit.title, editedSourceTitle))
-        }
+        doShowEditItemSourceView(sourceToEdit, series, editedSourceTitle)
     }
 
-    private fun getEditSourceDialogTitle(sourceTitle: String, editedSourceTitle: String? = null): String {
-        return String.format(FX.messages["edit.source.dialog.title"], editedSourceTitle ?: sourceTitle)
+    private fun doShowEditItemSourceView(source: Source, series: Series? = null, editedSourceTitle: String? = null) {
+        val title = String.format(FX.messages["edit.source.dialog.title"], editedSourceTitle ?: source.title)
+
+        showWindow(EditSourceDialog::class.java, EditSourceWindowData(source, series, editedSourceTitle), title)
     }
 
 
@@ -146,16 +135,9 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : IRo
     }
 
     private fun showImportFromPdfView(addNewPdfFile: File?, persistedPdfFile: FileLink?, sourceForFile: Source?) {
-        runLater {
-            mainWindowController.find(ViewPdfDialog::class,
-                    mapOf(ViewPdfDialog::addNewPdfFileParam to addNewPdfFile, ViewPdfDialog::persistedPdfFileParam to persistedPdfFile,
-                            ViewPdfDialog::sourceForFileParam to sourceForFile)
-            ).show(getViewPdfDialogTitle(addNewPdfFile, persistedPdfFile))
-        }
-    }
+        val title = String.format(FX.messages["view.pdf.dialog.title"], addNewPdfFile?.name ?: persistedPdfFile?.name)
 
-    private fun getViewPdfDialogTitle(addNewPdfFile: File?, persistedPdfFile: FileLink?): String {
-        return String.format(FX.messages["view.pdf.dialog.title"], addNewPdfFile?.name ?: persistedPdfFile?.name)
+        showWindow(ViewPdfDialog::class.java, ViewPdfWindowData(addNewPdfFile, persistedPdfFile, sourceForFile), title)
     }
 
 

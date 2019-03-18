@@ -44,19 +44,21 @@ import net.dankito.service.synchronization.changeshandler.SynchronizedChangesHan
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.image.ImageCache
-import net.dankito.utils.os.OsHelper
 import net.dankito.utils.hashing.HashService
 import net.dankito.utils.hashing.IBase64Service
+import net.dankito.utils.image.ImageCache
 import net.dankito.utils.io.IFileStorageService
 import net.dankito.utils.language.ILanguageDetector
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.network.NetworkHelper
+import net.dankito.utils.os.OsHelper
+import net.dankito.utils.serialization.ISerializer
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.web.client.IWebClient
 import net.dankito.utils.web.client.OkHttpWebClient
+import net.dankito.utils.windowregistry.window.WindowRegistry
+import net.dankito.utils.windowregistry.window.WindowStatePersister
 import javax.inject.Singleton
 
 
@@ -80,6 +82,18 @@ open class CommonModule {
     @Singleton
     open fun provideNetworkHelper() : NetworkHelper {
         return NetworkHelper()
+    }
+
+    @Provides
+    @Singleton
+    open fun provideWindowStatePersister(fileStorageService: IFileStorageService, serializer: ISerializer) : WindowStatePersister {
+        return WindowStatePersister(fileStorageService, serializer)
+    }
+
+    @Provides
+    @Singleton
+    open fun provideWindowRegistry(windowStatePersister: WindowStatePersister, router: net.dankito.utils.windowregistry.ui.router.IRouter) : WindowRegistry {
+        return WindowRegistry(windowStatePersister, router)
     }
 
     @Provides

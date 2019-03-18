@@ -1,6 +1,7 @@
 package net.dankito.deepthought.javafx.dialogs.item
 
 import net.dankito.deepthought.javafx.di.AppComponent
+import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import javax.inject.Inject
@@ -12,7 +13,7 @@ class EditItemExtractionResultView : EditItemViewBase() {
     protected lateinit var articleExtractorManager: ArticleExtractorManager
 
 
-    val extractionResult: ItemExtractionResult by param()
+    private lateinit var extractionResult: ItemExtractionResult
 
 
     init {
@@ -20,13 +21,11 @@ class EditItemExtractionResultView : EditItemViewBase() {
 
         canAlwaysBeSaved = true
 
-        showExtractionResult()
-    }
+        (windowData as? ItemExtractionResult)?.let { extractionResult ->
+            this.extractionResult = extractionResult
 
-
-    private fun showExtractionResult() {
-        val content = if (extractionResult.couldExtractContent) extractionResult.item.content else ""
-        showData(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series, extractionResult.files, content)
+            showExtractionResult()
+        }
     }
 
 
@@ -44,11 +43,40 @@ class EditItemExtractionResultView : EditItemViewBase() {
     }
 
 
+    private fun showExtractionResult() {
+        val content = if (extractionResult.couldExtractContent) extractionResult.item.content else ""
+        showData(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series, extractionResult.files, content)
+    }
+
     override fun resetSeries() {
         super.resetSeries()
 
         extractionResult.series = null
     }
 
+
+    override val windowDataClass = ItemExtractionResult::class.java
+
+    override val displayText: CharSequence
+        get() = extractionResult.source?.getPreviewWithSeriesAndPublishingDate(extractionResult.series) ?: super.displayText
+
+
+//    private fun openActivityClicked(clickedActivity: BaseActivity) {
+//        clickedActivity.intent?.let { intent ->
+//            //            intent.setFlags(intent.flags.rem(Intent.FLAG_ACTIVITY_NEW_TASK))
+//
+//            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+////            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+//
+//            if (clickedActivity.isFinishing || clickedActivity.isDestroyed) {
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//            }
+////            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+////            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//
+//            startActivity(intent)
+//        }
+//
+//    }
 
 }

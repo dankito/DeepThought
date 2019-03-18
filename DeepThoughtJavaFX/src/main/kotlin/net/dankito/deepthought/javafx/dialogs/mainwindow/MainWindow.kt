@@ -7,14 +7,17 @@ import javafx.scene.layout.AnchorPane
 import javafx.scene.layout.StackPane
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
-import net.dankito.utils.javafx.ui.extensions.setAnchorPaneOverallAnchor
 import net.dankito.deepthought.service.data.DataManager
+import net.dankito.utils.javafx.ui.extensions.setAnchorPaneOverallAnchor
+import net.dankito.utils.windowregistry.window.WindowRegistry
+import net.dankito.utils.windowregistry.window.WindowStatePersister
+import net.dankito.utils.windowregistry.window.javafx.ui.JavaFXMainWindow
 import tornadofx.*
 import tornadofx.FX.Companion.messages
 import javax.inject.Inject
 
 
-class MainWindow : View(String.format(messages["main.window.title"], getAppVersion())) {
+class MainWindow : JavaFXMainWindow(String.format(messages["main.window.title"], getAppVersion())) {
 
     companion object {
 
@@ -33,6 +36,12 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
 
     @Inject
     protected lateinit var dataManager: DataManager
+
+    @Inject
+    protected lateinit var windowRegistryField: WindowRegistry
+
+    @Inject
+    protected lateinit var windowStatePersisterField: WindowStatePersister
 
 
     private var stckpnContent: StackPane by singleAssign()
@@ -113,6 +122,17 @@ class MainWindow : View(String.format(messages["main.window.title"], getAppVersi
 
     private fun setupUI() {
         setStageIcon(Image(MainWindow::class.java.classLoader.getResourceAsStream("icons/AppIcon.png")))
+    }
+
+
+    override val windowDataClass = null
+
+    override fun getWindowRegistry(): WindowRegistry {
+        return windowRegistryField
+    }
+
+    override fun getWindowStatePersister(): WindowStatePersister {
+        return windowStatePersisterField
     }
 
 }

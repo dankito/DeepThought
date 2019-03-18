@@ -5,10 +5,21 @@ import net.dankito.deepthought.model.Item
 
 class EditItemView : EditItemViewBase() {
 
-    val item: Item by param()
+    private lateinit var item: Item
+
+
+    override val windowDataClass = Item::class.java
 
 
     init {
+        (windowData as? Item)?.let { item ->
+            setItem(item)
+        }
+    }
+
+    private fun setItem(item: Item) {
+        this.item = item
+
         showData(item, item.tags, item.source, item.source?.series, item.attachedFiles)
 
         hasUnsavedChanges.value = false

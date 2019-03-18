@@ -6,7 +6,7 @@ import net.dankito.deepthought.model.ReadLaterArticle
 
 class EditReadLaterArticleView : EditItemViewBase() {
 
-    val article: ReadLaterArticle by param()
+    private lateinit var article: ReadLaterArticle
 
 
     init {
@@ -14,9 +14,15 @@ class EditReadLaterArticleView : EditItemViewBase() {
 
         canAlwaysBeSaved = true
 
-        val extractionResult = article.itemExtractionResult
+        (windowData as? ReadLaterArticle)?.let { article ->
+            this.article = article
 
-        showData(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series, extractionResult.files)
+            readLaterArticleService.deserializeItemExtractionResult(article)
+
+            val extractionResult = article.itemExtractionResult
+
+            showData(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series, extractionResult.files)
+        }
     }
 
 
@@ -31,6 +37,9 @@ class EditReadLaterArticleView : EditItemViewBase() {
 
         readLaterArticleService.delete(article)
     }
+
+
+    override val windowDataClass = ReadLaterArticle::class.java
 
 
 }

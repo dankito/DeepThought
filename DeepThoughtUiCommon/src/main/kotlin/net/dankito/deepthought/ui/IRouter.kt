@@ -3,10 +3,11 @@ package net.dankito.deepthought.ui
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.model.ArticleSummary
+import net.dankito.utils.windowregistry.ui.router.IRouter
 import java.io.File
 
 
-interface IRouter {
+interface IRouter : IRouter {
 
     fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>)
 
