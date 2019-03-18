@@ -1,7 +1,6 @@
 package net.dankito.deepthought.javafx
 
 import javafx.application.Application
-import javafx.application.Platform
 import javafx.stage.Stage
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.CommonComponent
@@ -34,8 +33,6 @@ open class DeepThoughtJavaFXApplication : App(MainWindow::class) {
         setupDI(stage)
 
         setupMessagesResources() // has to be done before creating / injecting first instances as some of them already rely on Messages (e.g. CalculatedTags)
-
-        stage.setOnCloseRequest { Platform.exit() } // stop application as otherwise all other windows would stay open
 
         appInitializer.initializeApp()
 

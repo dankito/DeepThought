@@ -54,6 +54,8 @@ dependencies {
 
     compile "net.dankito.utils:java-fx-utils:$javaFXUtilsVersion"
 
+    compile "net.dankito.utils:window-registry-javafx:$windowRegistryVersion"
+
     compile "net.dankito.richtexteditor:richtexteditor-javafx:$richTextEditorVersion", {
         exclude group: 'net.dankito.utils', module: 'java-utils'
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'

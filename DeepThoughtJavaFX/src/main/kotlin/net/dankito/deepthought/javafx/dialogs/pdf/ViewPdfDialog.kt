@@ -13,14 +13,15 @@ import javafx.scene.text.Font
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
+import net.dankito.deepthought.javafx.dialogs.pdf.model.ViewPdfWindowData
 import net.dankito.deepthought.javafx.res.icons.Icons
-import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.importexport.pdf.*
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.utils.localization.Localization
 import org.slf4j.LoggerFactory
 import tornadofx.*
@@ -35,10 +36,6 @@ class ViewPdfDialog : DialogFragment() {
         private const val PreviousAndNextButtonsLeftRightMargin = 12.0
         private const val PageFieldWidth = 55.0
         private const val FontSize = 16.0
-
-        private val FileNullObject = File(".")
-        private val FileLinkNullObject = FileLink(".")
-        private val SourceNullObject = Source()
 
         private val logger = LoggerFactory.getLogger(ViewPdfDialog::class.java)
     }
@@ -57,18 +54,7 @@ class ViewPdfDialog : DialogFragment() {
     protected lateinit var localization: Localization
 
 
-
-    val addNewPdfFileParam: File? by param(FileNullObject) // by param() doesn't seem to like when passing null - on calling get() an exception gets thrown
-
-    private var addNewPdfFile: File? = if(addNewPdfFileParam == FileNullObject) null else addNewPdfFileParam
-
-    val persistedPdfFileParam: FileLink? by param(FileLinkNullObject) // by param() doesn't seem to like when passing null - on calling get() an exception gets thrown
-
-    private var persistedPdfFile: FileLink? = if(persistedPdfFileParam == FileLinkNullObject) null else persistedPdfFileParam
-
-    val sourceForFileParam: Source? by param(SourceNullObject) // by param() doesn't seem to like when passing null - on calling get() an exception gets thrown
-
-    private var sourceForFile: Source? = if(sourceForFileParam == SourceNullObject) null else sourceForFileParam
+    private val viewPdfWindowData: ViewPdfWindowData?
 
 
     private val currentPageText = SimpleStringProperty("")
@@ -95,9 +81,7 @@ class ViewPdfDialog : DialogFragment() {
     init {
         AppComponent.component.inject(this)
 
-        addNewPdfFile?.let { loadPdf(it) }
-
-        persistedPdfFile?.let { loadPdf(it) }
+        this.viewPdfWindowData = windowData as? ViewPdfWindowData
     }
 
 
@@ -190,6 +174,10 @@ class ViewPdfDialog : DialogFragment() {
                 action { createItemFromSelectedText() }
             }
         }
+
+        viewPdfWindowData?.addNewPdfFile?.let { loadPdf(it) }
+
+        viewPdfWindowData?.persistedPdfFile?.let { loadPdf(it) }
     }
 
     private fun Button.setButtonSize() {
@@ -234,11 +222,13 @@ class ViewPdfDialog : DialogFragment() {
     private fun loadedFileOnUiThread(pdfFile: FileLink, metadata: FileMetadata) {
         fileMetaData = metadata
 
+        var sourceForFile = viewPdfWindowData?.sourceForFile
+
         if(sourceForFile == null) {
-            sourceForFile = createSource(metadata, pdfFile)
+            viewPdfWindowData?.sourceForFile = createSource(metadata, pdfFile)
         }
-        else if(sourceForFile?.isPersisted() == false) { // when coming to this from downloading file
-            sourceForFile?.let { setSourceProperties(it, metadata) }
+        else if(sourceForFile.isPersisted() == false) { // when coming to this from downloading file
+            setSourceProperties(sourceForFile, metadata)
         }
 
         textCountPages.value = metadata.countPages.toString()
@@ -320,7 +310,10 @@ class ViewPdfDialog : DialogFragment() {
                 if(fileMetaData != null) localization.getLocalizedString("file.page.indication.with.count.pages.known", currentPage, fileMetaData?.countPages ?: 0)
                 else localization.getLocalizedString("file.page.indication", currentPage)
 
-        router.showEditItemView(ItemExtractionResult(item, sourceForFile, couldExtractContent = true))
+        router.showEditItemView(ItemExtractionResult(item, viewPdfWindowData?.sourceForFile, couldExtractContent = true))
     }
+
+
+    override val windowDataClass = ViewPdfWindowData::class.java
 
 }

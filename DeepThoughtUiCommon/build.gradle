@@ -30,6 +30,8 @@ dependencies {
 
     compile project(':Utils')
 
+    compile "net.dankito.utils:window-registry-common:$windowRegistryVersion"
+
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
 
