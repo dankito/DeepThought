@@ -1,26 +1,33 @@
 package net.dankito.deepthought.utils
 
 import com.fasterxml.jackson.databind.module.SimpleModule
-import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Tag
-import net.dankito.service.data.SeriesService
-import net.dankito.service.data.TagService
+import net.dankito.deepthought.model.*
+import net.dankito.service.data.*
 import net.dankito.utils.serialization.JacksonJsonSerializer
-import net.dankito.utils.serialization.deserializer.PersistedSeriesDeserializer
-import net.dankito.utils.serialization.deserializer.PersistedTagDeserializer
-import net.dankito.utils.serialization.serializer.PersistedSeriesSerializer
-import net.dankito.utils.serialization.serializer.PersistedTagSerializer
+import net.dankito.utils.serialization.deserializer.*
+import net.dankito.utils.serialization.serializer.*
 
 
-class DeepThoughtJacksonJsonSerializer(tagService: TagService, seriesService: SeriesService)
+class DeepThoughtJacksonJsonSerializer(itemService: ItemService, tagService: TagService, sourceService: SourceService,
+                                       seriesService: SeriesService, fileService: FileService)
     : JacksonJsonSerializer(configureMapperCallback = { mapper ->
 
     val module = SimpleModule() // TODO: find a better place for this
 
+    module.addSerializer(Item::class.java, PersistedItemSerializer())
+    module.addDeserializer(Item::class.java, PersistedItemDeserializer(itemService))
+
     module.addSerializer(Tag::class.java, PersistedTagSerializer())
     module.addDeserializer(Tag::class.java, PersistedTagDeserializer(tagService))
+
+    module.addSerializer(Source::class.java, PersistedSourceSerializer())
+    module.addDeserializer(Source::class.java, PersistedSourceDeserializer(sourceService))
+
     module.addSerializer(Series::class.java, PersistedSeriesSerializer())
     module.addDeserializer(Series::class.java, PersistedSeriesDeserializer(seriesService))
+
+    module.addSerializer(FileLink::class.java, PersistedFileLinkSerializer())
+    module.addDeserializer(FileLink::class.java, PersistedFileLinkDeserializer(fileService))
 
     mapper.registerModule(module)
 })

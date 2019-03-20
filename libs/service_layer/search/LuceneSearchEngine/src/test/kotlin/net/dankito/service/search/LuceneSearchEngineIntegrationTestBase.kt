@@ -125,9 +125,11 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         tagService = TagService(dataManager, entityChangedNotifier)
         sourceService = SourceService(dataManager, entityChangedNotifier)
         seriesService = SeriesService(dataManager, entityChangedNotifier)
-        readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, DeepThoughtJacksonJsonSerializer(tagService, seriesService))
-        localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
         fileService = FileService(dataManager, entityChangedNotifier)
+
+        val serializer = DeepThoughtJacksonJsonSerializer(itemService, tagService, sourceService, seriesService, fileService)
+        readLaterArticleService = ReadLaterArticleService(dataManager, entityChangedNotifier, serializer)
+        localFileInfoService = LocalFileInfoService(dataManager, entityChangedNotifier)
         mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
 
         underTest = LuceneSearchEngine(localSettingsStore, dataManager, NoOpLanguageDetector(), OsHelper(),

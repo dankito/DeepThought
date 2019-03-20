@@ -93,7 +93,7 @@ class CommunicationManagerTest {
 
     private val fileStorageService = JavaFileStorageService()
 
-    private val serializer = DeepThoughtJacksonJsonSerializer(mock(), mock())
+    private val serializer = DeepThoughtJacksonJsonSerializer(mock(), mock(), mock(), mock(), mock())
 
 
     private lateinit var localDevice: Device

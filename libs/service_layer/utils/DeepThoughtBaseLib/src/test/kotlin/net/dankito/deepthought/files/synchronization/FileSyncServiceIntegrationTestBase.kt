@@ -134,7 +134,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected val localSocketHandler = SocketHandler()
 
-    protected val localSerializer = DeepThoughtJacksonJsonSerializer(mock(), mock()) // in this case we don't need TagService and SeriesService
+    protected val localSerializer = DeepThoughtJacksonJsonSerializer(mock(), mock(), mock(), mock(), mock()) // in this case we don't need TagService and SeriesService
 
     protected val localThreadPool = ThreadPool()
 
@@ -232,7 +232,7 @@ abstract class FileSyncServiceIntegrationTestBase {
 
     protected val remoteSocketHandler = SocketHandler()
 
-    protected val remoteSerializer = DeepThoughtJacksonJsonSerializer(mock(), mock()) // in this case we don't need TagService and SeriesService
+    protected val remoteSerializer = DeepThoughtJacksonJsonSerializer(mock(), mock(), mock(), mock(), mock()) // in this case we don't need TagService and SeriesService
 
     protected val remoteThreadPool = ThreadPool()
 
