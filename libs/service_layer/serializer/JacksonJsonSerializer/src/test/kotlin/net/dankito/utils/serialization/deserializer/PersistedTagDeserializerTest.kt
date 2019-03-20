@@ -1,8 +1,9 @@
-package net.dankito.utils.serialization.serializer
+package net.dankito.utils.serialization.deserializer
 
 import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.TagService
+import net.dankito.utils.serialization.SerializerConfig
 import org.mockito.Mockito.mock
 
 

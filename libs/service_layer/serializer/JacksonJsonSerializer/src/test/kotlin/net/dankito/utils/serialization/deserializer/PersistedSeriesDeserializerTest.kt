@@ -1,8 +1,9 @@
-package net.dankito.utils.serialization.serializer
+package net.dankito.utils.serialization.deserializer
 
 import net.dankito.deepthought.model.Series
 import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.SeriesService
+import net.dankito.utils.serialization.SerializerConfig
 import org.mockito.Mockito.mock
 
 

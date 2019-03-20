@@ -1,4 +1,4 @@
-package net.dankito.utils.serialization.serializer
+package net.dankito.utils.serialization.deserializer
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule

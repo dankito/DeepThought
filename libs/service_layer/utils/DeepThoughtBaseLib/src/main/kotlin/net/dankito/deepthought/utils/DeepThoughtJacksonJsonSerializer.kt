@@ -6,9 +6,9 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.TagService
 import net.dankito.utils.serialization.JacksonJsonSerializer
-import net.dankito.utils.serialization.serializer.PersistedSeriesDeserializer
+import net.dankito.utils.serialization.deserializer.PersistedSeriesDeserializer
+import net.dankito.utils.serialization.deserializer.PersistedTagDeserializer
 import net.dankito.utils.serialization.serializer.PersistedSeriesSerializer
-import net.dankito.utils.serialization.serializer.PersistedTagDeserializer
 import net.dankito.utils.serialization.serializer.PersistedTagSerializer
 
 

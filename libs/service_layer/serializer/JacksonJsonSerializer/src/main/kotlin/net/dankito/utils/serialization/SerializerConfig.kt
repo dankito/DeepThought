@@ -1,4 +1,4 @@
-package net.dankito.utils.serialization.serializer
+package net.dankito.utils.serialization
 
 
 class SerializerConfig {
