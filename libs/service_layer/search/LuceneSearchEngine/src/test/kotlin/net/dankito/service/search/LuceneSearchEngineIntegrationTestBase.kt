@@ -26,12 +26,12 @@ import net.dankito.service.search.specific.ItemsSearch
 import net.dankito.service.search.specific.TagsSearch
 import net.dankito.service.search.specific.TagsSearchResults
 import net.dankito.service.search.util.SortOption
-import net.dankito.utils.os.OsHelper
 import net.dankito.utils.PlatformConfigurationBase
 import net.dankito.utils.ThreadPool
 import net.dankito.utils.hashing.HashService
 import net.dankito.utils.io.JavaFileStorageService
 import net.dankito.utils.language.NoOpLanguageDetector
+import net.dankito.utils.os.OsHelper
 import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import net.dankito.utils.version.Versions
@@ -130,7 +130,7 @@ abstract class LuceneSearchEngineIntegrationTestBase {
         fileService = FileService(dataManager, entityChangedNotifier)
         mimeTypeService = MimeTypeService(mimeTypeDetector, mimeTypeCategorizer, dataManager)
 
-        underTest = LuceneSearchEngine(localSettingsStore, dataManager, NoOpLanguageDetector(), OsHelper(platformConfiguration),
+        underTest = LuceneSearchEngine(localSettingsStore, dataManager, NoOpLanguageDetector(), OsHelper(),
                 ThreadPool(), eventBus, itemService, tagService, sourceService, seriesService, readLaterArticleService, fileService, localFileInfoService)
         initLuceneSearchEngine(underTest)
 
