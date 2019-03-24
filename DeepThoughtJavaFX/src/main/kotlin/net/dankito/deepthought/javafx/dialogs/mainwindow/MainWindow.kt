@@ -22,8 +22,8 @@ class MainWindow : JavaFXMainWindow(String.format(messages["main.window.title"],
     companion object {
 
         private fun getAppVersion(): String {
-            val javaPackage = javaClass.getPackage()
-            if(javaPackage != null && javaPackage.implementationVersion != null) {
+            val javaPackage = MainWindow::class.java.getPackage()
+            if (javaPackage != null && javaPackage.implementationVersion != null) {
                 return javaPackage.implementationVersion
             }
             else {
