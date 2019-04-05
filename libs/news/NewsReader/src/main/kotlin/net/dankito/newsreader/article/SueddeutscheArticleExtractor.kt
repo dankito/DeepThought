@@ -191,7 +191,9 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             if (articleInfo.selectFirst("iframe[name=\"stockchart\"]") == null) { // filter out stock charts
                 articleInfo.select(".locationinfo-map").remove()
 
-                return articleInfo
+                if (articleInfo.html().trim().isNotBlank()) {
+                    return articleInfo
+                }
             }
         }
 
