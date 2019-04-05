@@ -80,6 +80,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun fixFilterStockChart() {
+        getAndTestArticle("https://www.sueddeutsche.de/wirtschaft/boeing-softwareproblem-1.4397784",
+                "Boeing räumt nach Abstürzen weiteres Softwareproblem ein",
+                null,
+                "https://media-cdn.sueddeutsche.de/image/sz.1.4393557/640x360?v=1554452618000",
+                4400, subTitle = "Flugverkehr")
+    }
+
+    @Test
     fun ensureSurveysGetsRemoved() {
         getAndTestArticle("http://www.sueddeutsche.de/panorama/eil-bundesverfassungsgericht-fordert-drittes-geschlecht-im-geburtenregister-1.3740223",
                 "Bundesverfassungsgericht fordert drittes Geschlecht im Geburtenregister",
