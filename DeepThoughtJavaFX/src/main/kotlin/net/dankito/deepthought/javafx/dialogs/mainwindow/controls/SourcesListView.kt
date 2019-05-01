@@ -161,7 +161,7 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
             }
         }
 
-        separator()
+        contextMenu.separator()
 
         contextMenu.item(messages["action.delete"]) {
             action {
@@ -181,7 +181,7 @@ class SourcesListView : EntitiesListView(), ISourcesListView {
             }
         }
 
-        separator()
+        contextMenu.separator()
 
         contextMenu.item(messages["action.delete"]) {
             action {

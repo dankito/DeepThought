@@ -177,7 +177,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
             }
         }
 
-        separator()
+        contextMenu.separator()
 
         contextMenu.item(messages["action.delete"]) {
             action {
@@ -197,7 +197,7 @@ class TagsListView : EntitiesListView(), ITagsListView {
             }
         }
 
-        separator()
+        contextMenu.separator()
 
         contextMenu.item(messages["action.delete"]) {
             action {
