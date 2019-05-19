@@ -4,6 +4,7 @@ import javafx.scene.image.Image
 import javafx.stage.Stage
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.utils.image.ImageCache
+import net.dankito.utils.windowregistry.window.WindowRegistry
 import net.dankito.utils.windowregistry.window.javafx.ui.JavaFXWindow
 import tornadofx.*
 import javax.inject.Inject
@@ -14,9 +15,16 @@ abstract class DialogFragment : JavaFXWindow() {
     @Inject
     protected lateinit var imageCache: ImageCache
 
+    @Inject
+    protected lateinit var injectedWindowRegistry: WindowRegistry
 
-    init {
+
+    override fun setupDependencyInjection() {
         AppComponent.component.inject(this)
+    }
+
+    override fun getWindowRegistryInstance(): WindowRegistry {
+        return injectedWindowRegistry
     }
 
 

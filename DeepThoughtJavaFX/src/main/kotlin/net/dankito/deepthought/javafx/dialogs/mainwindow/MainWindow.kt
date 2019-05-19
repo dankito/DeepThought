@@ -1,5 +1,6 @@
 package net.dankito.deepthought.javafx.dialogs.mainwindow
 
+import javafx.application.Platform
 import javafx.scene.control.SplitPane
 import javafx.scene.control.TabPane
 import javafx.scene.image.Image
@@ -10,7 +11,6 @@ import net.dankito.deepthought.javafx.dialogs.mainwindow.controls.*
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.utils.javafx.ui.extensions.setAnchorPaneOverallAnchor
 import net.dankito.utils.windowregistry.window.WindowRegistry
-import net.dankito.utils.windowregistry.window.WindowStatePersister
 import net.dankito.utils.windowregistry.window.javafx.ui.JavaFXMainWindow
 import tornadofx.*
 import tornadofx.FX.Companion.messages
@@ -38,10 +38,7 @@ class MainWindow : JavaFXMainWindow(String.format(messages["main.window.title"],
     protected lateinit var dataManager: DataManager
 
     @Inject
-    protected lateinit var windowRegistryField: WindowRegistry
-
-    @Inject
-    protected lateinit var windowStatePersisterField: WindowStatePersister
+    protected lateinit var injectedWindowRegistry: WindowRegistry
 
 
     private var stckpnContent: StackPane by singleAssign()
@@ -60,9 +57,25 @@ class MainWindow : JavaFXMainWindow(String.format(messages["main.window.title"],
 
 
     init {
-        AppComponent.component.inject(this)
-
         setupUI()
+    }
+
+
+    override fun setupDependencyInjection() {
+        super.setupDependencyInjection()
+
+        AppComponent.component.inject(this)
+    }
+
+    override fun getWindowRegistryInstance(): WindowRegistry {
+        return injectedWindowRegistry
+    }
+
+
+    override fun onUndock() {
+        super.onUndock()
+
+        Platform.exit()
     }
 
 
@@ -127,12 +140,6 @@ class MainWindow : JavaFXMainWindow(String.format(messages["main.window.title"],
 
     override val windowDataClass = null
 
-    override fun getWindowRegistry(): WindowRegistry {
-        return windowRegistryField
-    }
-
-    override fun getWindowStatePersister(): WindowStatePersister {
-        return windowStatePersisterField
-    }
+    override fun getCurrentWindowData() = null
 
 }

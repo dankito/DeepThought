@@ -57,6 +57,9 @@ class EditItemExtractionResultView : EditItemViewBase() {
 
     override val windowDataClass = ItemExtractionResult::class.java
 
+    // TODO: update extractionResult before, e.g. content with htmlEditor.getCurrentHtmlBlocking()
+    override fun getCurrentWindowData() = extractionResult
+
     override val displayText: CharSequence
         get() = extractionResult.source?.getPreviewWithSeriesAndPublishingDate(extractionResult.series) ?: super.displayText
 

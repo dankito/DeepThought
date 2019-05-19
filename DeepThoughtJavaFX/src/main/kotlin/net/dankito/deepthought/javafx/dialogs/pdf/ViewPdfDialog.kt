@@ -316,4 +316,6 @@ class ViewPdfDialog : DialogFragment() {
 
     override val windowDataClass = ViewPdfWindowData::class.java
 
+    override fun getCurrentWindowData() = viewPdfWindowData
+
 }
