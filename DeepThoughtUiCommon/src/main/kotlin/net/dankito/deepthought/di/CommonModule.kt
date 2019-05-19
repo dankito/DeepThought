@@ -92,8 +92,8 @@ open class CommonModule {
 
     @Provides
     @Singleton
-    open fun provideWindowRegistry(windowStatePersister: WindowStatePersister, router: net.dankito.utils.windowregistry.ui.router.IRouter) : WindowRegistry {
-        return WindowRegistry(windowStatePersister, router)
+    open fun provideWindowRegistry(windowStatePersister: WindowStatePersister) : WindowRegistry {
+        return WindowRegistry(windowStatePersister)
     }
 
     @Provides

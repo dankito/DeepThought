@@ -41,5 +41,7 @@ class EditReadLaterArticleView : EditItemViewBase() {
 
     override val windowDataClass = ReadLaterArticle::class.java
 
+    override fun getCurrentWindowData() = article
+
 
 }

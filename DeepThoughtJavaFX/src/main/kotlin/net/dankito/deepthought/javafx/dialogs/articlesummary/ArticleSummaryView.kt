@@ -76,6 +76,12 @@ class ArticleSummaryView : DialogFragment() {
 
     override val windowDataClass = ArticleSummaryWindowData::class.java
 
+    override fun getCurrentWindowData(): Any? {
+        (windowData as ArticleSummaryWindowData).articleSummary = presenter.lastLoadedSummary
+
+        return windowData
+    }
+
 //    override fun getWindowData(): Any? {
 //        extractorConfig?.let {
 //            return ArticleSummaryWindowData(it, presenter.lastLoadedSummary)

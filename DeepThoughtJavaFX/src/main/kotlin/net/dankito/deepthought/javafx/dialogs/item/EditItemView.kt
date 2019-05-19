@@ -25,4 +25,6 @@ class EditItemView : EditItemViewBase() {
         hasUnsavedChanges.value = false
     }
 
+    override fun getCurrentWindowData() = item
+
 }

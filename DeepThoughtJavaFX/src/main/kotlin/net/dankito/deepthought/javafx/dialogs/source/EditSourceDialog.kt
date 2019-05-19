@@ -204,4 +204,6 @@ class EditSourceDialog : DialogFragment() {
 
     override val windowDataClass = EditSourceWindowData::class.java
 
+    override fun getCurrentWindowData() = editSourceWindowData
+
 }
