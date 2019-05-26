@@ -145,7 +145,11 @@ dependencies {
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    compile project(':DeepThoughtUiCommon')
+    implementation (project(':DeepThoughtUiCommon')) {
+        // otherwise classes from window-registry-common would get imported twice which leads to an compile error (why Gradle?)
+        exclude group: 'net.dankito.utils', module: 'window-registry-common'
+    }
+
     compile project(':AndroidCouchbaseLiteEntityManager')
     compile project(':AndroidUdpDevicesDiscoverer')
     compile project(':AndroidPdfImporter')
@@ -157,6 +161,8 @@ dependencies {
     compile "com.google.android:flexbox:$flexboxVersion"
 
     compile "net.dankito.utils:android-utils:$androidUtilsVersion"
+
+    implementation "net.dankito.utils:window-registry-android:$windowRegistryVersion"
 
     compile "net.dankito.richtexteditor:richtexteditor-android:$richTextEditorVersion", {
         exclude group: 'net.dankito.utils', module: 'java-utils'
