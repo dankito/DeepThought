@@ -10,11 +10,13 @@ import net.dankito.utils.android.permissions.IPermissionsService
 import net.dankito.utils.android.permissions.PermissionsService
 import net.dankito.utils.android.ui.activities.ThemeableActivity
 import net.dankito.utils.android.ui.theme.Theme
+import net.dankito.utils.windowregistry.window.WindowRegistry
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 
-open class BaseActivity : ThemeableActivity() {
+abstract class BaseActivity : ThemeableActivity() {
+//abstract class BaseActivity : AndroidWindow() {
 
     companion object {
         const val ParametersId = "BASE_ACTIVITY_PARAMETERS_ID"
@@ -29,10 +31,13 @@ open class BaseActivity : ThemeableActivity() {
     protected lateinit var currentActivityTracker: CurrentActivityTracker
 
     @Inject
-    protected lateinit var parameterHolder: ActivityParameterHolder
+    protected lateinit var parameterHolderField: ActivityParameterHolder
 
     @Inject
     protected lateinit var uiStatePersister: UiStatePersister
+
+    @Inject
+    protected lateinit var windowRegistryField: WindowRegistry
 
 
     private var waitingForResultWithId: String? = null
@@ -46,7 +51,6 @@ open class BaseActivity : ThemeableActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        log.info("Creating Activity $this")
         super.onCreate(savedInstanceState)
 
         savedInstanceState?.let {
@@ -54,39 +58,9 @@ open class BaseActivity : ThemeableActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        currentActivityTracker.currentActivity = this
-
-        log.info("Started Activity $this")
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        currentActivityTracker.currentActivity = this
-
-        log.info("Resumed Activity $this")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        log.info("Paused Activity $this")
-    }
-
-    override fun onStop() {
-        if(currentActivityTracker.currentActivity == this) {
-            currentActivityTracker.currentActivity = null
-        }
-
-        super.onStop()
-        log.info("Stopped Activity $this")
-    }
-
     override fun onDestroy() {
         getParametersId()?.let { parametersId ->
-            parameterHolder.clearParameters(parametersId)
+            parameterHolderField.clearParameters(parametersId)
         }
 
         registeredPermissionsServices.clear()
@@ -121,7 +95,7 @@ open class BaseActivity : ThemeableActivity() {
 
     protected fun getParameters(): Any? {
         getParametersId()?.let { parametersId ->
-            return parameterHolder.getParameters(parametersId) // we're done with activity. remove parameters from cache to not waste any memory
+            return parameterHolderField.getParameters(parametersId) // we're done with activity. remove parameters from cache to not waste any memory
         }
 
         return null
@@ -135,19 +109,19 @@ open class BaseActivity : ThemeableActivity() {
     internal fun setWaitingForResult(targetResultId: String) {
         waitingForResultWithId = targetResultId
 
-        parameterHolder.clearActivityResults(targetResultId)
+        parameterHolderField.clearActivityResults(targetResultId)
     }
 
     protected fun getAndClearResult(targetResultId: String): Any? {
-        val result = parameterHolder.getActivityResult(targetResultId)
+        val result = parameterHolderField.getActivityResult(targetResultId)
 
-        parameterHolder.clearActivityResults(targetResultId)
+        parameterHolderField.clearActivityResults(targetResultId)
 
         return result
     }
 
     protected fun clearAllActivityResults() {
-        parameterHolder.clearActivityResults()
+        parameterHolderField.clearActivityResults()
     }
 
 

@@ -230,7 +230,7 @@ class EditSourceActivity : BaseActivity() {
     }
 
     override fun onDestroy() {
-        parameterHolder.clearActivityResults(EditSeriesActivity.ResultId)
+        parameterHolderField.clearActivityResults(EditSeriesActivity.ResultId)
 
         super.onDestroy()
     }
@@ -337,7 +337,7 @@ class EditSourceActivity : BaseActivity() {
     }
 
     private fun setActivityResult(result: EditSourceActivityResult) {
-        parameterHolder.setActivityResult(ResultId, result)
+        parameterHolderField.setActivityResult(ResultId, result)
     }
 
     private fun closeDialog() {

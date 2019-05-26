@@ -38,6 +38,7 @@ import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.ui.IApplicationsService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.windowregistry.window.WindowRegistry
 import javax.inject.Singleton
 
 
@@ -133,8 +134,14 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideRouter(context: Context, parameterHolder: ActivityParameterHolder, activityTracker: CurrentActivityTracker, dataManager: DataManager) : IRouter {
-        return AndroidRouter(context, parameterHolder, activityTracker, dataManager)
+    fun provideWindowRegistryActivityParameterHolder() : net.dankito.utils.android.ui.activities.ActivityParameterHolder {
+        return net.dankito.utils.android.ui.activities.ActivityParameterHolder()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRouter(context: Context, windowRegistry: WindowRegistry, parameterHolder: net.dankito.utils.android.ui.activities.ActivityParameterHolder, activityTracker: CurrentActivityTracker, dataManager: DataManager) : IRouter {
+        return AndroidRouter(context, windowRegistry, parameterHolder, activityTracker, dataManager)
     }
 
     @Provides

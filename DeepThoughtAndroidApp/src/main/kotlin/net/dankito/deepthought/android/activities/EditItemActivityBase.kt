@@ -165,7 +165,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        parameterHolder.setActivityResult(ResultId, EditItemActivityResult())
+        parameterHolderField.setActivityResult(ResultId, EditItemActivityResult())
 
         setupUI()
 
@@ -597,7 +597,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     override fun onDestroy() {
         itemContentView.onDestroy()
 
-        parameterHolder.clearActivityResults(EditSourceActivity.ResultId)
+        parameterHolderField.clearActivityResults(EditSourceActivity.ResultId)
 
         super.onDestroy()
     }
@@ -750,7 +750,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
 
     protected fun setActivityResult(result: EditItemActivityResult) {
-        parameterHolder.setActivityResult(ResultId, result)
+        parameterHolderField.setActivityResult(ResultId, result)
     }
 
     protected fun updateItem(item: Item, content: String, summary: String) {

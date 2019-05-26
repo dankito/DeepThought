@@ -1,7 +1,6 @@
 package net.dankito.deepthought.android.routing
 
 import android.content.Context
-import android.content.Intent
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.*
 import net.dankito.deepthought.android.activities.arguments.*
@@ -9,7 +8,6 @@ import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.dialogs.SourceItemsListDialog
 import net.dankito.deepthought.android.dialogs.TagItemsListDialog
-import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
@@ -18,11 +16,14 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.filechooserdialog.FileChooserDialog
 import net.dankito.filechooserdialog.model.FileChooserDialogConfig
 import net.dankito.newsreader.model.ArticleSummary
+import net.dankito.utils.android.ui.activities.ActivityParameterHolder
+import net.dankito.utils.windowregistry.android.ui.router.AndroidRouterBase
+import net.dankito.utils.windowregistry.window.WindowRegistry
 import java.io.File
 
 
-class AndroidRouter(private val context: Context, private val parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker,
-                    private val dataManager: DataManager) : IRouter {
+class AndroidRouter(private val context: Context, windowRegistry: WindowRegistry, parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker,
+                    private val dataManager: DataManager) : AndroidRouterBase(context, windowRegistry, parameterHolder), IRouter {
 
 
     override fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>) {
@@ -148,18 +149,21 @@ class AndroidRouter(private val context: Context, private val parameterHolder: A
 
 
     private fun navigateToActivity(activityClass: Class<out BaseActivity>, parameters: Any? = null) {
-        val intent = Intent(context, activityClass)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-        parameters?.let { addParametersToIntent(intent, parameters) }
+        showWindow(activityClass, parameters?.let { it.javaClass }, parameters)
 
-        context.startActivity(intent)
+//        val intent = Intent(context, activityClass)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//
+//        parameters?.let { addParametersToIntent(intent, parameters) }
+//
+//        context.startActivity(intent)
     }
 
-    private fun addParametersToIntent(intent: Intent, parameters: Any) {
-        val id = parameterHolder.setParameters(parameters)
-
-        intent.putExtra(BaseActivity.ParametersId, id)
-    }
+//    private fun addParametersToIntent(intent: Intent, parameters: Any) {
+//        val id = parameterHolder.setParameters(parameters)
+//
+//        intent.putExtra(BaseActivity.ParametersId, id)
+//    }
 
 }

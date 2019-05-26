@@ -266,7 +266,7 @@ class MainActivity : BaseActivity() {
 
 
     private fun addParametersToIntent(intent: Intent, parameters: Any) {
-        val id = parameterHolder.setParameters(parameters)
+        val id = parameterHolderField.setParameters(parameters)
 
         intent.putExtra(BaseActivity.ParametersId, id)
     }

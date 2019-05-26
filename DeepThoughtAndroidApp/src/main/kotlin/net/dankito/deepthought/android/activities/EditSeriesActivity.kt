@@ -229,7 +229,7 @@ class EditSeriesActivity : BaseActivity() {
     }
 
     private fun setActivityResult(result: EditSeriesActivityResult) {
-        parameterHolder.setActivityResult(ResultId, result)
+        parameterHolderField.setActivityResult(ResultId, result)
     }
 
     private fun closeDialog() {
