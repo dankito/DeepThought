@@ -8,7 +8,6 @@ import kotlinx.android.synthetic.main.view_item_content.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.extensions.hasDarkTheme
 import net.dankito.deepthought.android.ui.theme.AppThemes
-import net.dankito.richtexteditor.android.AndroidIcon
 import net.dankito.richtexteditor.android.RichTextEditor
 import net.dankito.richtexteditor.android.toolbar.EditorToolbar
 import net.dankito.richtexteditor.android.util.StyleApplier
@@ -17,6 +16,7 @@ import net.dankito.utils.Color
 import net.dankito.utils.android.extensions.ColorExtensions
 import net.dankito.utils.android.extensions.asActivity
 import net.dankito.utils.android.extensions.getColorFromResource
+import net.dankito.utils.android.image.AndroidImageReference
 import net.dankito.utils.android.ui.view.IHandlesBackButtonPress
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -66,7 +66,7 @@ class EditHtmlView : View, IHandlesBackButtonPress {
 
     private fun setupEditorToolbar(rootView: View) {
         val styleApplier = StyleApplier()
-        styleApplier.applyCommandStyle(AndroidIcon(R.drawable.ic_check_white_48dp), ToolbarCommandStyle(), rootView.btnApplyEditedContent)
+        styleApplier.applyCommandStyle(AndroidImageReference(R.drawable.ic_check_white_48dp), ToolbarCommandStyle(), rootView.btnApplyEditedContent)
 
         editorToolbar = rootView.editorToolbar
         editorToolbar.editor = editor
