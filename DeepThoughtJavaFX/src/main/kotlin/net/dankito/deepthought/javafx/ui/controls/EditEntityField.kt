@@ -79,4 +79,8 @@ open class EditEntityField(fieldName: String, initialFieldValue: String = "") : 
             currentValue.value = value
         }
 
+    fun setCurrentValue(currentValue: String) {
+        this.currentValue.value = currentValue
+    }
+
 }

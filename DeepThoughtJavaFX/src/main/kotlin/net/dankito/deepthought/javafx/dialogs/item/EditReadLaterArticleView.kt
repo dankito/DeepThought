@@ -1,12 +1,12 @@
 package net.dankito.deepthought.javafx.dialogs.item
 
 import net.dankito.deepthought.javafx.di.AppComponent
-import net.dankito.deepthought.model.ReadLaterArticle
+import net.dankito.deepthought.ui.windowdata.EditReadLaterArticleWindowData
 
 
 class EditReadLaterArticleView : EditItemViewBase() {
 
-    private lateinit var article: ReadLaterArticle
+    private lateinit var editReadLaterArticleWindowData: EditReadLaterArticleWindowData
 
 
     init {
@@ -14,14 +14,16 @@ class EditReadLaterArticleView : EditItemViewBase() {
 
         canAlwaysBeSaved = true
 
-        (windowData as? ReadLaterArticle)?.let { article ->
-            this.article = article
+        (windowData as? EditReadLaterArticleWindowData)?.let { editReadLaterArticleWindowData ->
+            this.editReadLaterArticleWindowData = editReadLaterArticleWindowData
+            val article = editReadLaterArticleWindowData.readLaterArticle
 
             readLaterArticleService.deserializeItemExtractionResult(article)
 
             val extractionResult = article.itemExtractionResult
 
             showData(extractionResult.item, extractionResult.tags, extractionResult.source, extractionResult.series, extractionResult.files)
+            restoreWindowData(editReadLaterArticleWindowData)
         }
     }
 
@@ -29,19 +31,23 @@ class EditReadLaterArticleView : EditItemViewBase() {
     override fun resetSeries() {
         super.resetSeries()
 
-        article.itemExtractionResult.series = null
+        editReadLaterArticleWindowData.readLaterArticle.itemExtractionResult.series = null
     }
 
     override fun itemSaved() {
         super.itemSaved()
 
-        readLaterArticleService.delete(article)
+        readLaterArticleService.delete(editReadLaterArticleWindowData.readLaterArticle)
     }
 
 
-    override val windowDataClass = ReadLaterArticle::class.java
+    override val windowDataClass = EditReadLaterArticleWindowData::class.java
 
-    override fun getCurrentWindowData() = article
+    override fun getCurrentWindowData(): Any? {
+        updateWindowData(editReadLaterArticleWindowData)
+
+        return editReadLaterArticleWindowData
+    }
 
 
 }

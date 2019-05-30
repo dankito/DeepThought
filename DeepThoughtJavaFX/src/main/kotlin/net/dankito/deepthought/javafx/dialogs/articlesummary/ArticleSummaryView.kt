@@ -5,11 +5,11 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ArticleSummaryControlBarView
 import net.dankito.deepthought.javafx.dialogs.articlesummary.controls.ArticleSummaryItemsView
-import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryWindowData
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
+import net.dankito.deepthought.ui.windowdata.ArticleSummaryWindowData
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.IDialogService

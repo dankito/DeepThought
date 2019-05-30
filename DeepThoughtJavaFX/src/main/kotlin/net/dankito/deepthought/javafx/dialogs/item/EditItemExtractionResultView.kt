@@ -4,6 +4,7 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.news.article.ArticleExtractorManager
+import net.dankito.deepthought.ui.windowdata.EditItemExtractionResultWindowData
 import javax.inject.Inject
 
 
@@ -13,7 +14,10 @@ class EditItemExtractionResultView : EditItemViewBase() {
     protected lateinit var articleExtractorManager: ArticleExtractorManager
 
 
-    private lateinit var extractionResult: ItemExtractionResult
+    private lateinit var extractionResultWindowData: EditItemExtractionResultWindowData
+
+    private val extractionResult: ItemExtractionResult
+        get() = extractionResultWindowData.itemExtractionResult
 
 
     init {
@@ -21,10 +25,11 @@ class EditItemExtractionResultView : EditItemViewBase() {
 
         canAlwaysBeSaved = true
 
-        (windowData as? ItemExtractionResult)?.let { extractionResult ->
-            this.extractionResult = extractionResult
+        (windowData as? EditItemExtractionResultWindowData)?.let { extractionResultWindowData ->
+            this.extractionResultWindowData = extractionResultWindowData
 
             showExtractionResult()
+            restoreWindowData(extractionResultWindowData)
         }
     }
 
@@ -55,13 +60,17 @@ class EditItemExtractionResultView : EditItemViewBase() {
     }
 
 
-    override val windowDataClass = ItemExtractionResult::class.java
+    override val windowDataClass = EditItemExtractionResultWindowData::class.java
 
-    // TODO: update extractionResult before, e.g. content with htmlEditor.getCurrentHtmlBlocking()
-    override fun getCurrentWindowData() = extractionResult
+    override fun getCurrentWindowData(): Any? {
+        updateWindowData(extractionResultWindowData)
+
+        return extractionResultWindowData
+    }
 
     override val displayText: CharSequence
-        get() = extractionResult.source?.getPreviewWithSeriesAndPublishingDate(extractionResult.series) ?: super.displayText
+        get() = (windowData as? EditItemExtractionResultWindowData)?.itemExtractionResult?.source?.getPreviewWithSeriesAndPublishingDate(extractionResult.series)
+                ?: super.displayText
 
 
 //    private fun openActivityClicked(clickedActivity: BaseActivity) {

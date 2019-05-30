@@ -37,8 +37,11 @@ class EditItemSourceField : EditEntityReferenceField<Source>(FX.messages["edit.i
     val sourceToEdit: Source?
         get() = entityToEdit
 
-    val enteredIndication: String
+    var enteredIndication: String
         get() = enteredSecondaryInformation
+        set(value) {
+            enteredSecondaryInformation = value
+        }
 
     val didIndicationChange = didSecondaryInformationChange
 

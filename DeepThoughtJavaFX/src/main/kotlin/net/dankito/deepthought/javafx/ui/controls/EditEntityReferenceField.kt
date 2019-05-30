@@ -46,11 +46,17 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
 
     val didSecondaryInformationChange = SimpleBooleanProperty(false)
 
-    val enteredTitle: String
+    var enteredTitle: String
         get() = editedTitle.value
+        set(value) {
+            editedTitle.value = value
+        }
 
-    val enteredSecondaryInformation: String
+    var enteredSecondaryInformation: String
         get() = editedSecondaryInformation.value
+        set(value){
+            editedSecondaryInformation.value = value
+        }
 
 
     var originalEntity: T? = null
