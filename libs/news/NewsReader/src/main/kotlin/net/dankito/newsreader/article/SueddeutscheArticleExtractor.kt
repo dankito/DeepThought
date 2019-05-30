@@ -114,8 +114,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             }
         }
 
-        siteContent.select("section.article-info").firstOrNull()?.let { articleInfo ->
-            articleInfo.select(".locationinfo-map").remove()
+        getArticleInfo(siteContent)?.let { articleInfo ->
             content.append(articleInfo.outerHtml())
         }
 
@@ -186,6 +185,21 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             }
         }
     }
+
+    private fun getArticleInfo(siteContent: Element): Element? {
+        siteContent.select("section.article-info").firstOrNull()?.let { articleInfo ->
+            if (articleInfo.selectFirst("iframe[name=\"stockchart\"]") == null) { // filter out stock charts
+                articleInfo.select(".locationinfo-map").remove()
+
+                if (articleInfo.html().trim().isNotBlank()) {
+                    return articleInfo
+                }
+            }
+        }
+
+        return null
+    }
+
 
     private fun extractInlineGalleries(articleBody: Element) {
         articleBody.select("figure.gallery.inline").forEach { inlineGallery ->

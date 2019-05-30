@@ -92,6 +92,8 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         val summaryElement = articleMeldungElement.select(".article-content__lead, .article-header__lead").firstOrNull()
 
         if(previewImageElement != null || summaryElement != null) {
+            previewImageElement?.let { unwrapImagesFromNoscriptElements(it) }
+
             contentHtml = "<div>" + (previewImageElement?.outerHtml() ?: "") + (summaryElement?.outerHtml() ?: "") + contentHtml + "</div>"
         }
 
@@ -118,7 +120,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         cleanContentElement(articleContentElement)
 
         makeLinksAbsolute(articleContentElement, url)
-        unwrapImagesFromNoscriptElements(articleContentElement);
+        unwrapImagesFromNoscriptElements(articleContentElement)
 
         extractionResult.setExtractedContent(Item(articleContentElement.outerHtml()), source)
     }
