@@ -19,7 +19,7 @@ import javafx.scene.text.TextAlignment
 import net.dankito.deepthought.model.BaseEntity
 import net.dankito.utils.javafx.ui.controls.AutoCompletionSearchTextField
 import net.dankito.utils.javafx.ui.controls.autocompletionsearchtextfield
-import net.dankito.utils.javafx.util.FXUtils
+import net.dankito.utils.javafx.ui.extensions.setBackgroundToColor
 import tornadofx.*
 import java.util.*
 
@@ -77,7 +77,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
 
     override val root = vbox {
 
-        FXUtils.setBackgroundToColor(this, Color.WHITE)
+        setBackgroundToColor(Color.WHITE)
 
         hbox {
             alignment = Pos.TOP_LEFT

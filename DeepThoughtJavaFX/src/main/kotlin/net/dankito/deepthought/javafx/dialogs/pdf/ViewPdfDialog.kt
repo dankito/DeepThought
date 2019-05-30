@@ -21,7 +21,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.importexport.pdf.*
 import net.dankito.deepthought.ui.IRouter
-import net.dankito.utils.javafx.util.FXUtils
+import net.dankito.utils.javafx.ui.extensions.setBackgroundToColor
 import net.dankito.utils.localization.Localization
 import org.slf4j.LoggerFactory
 import tornadofx.*
@@ -95,7 +95,7 @@ class ViewPdfDialog : DialogFragment() {
 
             isWrapText = true
             isEditable = false // to make it look like a Label (there's no way to select text in a Label, see https://stackoverflow.com/questions/22534067/copiable-label-textfield-labeledtext-in-javafx)
-            FXUtils.setBackgroundToColor(this, Color.TRANSPARENT)
+            setBackgroundToColor(Color.TRANSPARENT)
 
             this@ViewPdfDialog.selectedText.bind(selectedTextProperty())
 

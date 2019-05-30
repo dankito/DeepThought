@@ -5,7 +5,7 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.model.ReadLaterArticleViewModel
 import net.dankito.deepthought.model.ReadLaterArticle
-import net.dankito.utils.javafx.util.FXUtils
+import net.dankito.utils.javafx.ui.extensions.ensureOnlyUsesSpaceIfVisible
 import tornadofx.*
 
 
@@ -41,7 +41,7 @@ class ReadLaterArticleListCellFragment : ListCellFragment<ReadLaterArticle>() {
 
             label(article.source) {
                 maxHeight = 20.0
-                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+                ensureOnlyUsesSpaceIfVisible()
 
                 vboxConstraints {
                     marginBottom = 6.0
