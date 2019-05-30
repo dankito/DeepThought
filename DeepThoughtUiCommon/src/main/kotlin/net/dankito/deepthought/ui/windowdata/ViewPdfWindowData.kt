@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.pdf.model
+package net.dankito.deepthought.ui.windowdata
 
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Source

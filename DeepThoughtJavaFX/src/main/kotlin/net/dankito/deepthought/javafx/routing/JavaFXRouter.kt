@@ -2,22 +2,20 @@ package net.dankito.deepthought.javafx.routing
 
 import javafx.stage.FileChooser
 import net.dankito.deepthought.javafx.dialogs.articlesummary.ArticleSummaryView
-import net.dankito.deepthought.javafx.dialogs.articlesummary.model.ArticleSummaryWindowData
 import net.dankito.deepthought.javafx.dialogs.item.EditItemExtractionResultView
 import net.dankito.deepthought.javafx.dialogs.item.EditItemView
 import net.dankito.deepthought.javafx.dialogs.item.EditReadLaterArticleView
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
 import net.dankito.deepthought.javafx.dialogs.pdf.ViewPdfDialog
-import net.dankito.deepthought.javafx.dialogs.pdf.model.ViewPdfWindowData
 import net.dankito.deepthought.javafx.dialogs.readlaterarticle.ReadLaterArticleListView
 import net.dankito.deepthought.javafx.dialogs.source.EditSourceDialog
-import net.dankito.deepthought.javafx.dialogs.source.model.EditSourceWindowData
 import net.dankito.deepthought.javafx.ui.controls.IItemsListViewJavaFX
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.preview
 import net.dankito.deepthought.model.extensions.previewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.windowdata.*
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.utils.javafx.ui.image.JavaFXImageReference
 import net.dankito.utils.windowregistry.window.javafx.ui.router.JavaFXRouterBase
@@ -70,15 +68,17 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : Jav
     }
 
     private fun showEditItemView(item: Item, title: String?) {
-        showWindow(EditItemView::class.java, Item::class.java, item, title)
+        showWindow(EditItemView::class.java, EditItemWindowData::class.java, EditItemWindowData(item), title)
     }
 
     override fun showEditItemView(article: ReadLaterArticle) {
-        showWindow(EditReadLaterArticleView::class.java, ReadLaterArticle::class.java, article, article.itemExtractionResult.source?.preview)
+        showWindow(EditReadLaterArticleView::class.java, EditReadLaterArticleWindowData::class.java,
+                EditReadLaterArticleWindowData(article), article.itemExtractionResult.source?.preview)
     }
 
     override fun showEditItemView(extractionResult: ItemExtractionResult) {
-        showWindow(EditItemExtractionResultView::class.java, ItemExtractionResult::class.java, extractionResult, extractionResult.source?.preview)
+        showWindow(EditItemExtractionResultView::class.java, EditItemExtractionResultWindowData::class.java,
+                EditItemExtractionResultWindowData(extractionResult), extractionResult.source?.preview)
     }
 
 

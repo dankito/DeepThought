@@ -18,11 +18,11 @@ import net.dankito.deepthought.javafx.dialogs.item.controls.EditItemTagsField
 import net.dankito.deepthought.javafx.dialogs.item.controls.InlineHtmlEditor
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
-import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
+import net.dankito.deepthought.ui.windowdata.EditItemWindowDataBase
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.javafx.ui.extensions.ensureOnlyUsesSpaceIfVisible
@@ -287,6 +287,45 @@ abstract class EditItemViewBase : DialogFragment() {
     protected open fun itemSaved() {
 
     }
+
+
+    protected open fun restoreWindowData(editItemWindowData: EditItemWindowDataBase) {
+        editItemWindowData.editedContent?.let {
+            htmlEditor.setHtml(it)
+        }
+
+        editItemWindowData.editedSummary?.let {
+            editedSummary.value = it
+        }
+
+        editItemWindowData.editedTags?.let {
+            editTagsField.setCollectionToEdit(it.toMutableList())
+        }
+
+        editItemWindowData.editedSourceTitle?.let {
+            editSourceField.enteredTitle = it
+        }
+        editItemWindowData.editedIndicator?.let {
+            editSourceField.enteredIndication = it
+        }
+
+        editItemWindowData.editedFiles?.let {
+            editFilesField.setEditedFiles(it.toMutableList())
+        }
+    }
+
+    protected open fun updateWindowData(editItemWindowData: EditItemWindowDataBase) {
+        editItemWindowData.editedContent = htmlEditor.getCurrentHtmlBlocking()
+        editItemWindowData.editedSummary = editedSummary.value
+
+        editItemWindowData.editedTags = editTagsField.getMergedTags()
+
+        editItemWindowData.editedSourceTitle = editSourceField.enteredTitle
+        editItemWindowData.editedIndicator = editSourceField.enteredIndication
+
+        editItemWindowData.editedFiles = editFilesField.getEditedFiles()
+    }
+
 
     private fun closeDialog() {
         runLater {

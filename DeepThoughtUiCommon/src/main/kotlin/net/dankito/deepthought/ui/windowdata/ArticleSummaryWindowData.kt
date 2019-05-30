@@ -1,4 +1,4 @@
-package net.dankito.deepthought.javafx.dialogs.articlesummary.model
+package net.dankito.deepthought.ui.windowdata
 
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.newsreader.model.ArticleSummary

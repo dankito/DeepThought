@@ -165,6 +165,10 @@ class EditEntityFilesField : View() {
 
         fileListPresenter.forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(originalFiles)
 
+        setEditedFiles(originalFiles)
+    }
+
+    fun setEditedFiles(originalFiles: MutableCollection<FileLink>) {
         files.setAll(originalFiles) // make a copy to not edit original files
 
         updateListViewHeight()

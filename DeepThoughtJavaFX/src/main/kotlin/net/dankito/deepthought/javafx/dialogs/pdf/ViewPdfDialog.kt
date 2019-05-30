@@ -13,7 +13,7 @@ import javafx.scene.text.Font
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
-import net.dankito.deepthought.javafx.dialogs.pdf.model.ViewPdfWindowData
+import net.dankito.deepthought.ui.windowdata.ViewPdfWindowData
 import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item

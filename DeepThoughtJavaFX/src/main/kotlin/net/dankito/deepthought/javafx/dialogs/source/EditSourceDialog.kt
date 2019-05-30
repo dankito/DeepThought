@@ -8,7 +8,6 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.DialogFragment
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourcePublishingDateField
 import net.dankito.deepthought.javafx.dialogs.source.controls.EditSourceSeriesField
-import net.dankito.deepthought.javafx.dialogs.source.model.EditSourceWindowData
 import net.dankito.deepthought.javafx.service.events.EditingSourceDoneEvent
 import net.dankito.deepthought.javafx.ui.controls.DialogButtonBar
 import net.dankito.deepthought.javafx.ui.controls.EditEntityField
@@ -16,6 +15,7 @@ import net.dankito.deepthought.javafx.ui.controls.EditEntityFilesField
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSourcePresenter
+import net.dankito.deepthought.ui.windowdata.EditSourceWindowData
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.utils.datetime.asLocalDate
@@ -83,6 +83,8 @@ class EditSourceDialog : DialogFragment() {
             this.editSourceWindowData = editSourceWindowData
 
             initFieldValues(editSourceWindowData)
+
+            restoreEditedValues(editSourceWindowData)
         }
     }
 
@@ -145,6 +147,36 @@ class EditSourceDialog : DialogFragment() {
         editFilesField.setFiles(source.attachedFiles, source)
     }
 
+    private fun restoreEditedValues(windowData: EditSourceWindowData) {
+        windowData.editedTitle?.let {
+            titleField.setCurrentValue(it)
+        }
+
+        windowData.editedSeriesTitle?.let {
+            editSeriesField.enteredTitle = it
+        }
+
+        windowData.editedIssue?.let {
+            issueField.setCurrentValue(it)
+        }
+
+        windowData.editedLength?.let {
+            lengthField.setCurrentValue(it)
+        }
+
+        windowData.editedPublishingDateString?.let {
+            publishingDateField.setCurrentValue(it)
+        }
+
+        windowData.editedUrl?.let {
+            webAddressField.setCurrentValue(it)
+        }
+
+        windowData.editedFiles?.let {
+            editFilesField.setEditedFiles(it.toMutableList())
+        }
+    }
+
     private fun updateHasUnsavedChanges() {
         hasUnsavedChanges.value = titleField.didValueChange.value or
                 editSeriesField.didEntityChange.value or editSeriesField.didTitleChange.value or
@@ -204,6 +236,23 @@ class EditSourceDialog : DialogFragment() {
 
     override val windowDataClass = EditSourceWindowData::class.java
 
-    override fun getCurrentWindowData() = editSourceWindowData
+    override fun getCurrentWindowData(): Any? {
+        editSourceWindowData.editedTitle = titleField.value
+
+        editSourceWindowData.editedSeriesTitle = editSeriesField.enteredTitle
+
+        editSourceWindowData.editedIssue = issueField.value
+
+        editSourceWindowData.editedLength = lengthField.value
+
+        editSourceWindowData.editedPublishingDateString = publishingDateField.value
+
+        editSourceWindowData.editedUrl = webAddressField.value
+
+        editSourceWindowData.editedFiles = editFilesField.getEditedFiles()
+
+
+        return editSourceWindowData
+    }
 
 }

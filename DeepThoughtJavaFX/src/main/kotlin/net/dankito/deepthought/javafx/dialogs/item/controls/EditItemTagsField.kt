@@ -69,7 +69,7 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView 
     }
 
 
-    private fun getMergedTags(): Collection<Tag> {
+    fun getMergedTags(): Collection<Tag> {
         return presenter.getMergedTags(editedCollection, autoCompleteResult)
     }
 

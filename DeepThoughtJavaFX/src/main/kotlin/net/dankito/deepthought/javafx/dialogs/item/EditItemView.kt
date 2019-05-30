@@ -1,30 +1,36 @@
 package net.dankito.deepthought.javafx.dialogs.item
 
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.ui.windowdata.EditItemWindowData
 
 
 class EditItemView : EditItemViewBase() {
 
-    private lateinit var item: Item
+    private lateinit var editItemWindowData: EditItemWindowData
 
 
-    override val windowDataClass = Item::class.java
+    override val windowDataClass = EditItemWindowData::class.java
 
 
     init {
-        (windowData as? Item)?.let { item ->
-            setItem(item)
+        (windowData as? EditItemWindowData)?.let { editItemWindowData ->
+            this.editItemWindowData = editItemWindowData
+
+            setItem(editItemWindowData.item)
+            restoreWindowData(editItemWindowData)
         }
     }
 
     private fun setItem(item: Item) {
-        this.item = item
-
         showData(item, item.tags, item.source, item.source?.series, item.attachedFiles)
 
         hasUnsavedChanges.value = false
     }
 
-    override fun getCurrentWindowData() = item
+    override fun getCurrentWindowData(): Any? {
+        updateWindowData(editItemWindowData)
+
+        return editItemWindowData
+    }
 
 }
