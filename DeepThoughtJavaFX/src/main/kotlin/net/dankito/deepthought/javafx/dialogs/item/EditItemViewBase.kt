@@ -25,6 +25,7 @@ import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
+import net.dankito.utils.javafx.ui.extensions.ensureOnlyUsesSpaceIfVisible
 import net.dankito.utils.ui.IClipboardService
 import tornadofx.*
 import javax.inject.Inject
@@ -150,7 +151,7 @@ abstract class EditItemViewBase : DialogFragment() {
         wbvwShowUrl = webview {
             useMaxWidth = true
             isVisible = false
-            FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+            ensureOnlyUsesSpaceIfVisible()
 
             vboxConstraints {
                 vgrow = Priority.ALWAYS

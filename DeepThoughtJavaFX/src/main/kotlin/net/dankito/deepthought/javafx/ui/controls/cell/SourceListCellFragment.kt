@@ -4,8 +4,8 @@ import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.SourceViewModel
 import net.dankito.deepthought.javafx.res.Fonts
-import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.deepthought.model.Source
+import net.dankito.utils.javafx.ui.extensions.ensureOnlyUsesSpaceIfVisible
 import tornadofx.*
 
 
@@ -35,7 +35,7 @@ class SourceListCellFragment : ListCellFragment<Source>() {
         label(source.seriesAndPublishingDatePreview) {
             maxHeight = 20.0
             visibleProperty().bind(source.hasSeriesAndPublishingDatePreview)
-            FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+            ensureOnlyUsesSpaceIfVisible()
 
             font = Fonts.Header2Font
             textFill = Fonts.Header2TextColor

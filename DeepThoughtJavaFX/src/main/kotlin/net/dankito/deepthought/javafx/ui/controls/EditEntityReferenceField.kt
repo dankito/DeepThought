@@ -16,10 +16,10 @@ import javafx.scene.layout.Priority
 import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import net.dankito.deepthought.javafx.res.icons.Icons
-import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.richtexteditor.java.fx.extensions.setImageTintColor
 import net.dankito.utils.javafx.ui.controls.AutoCompletionSearchTextField
 import net.dankito.utils.javafx.ui.controls.autocompletionsearchtextfield
+import net.dankito.utils.javafx.ui.extensions.ensureOnlyUsesSpaceIfVisible
 import tornadofx.*
 import kotlin.reflect.KClass
 
@@ -117,7 +117,7 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
 
                 textProperty().bind(entityAdditionalPreview)
                 visibleProperty().bind(isEntityAdditionalSet)
-                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+                ensureOnlyUsesSpaceIfVisible()
 
                 cursor = Cursor.HAND
                 setOnMouseClicked { entityAdditionalPreviewClicked(it) }
@@ -167,7 +167,7 @@ abstract class EditEntityReferenceField<T>(entityLabel: String, entityPromptText
             hbox {
                 alignment = Pos.CENTER_LEFT
                 visibleProperty().bind(showSecondaryInformation)
-                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+                ensureOnlyUsesSpaceIfVisible()
 
                 label(secondaryInformationLabel ?: "") {
                     minWidth = Control.USE_PREF_SIZE

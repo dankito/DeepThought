@@ -15,7 +15,7 @@ import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.utils.AsyncResult
 import net.dankito.utils.javafx.ui.controls.searchtextfield
-import net.dankito.utils.javafx.util.FXUtils
+import net.dankito.utils.javafx.ui.extensions.ensureOnlyUsesSpaceIfVisible
 import tornadofx.*
 import java.text.DateFormat
 
@@ -234,7 +234,7 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
                 maxWidth = IconButtonsWidth
 
                 visibleProperty().bind(canLoadMoreItems)
-                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+                ensureOnlyUsesSpaceIfVisible()
 
                 contentDisplay = ContentDisplay.GRAPHIC_ONLY
                 graphic = ImageView(Icons.LoadNextItemsIconPath)
