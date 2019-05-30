@@ -1,6 +1,13 @@
 package net.dankito.deepthought.utils
 
+import com.fasterxml.jackson.databind.*
+import com.fasterxml.jackson.databind.deser.BeanDeserializer
+import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.databind.ser.BeanSerializer
+import com.fasterxml.jackson.databind.ser.BeanSerializerModifier
+import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import net.dankito.deepthought.model.*
 import net.dankito.service.data.*
 import net.dankito.utils.serialization.JacksonJsonSerializer
@@ -12,22 +19,49 @@ class DeepThoughtJacksonJsonSerializer(itemService: ItemService, tagService: Tag
                                        seriesService: SeriesService, fileService: FileService)
     : JacksonJsonSerializer(configureMapperCallback = { mapper ->
 
-    val module = SimpleModule() // TODO: find a better place for this
 
-    module.addSerializer(Item::class.java, PersistedItemSerializer())
-    module.addDeserializer(Item::class.java, PersistedItemDeserializer(itemService))
+    val module = object : SimpleModule() { // TODO: find a better place for this
 
-    module.addSerializer(Tag::class.java, PersistedTagSerializer())
-    module.addDeserializer(Tag::class.java, PersistedTagDeserializer(tagService))
+        override fun setupModule(context: SetupContext) {
+            super.setupModule(context)
 
-    module.addSerializer(Source::class.java, PersistedSourceSerializer())
-    module.addDeserializer(Source::class.java, PersistedSourceDeserializer(sourceService))
+            context.addBeanSerializerModifier(object : BeanSerializerModifier() {
 
-    module.addSerializer(Series::class.java, PersistedSeriesSerializer())
-    module.addDeserializer(Series::class.java, PersistedSeriesDeserializer(seriesService))
+                override fun modifySerializer(config: SerializationConfig, beanDesc: BeanDescription, serializer: JsonSerializer<*>): JsonSerializer<*> {
+                    if (serializer is BeanSerializer) {
+                        when (serializer.handledType()) {
+                            Item::class.java -> return PersistedItemSerializer(serializer as StdSerializer<Item>)
+                            Tag::class.java -> return PersistedTagSerializer(serializer as StdSerializer<Tag>)
+                            Source::class.java -> return PersistedSourceSerializer(serializer as StdSerializer<Source>)
+                            Series::class.java -> return PersistedSeriesSerializer(serializer as StdSerializer<Series>)
+                            FileLink::class.java -> return PersistedFileLinkSerializer(serializer as StdSerializer<FileLink>)
+                        }
+                    }
 
-    module.addSerializer(FileLink::class.java, PersistedFileLinkSerializer())
-    module.addDeserializer(FileLink::class.java, PersistedFileLinkDeserializer(fileService))
+                    return super.modifySerializer(config, beanDesc, serializer)
+                }
+
+            })
+
+            context.addBeanDeserializerModifier(object : BeanDeserializerModifier() {
+
+                override fun modifyDeserializer(config: DeserializationConfig?, beanDesc: BeanDescription?, deserializer: JsonDeserializer<*>?): JsonDeserializer<*> {
+                    if (deserializer is BeanDeserializer) {
+                        when (deserializer.handledType()) {
+                            Item::class.java -> return PersistedItemDeserializer(itemService, deserializer as StdDeserializer<Item>)
+                            Tag::class.java -> return PersistedTagDeserializer(tagService, deserializer as StdDeserializer<Tag>)
+                            Source::class.java -> return PersistedSourceDeserializer(sourceService, deserializer as StdDeserializer<Source>)
+                            Series::class.java -> return PersistedSeriesDeserializer(seriesService, deserializer as StdDeserializer<Series>)
+                            FileLink::class.java -> return PersistedFileLinkDeserializer(fileService, deserializer as StdDeserializer<FileLink>)
+                        }
+                    }
+
+                    return super.modifyDeserializer(config, beanDesc, deserializer)
+                }
+
+            })
+        }
+    }
 
     mapper.registerModule(module)
 })

@@ -38,7 +38,7 @@ abstract class PersistedEntitySerializerTestBase<T : BaseEntity>(protected val e
 
 
     @Test
-    fun serialize() {
+    fun serializePersistedEntity() {
 
         // given
         val entity = createEntity()
@@ -50,6 +50,20 @@ abstract class PersistedEntitySerializerTestBase<T : BaseEntity>(protected val e
         // then
 
         assertThat(result).isEqualTo("{\"${getIdFieldName()}\":\"$ID\"}")
+    }
+
+    @Test
+    fun serializeUnpersistedEntity() {
+
+        // given
+        val entity = createEntity()
+
+        // when
+        val result = mapper.writeValueAsString(entity)
+
+        // then
+
+        assertThat(result).doesNotContain(getIdFieldName())
     }
 
 }

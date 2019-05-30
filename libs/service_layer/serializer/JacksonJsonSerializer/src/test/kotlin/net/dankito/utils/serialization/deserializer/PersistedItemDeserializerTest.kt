@@ -1,5 +1,6 @@
 package net.dankito.utils.serialization.deserializer
 
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import net.dankito.deepthought.model.Item
 import net.dankito.service.data.EntityServiceBase
 import net.dankito.service.data.ItemService
@@ -14,7 +15,7 @@ class PersistedItemDeserializerTest : PersistedEntityDeserializerTestBase<Item>(
     }
 
     override fun createDeserializer(entityService: EntityServiceBase<Item>): PersistedEntityDeserializerBase<Item> {
-        return PersistedItemDeserializer(entityService as ItemService)
+        return PersistedItemDeserializer(entityService as ItemService, mock(StdDeserializer::class.java) as StdDeserializer<Item>)
     }
 
     override fun getIdFieldName(): String {
