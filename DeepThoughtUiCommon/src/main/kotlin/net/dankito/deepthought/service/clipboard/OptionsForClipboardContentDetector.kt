@@ -18,6 +18,7 @@ import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.web.UrlUtil
 import net.dankito.utils.web.client.IWebClient
 import net.dankito.utils.web.client.RequestParameters
+import net.dankito.utils.web.client.WebClientResponse
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -51,9 +52,9 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
         }
     }
 
-    private fun getOptionsForUrl(url: String, callback: (OptionsForClipboardContent) -> Unit) {
+    fun getOptionsForUrl(url: String, callback: (OptionsForClipboardContent) -> Unit) {
         webClient.headAsync(RequestParameters(url)) { response ->
-            if(response.isSuccessful && response.isSuccessResponse) {
+            if(response.isSuccessful && (response.isSuccessResponse || isHttp500WithHtmlAsContentType(response))) {
                 val contentType = response.getHeaderValue("Content-Type")
 
                 if(contentType != null) {
@@ -66,6 +67,11 @@ class OptionsForClipboardContentDetector(private val articleExtractorManager: Ar
                 }
             }
         }
+    }
+
+    private fun isHttp500WithHtmlAsContentType(response: WebClientResponse): Boolean {
+        return response.responseCode == 500
+                && response.getHeaderValue("Content-Type")?.contains("text/html", true) == true
     }
 
     private fun getOptionsForHttpUrl(url: String, callback: (OptionsForClipboardContent) -> Unit) {
