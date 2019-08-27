@@ -80,6 +80,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractHtmlFromEmbedJs() {
+        getAndTestArticle("https://www.sueddeutsche.de/kultur/afd-kulturpolitik-rechtsextremismus-gewalt-1.4578106",
+                "Druck von rechts",
+                "Eine Recherche von ARD und SZ dokumentiert, wie Theater, Opernhäuser und Museen von der Neuen Rechten unter Druck gesetzt und bedroht werden. Eine Chronik.",
+                "https://media-cdn.sueddeutsche.de/image/sz.1.4578396/704x396",
+                40000)
+    }
+
+    @Test
     fun fixFilterStockChart() {
         getAndTestArticle("https://www.sueddeutsche.de/wirtschaft/boeing-softwareproblem-1.4397784",
                 "Boeing räumt nach Abstürzen weiteres Softwareproblem ein",

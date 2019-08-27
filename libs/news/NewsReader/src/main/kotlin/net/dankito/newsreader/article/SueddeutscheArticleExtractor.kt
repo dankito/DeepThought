@@ -4,6 +4,7 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.RequestParameters
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.text.DateFormat
@@ -48,8 +49,13 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         triedToResolveMultiPageArticle = false
 
+        document.body().select("article.sz-article").first()?.let { articleElement ->
+            extractSzArticle(extractionResult, articleElement, url)
+            return
+        }
+
         document.body().select("#sitecontent").first()?.let { siteContent ->
-            extractArticle(extractionResult, siteContent, url)
+            extractSiteContentArticle(extractionResult, siteContent, url)
             return
         }
 
@@ -63,11 +69,42 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
-    private fun extractArticle(extractionResult: ItemExtractionResult, siteContent: Element, siteUrl: String) {
-        val source = extractSource(siteContent, siteUrl)
+    private fun extractSzArticle(extractionResult: ItemExtractionResult, articleElement: Element, siteUrl: String) {
+        articleElement.select(".sz-article__body").first()?.let { articleBody ->
+            var content = loadLazyLoadingElementsAndGetContent(articleElement, articleBody)
 
+            val source = extractSzArticleSource(articleElement, siteUrl)
+
+            extractTopEnrichment(articleElement, source, siteUrl)?.let { topEnrichment ->
+                content = "<div>" + topEnrichment.outerHtml() + "</div>" + content
+            }
+
+            val item = Item(content)
+
+            extractionResult.setExtractedContent(item, source)
+        }
+    }
+
+    private fun extractSzArticleSource(articleElement: Element, url: String): Source? {
+        articleElement.select("header.sz-article__header").first()?.let { headerElement ->
+            headerElement.select(".sz-article-header__title").firstOrNull()?.text()?.trim()?.let { title ->
+                val overline = headerElement.select(".sz-article-header__overline").firstOrNull()?.text()?.trim() ?: ""
+
+                val publishingDate = extractPublishingDate(headerElement)
+
+                return Source(title, url, publishingDate, subTitle = overline)
+            }
+        }
+
+        return null
+    }
+
+
+    private fun extractSiteContentArticle(extractionResult: ItemExtractionResult, siteContent: Element, siteUrl: String) {
         siteContent.select("#article-body").first()?.let { articleBody ->
             var content = loadLazyLoadingElementsAndGetContent(siteContent, articleBody)
+
+            val source = extractSource(siteContent, siteUrl)
 
             extractTopEnrichment(siteContent, source, siteUrl)?.let { topEnrichment ->
                 content = "<div>" + topEnrichment.outerHtml() + "</div>" + content
@@ -100,12 +137,21 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     private fun loadLazyLoadingElementsAndGetContent(siteContent: Element, articleBody: Element): String {
         extractInlineGalleries(articleBody)
         extractInlineCarousels(articleBody)
+        insertHtmlFromEmbedJs(siteContent)
 
         cleanArticleBody(articleBody)
 
         super.loadLazyLoadingElements(articleBody)
 
         val content = StringBuilder(articleBody.html())
+
+        siteContent.select(".sz-article__intro").firstOrNull()?.let { articleIntro ->
+            content.insert(0, articleIntro.outerHtml())
+        }
+
+        siteContent.select(".sz-article__top-asset picture").firstOrNull()?.let { topAsset ->
+            content.insert(0, topAsset.outerHtml())
+        }
 
         siteContent.select(".topenrichment").first()?.let { topEnrichment ->
             topEnrichment.select("iframe").first()?.let { topEnrichmentIFrame ->
@@ -127,6 +173,8 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         // remove scripts with try{window.performance.mark('monitor_articleTeaser');}catch(e){};
         articleBody.select("script").filter { it.html().contains("window.performance.mark") }.forEach { it.remove() }
+
+        articleBody.select("script").filter { it.html().contains("AdController.render") }.forEach { it.parent().parent().remove() }
 
         articleBody.select(".asset-infobox").filter { it.html().contains("Interview am Morgen") }.forEach { it.remove() }
 
@@ -229,6 +277,42 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
             inlineCarousel.remove()
         }
+    }
+
+    private fun insertHtmlFromEmbedJs(siteContent: Element) {
+        siteContent.select("script").forEach { scriptElement ->
+            val src = scriptElement.attr("src")
+
+            if (src.endsWith("/embed.js", true)) {
+                extractHtmlFromEmbedJs(src)?.let { htmlToInsert ->
+                    val parent = scriptElement.parent()
+
+                    scriptElement.remove()
+                    parent.append(htmlToInsert)
+                }
+            }
+        }
+    }
+
+    private fun extractHtmlFromEmbedJs(src: String): String? {
+        val embedJsResult = webClient.get(RequestParameters(src))
+        if (embedJsResult.isSuccessful) {
+            val embedJs = embedJsResult.body ?: ""
+
+            val indexOfHtml = embedJs.indexOf(";e.exports='")
+            if (indexOfHtml >= 0) {
+                var htmlFromEmbedJs = embedJs.substring(indexOfHtml + ";e.exports='".length)
+
+                val endIndexOfHtml = htmlFromEmbedJs.indexOf("'},function(e,n,t)")
+                if (endIndexOfHtml >= 0) {
+                    htmlFromEmbedJs = htmlFromEmbedJs.substring(0, endIndexOfHtml)
+                }
+
+                return htmlFromEmbedJs
+            }
+        }
+
+        return null
     }
 
 
