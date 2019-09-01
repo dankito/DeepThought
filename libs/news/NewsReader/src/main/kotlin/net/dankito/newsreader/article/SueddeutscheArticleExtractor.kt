@@ -5,8 +5,10 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.utils.web.client.IWebClient
 import net.dankito.utils.web.client.RequestParameters
+import net.dankito.utils.web.client.WebClientResponse
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.parser.Parser
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -284,35 +286,33 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             val src = scriptElement.attr("src")
 
             if (src.endsWith("/embed.js", true)) {
-                extractHtmlFromEmbedJs(src)?.let { htmlToInsert ->
-                    val parent = scriptElement.parent()
+                val htmlSrc = src.replace("embed.js", "index.html")
 
-                    scriptElement.remove()
-                    parent.append(htmlToInsert)
+                val embedHtmlResponse = webClient.get(RequestParameters(htmlSrc))
+                if (embedHtmlResponse.isSuccessful) {
+                    insertHtmlFromEmbedHtml(embedHtmlResponse, scriptElement, src)
+                }
+                else {
+                    val iframe = Element("iframe")
+
+                    iframe.attr("src", htmlSrc)
+
+                    scriptElement.replaceWith(iframe)
                 }
             }
         }
     }
 
-    private fun extractHtmlFromEmbedJs(src: String): String? {
-        val embedJsResult = webClient.get(RequestParameters(src))
-        if (embedJsResult.isSuccessful) {
-            val embedJs = embedJsResult.body ?: ""
+    private fun insertHtmlFromEmbedHtml(embedHtmlResponse: WebClientResponse, scriptElement: Element, src: String) {
+        val parsed = Parser.parse(embedHtmlResponse.body, src.replace("embed.js", ""))
+        makeLinksAbsolute(parsed.body(), src.replace("embed.js", ""))
 
-            val indexOfHtml = embedJs.indexOf(";e.exports='")
-            if (indexOfHtml >= 0) {
-                var htmlFromEmbedJs = embedJs.substring(indexOfHtml + ";e.exports='".length)
+        val div = Element("div")
+        div.attr("style", "border: medium none; width: 100%; height: auto; overflow: hidden; box-sizing: border-box;")
 
-                val endIndexOfHtml = htmlFromEmbedJs.indexOf("'},function(e,n,t)")
-                if (endIndexOfHtml >= 0) {
-                    htmlFromEmbedJs = htmlFromEmbedJs.substring(0, endIndexOfHtml)
-                }
+        parsed.body().children().forEach { div.appendChild(it) }
 
-                return htmlFromEmbedJs
-            }
-        }
-
-        return null
+        scriptElement.replaceWith(div)
     }
 
 

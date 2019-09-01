@@ -89,6 +89,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractHtmlFromEmbedJs2() {
+        getAndTestArticle("https://www.sueddeutsche.de/politik/sz-streitbot-besser-diskutieren-so-geht-s-1.4525128",
+                "Besser diskutieren - so geht's",
+                "Diskussionen ohne Eskalationen? Fakten statt Faseln? Tipps, wie Sie souverän über heikle Themen streiten können - auch ohne Ich-Botschaften.",
+                "https://media-cdn.sueddeutsche.de/image/sz.1.4534653/704x396",
+                4500, subTitle = "SZ-Streitbot")
+    }
+
+    @Test
     fun fixFilterStockChart() {
         getAndTestArticle("https://www.sueddeutsche.de/wirtschaft/boeing-softwareproblem-1.4397784",
                 "Boeing räumt nach Abstürzen weiteres Softwareproblem ein",
