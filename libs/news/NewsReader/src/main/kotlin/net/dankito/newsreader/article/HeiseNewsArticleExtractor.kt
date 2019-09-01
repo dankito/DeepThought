@@ -16,6 +16,7 @@ class HeiseNewsArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
                 url.contains(".heise.de/security/meldung/") ||
                 url.contains(".heise.de/security/artikel/") ||
                 url.contains(".heise.de/make/meldung/") ||
+                url.contains(".heise.de/make/artikel/") ||
                 url.contains(".heise.de/mac-and-i/meldung/") )
     }
 

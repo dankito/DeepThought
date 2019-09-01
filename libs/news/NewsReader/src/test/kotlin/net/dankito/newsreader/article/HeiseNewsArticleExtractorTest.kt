@@ -59,4 +59,21 @@ class HeiseNewsArticleExtractorTest : ArticleExtractorTestBase() {
                 "https://1.f.ix.de/scale/geometry/700/q75/imgs/18/2/3/2/2/9/4/2/ewe-0dd4e09255e81e38.jpeg", 3000)
     }
 
+    @Test
+    fun parseMakeArticle() {
+        getAndTestArticle("https://www.heise.de/make/artikel/Grosser-Bruder-Espressif-ESP32-3256039.html",
+                "Großer Bruder: Espressif ESP32",
+                "Schnelleres WLAN (bis 150 Mbit/s), zwei Prozessoren (160 MHz), Bluetooth (Low Energy), noch mehr Speicher und viel Peripherie soll der neue Chip bringen.",
+                "https://heise.cloudimg.io/width/696/q85.png-lossy-85.webp-lossy-85.foil1/_www-heise-de_/make/imgs/76/1/8/4/4/2/6/5/ESP31B_ESP32_Arduino_IDE-0182a7cf4d5e2939.jpeg",
+                45000)
+    }
+
+    @Test
+    fun login() {
+        getAndTestArticle("https://www.heise.de/make/artikel/Grosser-Bruder-Espressif-ESP32-3256039.html?seite=all",
+                "Zeitumstellung: Wissenschaftler warnen vor ewiger \"Sommerzeit\"",
+                "Die Zeitumstellung abschaffen – das wollen nicht nur viele Deutsche. Doch Forscher warnen: Eine dauerhafte \"Sommerzeit\" könne schlimme Auswirkungen haben.",
+                "https://heise.cloudimg.io/width/700/q75.png-lossy-75.webp-lossy-75.foil1/_www-heise-de_/imgs/18/2/4/9/9/6/3/1/Unbenannt-1-40f434de35bf8b60.jpeg", 3000)
+    }
+
 }
