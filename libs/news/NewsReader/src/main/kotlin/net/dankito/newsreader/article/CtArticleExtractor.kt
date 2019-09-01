@@ -21,6 +21,8 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
 
         private val ctMobileDateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN)
 
+        private val AccessDateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.GERMAN)
+
         private val log = LoggerFactory.getLogger(CtArticleExtractor::class.java)
     }
 
@@ -49,6 +51,48 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
         document.body().select("article").first()?.let { articleElement ->
             parseMobileSite(url, articleElement, extractionResult)
         }
+    }
+
+
+    private fun parseArticleSite(url: String, articleElement: Element, extractionResult: ItemExtractionResult) {
+        articleElement.select("header").firstOrNull()?.let { headerElement ->
+            val title = headerElement.select("h1").firstOrNull()?.text()?.trim() ?: ""
+            val subtitle = headerElement.select("h2").firstOrNull()?.text()?.trim() ?: ""
+
+            val previewImage = headerElement.select("figure").firstOrNull()
+            val previewImageUrl = previewImage?.select("img")?.firstOrNull()?.attr("src")
+            val publishingDate = extractArticlePublishingDate(articleElement.ownerDocument())
+
+            val item = Item(articleElement.outerHtml())
+            item.indication = articleElement.ownerDocument().select(".meta__item--page").firstOrNull()?.text()?.trim() ?: ""
+
+            val source = Source(title, url, publishingDate, previewImageUrl, subtitle)
+            source.issue = articleElement.ownerDocument().select(".meta__item--issue").firstOrNull()?.text()?.trim()?.replace("c't ", "")
+
+            extractionResult.setExtractedContent(item, source)
+        }
+    }
+
+    private fun extractArticlePublishingDate(document: Document): Date? {
+        try {
+            val body = document.body().html()
+
+            var startIndex = body.indexOf("subscriberAccessDate: ")
+            if (startIndex > 0) {
+                startIndex += "subscriberAccessDate: ".length
+                val endIndex = body.indexOf("\n", startIndex)
+
+                if (endIndex > 0 && (endIndex - startIndex) < 30) {
+                    val accessDateString = body.substring(startIndex + 1, endIndex - 1)
+
+                    return AccessDateFormat.parse(accessDateString)
+                }
+            }
+        } catch (e: Exception) {
+            log.error("Could not parse subscriberAccessDate", e)
+        }
+
+        return null
     }
 
 

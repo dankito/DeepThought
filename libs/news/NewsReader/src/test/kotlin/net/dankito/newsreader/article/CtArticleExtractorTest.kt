@@ -48,5 +48,15 @@ class CtArticleExtractorTest : ArticleExtractorTestBase() {
         )
     }
 
+    @Test
+    fun extractSelectArticleWithoutLogin() {
+        getAndTestArticle("https://www.heise.de/select/ct/2019/18/1566919516550023",
+                "Verschlossen, nicht verrammelt",
+                "Passwörter sind bisher der wichtigste Schutz für unsere Online-Identität. Doch die neuen Sicherheitsschlüssel der FIDO-Allianz sind in jeder Hinsicht besser und komfortabler. Ein Blick hinter die Kulissen von FIDO2 und U2F (mit ganz wenig Krypto-Kauderwelsch).",
+                "https://heise.cloudimg.io/width/900/q65.png-lossy-65.webp-lossy-65.foil1/_www-heise-de_/select/ct/2019/18/1566919516550023/contentimages/image-1565609970388979.jpg",
+                2000, // extracts only teaser
+                subTitle = "So funktioniert der passwortlose Login mit FIDO2")
+    }
+
 
 }
