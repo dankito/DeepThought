@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 abstract class ArticleExtractorTestBase {
 
-    private val underTest: IArticleExtractor
+    protected val underTest: IArticleExtractor
 
     init {
         underTest = createArticleExtractor(OkHttpWebClient())

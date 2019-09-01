@@ -1,9 +1,13 @@
 package net.dankito.newsreader.article
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.newsreader.model.LoginResult
+import net.dankito.utils.credentials.ICredentials
+import net.dankito.utils.credentials.UsernamePasswordCredentials
+import net.dankito.utils.web.client.IWebClient
+import net.dankito.utils.web.client.RequestParameters
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -35,22 +39,37 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
     override fun canExtractItemFromUrl(url: String): Boolean {
-        return isHttpOrHttpsUrlFromHost(url, "www.heise.de/ct/") || isHttpOrHttpsUrlFromHost(url, "m.heise.de/ct/")
+        return isHttpOrHttpsUrlFromHost(url, "www.heise.de/ct/")
+                || isHttpOrHttpsUrlFromHost(url, "m.heise.de/ct/")
+                || isHttpOrHttpsUrlFromHost(url, "..heise.de/select/ct")
     }
+
+
+    override val doesSupportLoggingIn = true
+
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
         if(tryToParseMultiPageArticle(extractionResult, document, url)) {
             return
         }
 
-        document.body().select("main section").first()?.let { sectionElement ->
+        document.body().select("article.article--variante-2").firstOrNull()?.let { articleElement ->
+            parseArticleSite(url, articleElement, extractionResult)
+            handleNeedsLoginToViewFullArticle(url, document, extractionResult)
+            return
+        }
+
+        document.body().select("main section:not(.meta)").firstOrNull()?.let { sectionElement ->
             parseDesktopSite(url, sectionElement, extractionResult)
+            handleNeedsLoginToViewFullArticle(url, document, extractionResult)
             return
         }
 
         document.body().select("article").first()?.let { articleElement ->
             parseMobileSite(url, articleElement, extractionResult)
         }
+
+        handleNeedsLoginToViewFullArticle(url, document, extractionResult)
     }
 
 
@@ -299,6 +318,30 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
         }
 
         return pageNumberEndIndex
+    }
+
+
+    override fun needsLoginToViewFullArticle(url: String, document: Document): Boolean {
+        return document.body().select("#purchase").isNotEmpty()
+    }
+
+    override fun login(credentials: ICredentials): LoginResult? {
+        if (credentials is UsernamePasswordCredentials) {
+            val loginHeaders = mapOf(
+                    "Content-Type" to "application/x-www-form-urlencoded"
+            )
+            val loginResponse = webClient.post(RequestParameters("https://www.heise.de/sso/login/login",
+                    "username=${credentials.username}&password=${credentials.password}&permanent=1&ajax=1",
+                    headers = loginHeaders))
+
+            if (loginResponse.isSuccessful) {
+                loginResponse.getCookie("ssohls")?.let { loginCookie ->
+                    return setLoginResult(listOf(loginCookie))
+                }
+            }
+        }
+
+        return super.login(credentials)
     }
 
 }

@@ -1,12 +1,15 @@
 package net.dankito.newsreader.article
 
-import net.dankito.utils.services.network.ExtractorBase
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.getPlainTextForHtml
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.newsreader.model.ArticleSummaryItem
+import net.dankito.newsreader.model.LoginResult
 import net.dankito.utils.AsyncResult
+import net.dankito.utils.credentials.ICredentials
+import net.dankito.utils.services.network.ExtractorBase
+import net.dankito.utils.web.client.Cookie
 import net.dankito.utils.web.client.IWebClient
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -29,6 +32,13 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
 
 
     private val metaDataExtractor = WebPageMetaDataExtractor(webClient)
+
+    private var isTryingToRetrieveFullArticle = false
+
+
+    open val doesSupportLoggingIn: Boolean = false
+
+    protected var loginResult: LoginResult? = null
 
 
     override fun extractArticleAsync(item : ArticleSummaryItem, callback: (AsyncResult<ItemExtractionResult>) -> Unit) {
@@ -193,6 +203,52 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
         } catch(e: Exception) { log.info("Could not parse date string '$dateString' with DateFormat $dateFormat") }
 
         return null
+    }
+
+
+    open fun login(credentials: ICredentials): LoginResult? {
+        return null
+    }
+
+    protected open fun setLoginResult(loginCookies: List<Cookie>): LoginResult? {
+        this.loginResult = LoginResult(loginCookies)
+
+        return this.loginResult
+    }
+
+    protected open fun needsLoginToViewFullArticle(url: String, document: Document): Boolean {
+        return false
+    }
+
+    protected open fun handleNeedsLoginToViewFullArticle(url: String, document: Document, extractionResult: ItemExtractionResult) {
+        if (needsLoginToViewFullArticle(url, document)) {
+            if (isTryingToRetrieveFullArticle == false) {
+                isTryingToRetrieveFullArticle = true
+
+                loginResult?.let { loginResult ->
+                    try {
+                        val parameters = createParametersForUrl(url)
+                        parameters.cookies = loginResult.cookies
+
+                        val response = webClient.get(parameters)
+                        if (response.isSuccessful) {
+                            response.body?.let { html ->
+                                parseHtml(extractionResult, html, url)
+                                isTryingToRetrieveFullArticle = false
+
+                                return // could successfully retrieve and parse content with LoginResult
+                            }
+                        }
+                    } catch (e: Exception) {
+                        log.info("Could not get url '$url' with LoginResult $loginResult", e)
+                    }
+                }
+            }
+
+            extractionResult.needsLoginToViewFullArticle = true // in all other cases set needsLoginToViewFullArticle to true
+        }
+
+        isTryingToRetrieveFullArticle = false
     }
 
 }
