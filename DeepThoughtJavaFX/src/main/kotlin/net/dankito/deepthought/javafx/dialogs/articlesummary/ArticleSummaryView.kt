@@ -42,6 +42,8 @@ class ArticleSummaryView : DialogFragment() {
 
     private val extractorConfig: ArticleSummaryExtractorConfig
 
+    private val articleSummaryItemsView: ArticleSummaryItemsView
+
 
 
     override val root = borderpane {
@@ -56,15 +58,17 @@ class ArticleSummaryView : DialogFragment() {
 
         this.extractorConfig = (windowData as ArticleSummaryWindowData).articleSummaryExtractorConfig
 
-        (windowData as ArticleSummaryWindowData).articleSummary?.let { articleSummary ->
-            presenter.retrievedArticleSummary(articleSummary, extractorConfig)
+        articleSummaryItemsView = ArticleSummaryItemsView(presenter)
+
+        (windowData as? ArticleSummaryWindowData)?.let { data ->
+            data.articleSummary?.let { presenter.retrievedArticleSummary(it, extractorConfig) }
+            articleSummaryItemsView.checkedItems.addAll(data.selectedItems)
         }
 
         initUi()
     }
 
     private fun initUi() {
-        val articleSummaryItemsView = ArticleSummaryItemsView(presenter)
         root.center = articleSummaryItemsView.root
 
         val articleSummaryControlBarView = ArticleSummaryControlBarView(presenter, articleSummaryItemsView, extractorConfig)
@@ -77,7 +81,10 @@ class ArticleSummaryView : DialogFragment() {
     override val windowDataClass = ArticleSummaryWindowData::class.java
 
     override fun getCurrentWindowData(): Any? {
-        (windowData as ArticleSummaryWindowData).articleSummary = presenter.lastLoadedSummary
+        (windowData as? ArticleSummaryWindowData)?.let { data ->
+            data.articleSummary = presenter.lastLoadedSummary
+            data.selectedItems = articleSummaryItemsView.checkedItems.toList()
+        }
 
         return windowData
     }

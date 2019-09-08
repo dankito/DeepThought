@@ -64,8 +64,9 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
 
     init {
         articleSummaryItemsView.checkedItems.addListener(SetChangeListener<ArticleSummaryItem> {
-            checkedItemsChanged(it)
+            checkedItemsChanged(it.set)
         })
+        checkedItemsChanged(articleSummaryItemsView.checkedItems)
 
         presenter.lastLoadedSummary?.let { articleSummaryReceived(it) }
         ?: presenter.extractArticlesSummary(articleSummaryExtractorConfig) { articleSummaryReceived(it) }
@@ -308,11 +309,11 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
     }
 
 
-    private fun checkedItemsChanged(change: SetChangeListener.Change<out ArticleSummaryItem>) {
+    private fun checkedItemsChanged(selectedItems: Collection<out ArticleSummaryItem>) {
         runLater { // don't know how this ever could happen, but got called on non UI thread
-            areSelectedItemsActionButtonsDisabled.set(change.set.size == 0)
+            areSelectedItemsActionButtonsDisabled.set(selectedItems.isEmpty())
 
-            countItemsSelectedLabelText.set(String.format(messages["count.items.selected"], change.set.size))
+            countItemsSelectedLabelText.set(String.format(messages["count.items.selected"], selectedItems.size))
         }
     }
 

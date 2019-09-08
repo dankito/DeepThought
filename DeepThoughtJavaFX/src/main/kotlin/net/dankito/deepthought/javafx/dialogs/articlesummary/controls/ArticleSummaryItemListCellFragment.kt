@@ -29,17 +29,23 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
             if(newValue?.listView?.userData is ObservableSet<*>) {
                 checkedItems = newValue?.listView?.userData as? ObservableSet<ArticleSummaryItem>
 
+                setCheckBoxState()
+
                 checkedItems?.addListener(SetChangeListener<ArticleSummaryItem> {
-                    checkBoxIsItemSelected.isSelected = it.set.contains(item)
+                    setCheckBoxState()
                 })
             }
         }
 
         itemProperty.addListener { _, _, newValue ->
-            checkBoxIsItemSelected.isSelected = checkedItems?.contains(newValue) ?: false
+            setCheckBoxState()
 
             tooltipText.set(if (newValue == null) "" else "${summaryItem.title.value}${System.lineSeparator()}${summaryItem.summary.value}")
         }
+    }
+
+    private fun setCheckBoxState() {
+        checkBoxIsItemSelected.isSelected = checkedItems?.contains(item) ?: false
     }
 
     override val root = hbox {
@@ -55,7 +61,7 @@ class ArticleSummaryItemListCellFragment : ListCellFragment<ArticleSummaryItem>(
             prefWidth = 30.0
 
             selectedProperty().addListener { _, _, isSelected ->
-                itemSelectionChanged(isSelected, item)
+                item?.let { itemSelectionChanged(isSelected, it) }
             }
 
             hboxConstraints {
