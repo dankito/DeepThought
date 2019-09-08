@@ -142,7 +142,7 @@ class EditSourceDialog : DialogFragment() {
 
         webAddressField.value = source.url ?: ""
 
-        publishingDateField.selectedDate = source.publishingDate.asLocalDate()
+        source.publishingDate.asLocalDate()?.let { publishingDateField.selectedDate = it }
 
         editFilesField.setFiles(source.attachedFiles, source)
     }
