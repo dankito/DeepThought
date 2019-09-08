@@ -43,10 +43,23 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
-        if(isMultiPageArticle(document) && triedToResolveMultiPageArticle == false) { // some multi page articles after fetching read all on one page still have the read all on one page link
-            triedToResolveMultiPageArticle = true // -> extractArticleWithPost() would be called endlessly. that's what triedToResolveMultiPageArticle is there for to avoid this
-            extractArticleWithPost(extractionResult, url, "article.singlePage=true", "application/x-www-form-urlencoded")
-            return
+        if (triedToResolveMultiPageArticle == false) { // some multi page articles after fetching read all on one page still have the read all on one page link
+            if (isMultiPageArticle(document)) {
+                triedToResolveMultiPageArticle = true // -> extractArticleWithPost() would be called endlessly. that's what triedToResolveMultiPageArticle is there for to avoid this
+                extractArticleWithPost(extractionResult, url, "article.singlePage=true", "application/x-www-form-urlencoded")
+                return
+            }
+
+            // new all on one page version beginning august 2019
+            document.body().select(".sz-article-pagination__display-on-one-page a").firstOrNull()?.let { allOnOnePageAnchor ->
+                val allOnOnePageUrl = makeLinkAbsolute(allOnOnePageAnchor.attr("href"), "https://www.sueddeutsche.de")
+                extractArticle(allOnOnePageUrl)?.let { allOnOnePageResult ->
+                    extractionResult.setExtractedContent(allOnOnePageResult.item, allOnOnePageResult.source)
+
+                    triedToResolveMultiPageArticle = true
+                    return
+                }
+            }
         }
 
         triedToResolveMultiPageArticle = false
