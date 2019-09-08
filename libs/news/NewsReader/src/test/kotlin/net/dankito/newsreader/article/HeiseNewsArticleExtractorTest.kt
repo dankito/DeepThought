@@ -35,6 +35,15 @@ class HeiseNewsArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractArticleVersion201909() {
+        getAndTestArticle("https://www.heise.de/newsticker/meldung/Fernseher-mit-Durchblick-Display-auf-Knopfdruck-transparent-4516220.html",
+                "Fernseher mit Durchblick: Display auf Knopfdruck transparent",
+                "Panasonic zeigt in Berlin einen Fernsehgerät, das auf Durchzug schalten kann: Per Knopfdruck wird sein Display transparent. ",
+                "https://heise.cloudimg.io/width/200/q50.png-lossy-50.webp-lossy-50.foil1/_www-heise-de_/imgs/18/2/7/4/5/1/2/6/Panasonic_transparentes_OLED-49fc0ebc4fbc2703.jpeg",
+                3000, subTitle = "IFA")
+    }
+
+    @Test
     fun extractMultiPageArticle() {
         getAndTestArticle("https://www.heise.de/newsticker/meldung/50-Jahre-Geldautomat-den-kann-ich-gut-gebrauchen-3750924.html",
                 "50 Jahre Geldautomat – \"den kann ich gut gebrauchen\"",
