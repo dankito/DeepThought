@@ -14,7 +14,6 @@ import net.dankito.utils.settings.ILocalSettingsStore
 import net.dankito.utils.version.Versions
 import org.slf4j.LoggerFactory
 import java.io.IOException
-import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -88,8 +87,8 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
         for (entityConfig in result.entities) {
             val entityDao = createDaoForEntity(entityConfig)
 
-            daoCache.addDao(entityConfig.entityClass, entityDao)
-            mapEntityClassesToDaos.put(entityConfig.entityClass, entityDao)
+            daoCache.addDao(entityConfig.getEntityClass(), entityDao)
+            mapEntityClassesToDaos.put(entityConfig.getEntityClass(), entityDao)
         }
     }
 

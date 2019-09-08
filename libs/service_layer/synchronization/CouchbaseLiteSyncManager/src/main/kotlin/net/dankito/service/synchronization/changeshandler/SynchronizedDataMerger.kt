@@ -126,7 +126,7 @@ class SynchronizedDataMerger(private val entityManager: CouchbaseLiteEntityManag
             currentTargetEntityIdsString = "[]" // TODO: what to do here? Assuming "[]" is for sure false. Removing all items?
         }
 
-        (property.targetEntity?.entityClass as? Class<out BaseEntity>)?.let { targetEntityClass ->
+        (property.targetEntity?.getEntityClass() as? Class<out BaseEntity>)?.let { targetEntityClass ->
             entityManager.getDaoForClass(targetEntityClass)?.let { targetDao ->
                 val currentTargetEntityIds = targetDao.parseJoinedEntityIdsFromJsonString(currentTargetEntityIdsString)
 
