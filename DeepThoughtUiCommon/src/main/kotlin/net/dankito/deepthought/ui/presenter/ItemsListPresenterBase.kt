@@ -27,6 +27,10 @@ abstract class ItemsListPresenterBase(protected val deleteEntityService: DeleteE
         clipboardService.copyItemToClipboard(item, item.tags, item.source, item.source?.series)
     }
 
+    fun copyItemContentAsHtmlToClipboard(item: Item) {
+        clipboardService.copyItemContentAsHtmlToClipboard(item)
+    }
+
 
     fun confirmDeleteItemsAsync(items: List<Item>) {
         dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.items", items.size)) { selectedButton ->
