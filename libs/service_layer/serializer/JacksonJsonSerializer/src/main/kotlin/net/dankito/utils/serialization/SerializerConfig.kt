@@ -9,6 +9,7 @@ class SerializerConfig {
         const val SourceIdFieldName = "source_id"
         const val SeriesIdFieldName = "series_id"
         const val FileLinkIdFieldName = "file_id"
+        const val ArticleSummaryExtractorConfigIdFieldName = "article_summary_extractor_config_id"
     }
 
 }

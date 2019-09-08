@@ -142,8 +142,9 @@ class CommonDataModule {
     @Provides
     @Singleton
     fun provideSerializer(itemService: ItemService, tagService: TagService, sourceService: SourceService,
-                          seriesService: SeriesService, fileService: FileService) : ISerializer {
-        return DeepThoughtJacksonJsonSerializer(itemService, tagService, sourceService, seriesService, fileService)
+                          seriesService: SeriesService, fileService: FileService,
+                          articleSummaryExtractorConfigService: ArticleSummaryExtractorConfigService) : ISerializer {
+        return DeepThoughtJacksonJsonSerializer(itemService, tagService, sourceService, seriesService, fileService, articleSummaryExtractorConfigService)
     }
 
     @Provides

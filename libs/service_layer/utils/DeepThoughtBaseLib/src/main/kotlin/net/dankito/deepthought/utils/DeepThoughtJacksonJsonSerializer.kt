@@ -16,7 +16,7 @@ import net.dankito.utils.serialization.serializer.*
 
 
 class DeepThoughtJacksonJsonSerializer(itemService: ItemService, tagService: TagService, sourceService: SourceService,
-                                       seriesService: SeriesService, fileService: FileService)
+                                       seriesService: SeriesService, fileService: FileService, articleSummaryExtractorConfigService: ArticleSummaryExtractorConfigService)
     : JacksonJsonSerializer(configureMapperCallback = { mapper ->
 
 
@@ -35,6 +35,7 @@ class DeepThoughtJacksonJsonSerializer(itemService: ItemService, tagService: Tag
                             Source::class.java -> return PersistedSourceSerializer(serializer as StdSerializer<Source>)
                             Series::class.java -> return PersistedSeriesSerializer(serializer as StdSerializer<Series>)
                             FileLink::class.java -> return PersistedFileLinkSerializer(serializer as StdSerializer<FileLink>)
+                            ArticleSummaryExtractorConfig::class.java -> return PersistedArticleSummaryExtractorConfigSerializer(serializer as StdSerializer<ArticleSummaryExtractorConfig>)
                         }
                     }
 
@@ -53,6 +54,8 @@ class DeepThoughtJacksonJsonSerializer(itemService: ItemService, tagService: Tag
                             Source::class.java -> return PersistedSourceDeserializer(sourceService, deserializer as StdDeserializer<Source>)
                             Series::class.java -> return PersistedSeriesDeserializer(seriesService, deserializer as StdDeserializer<Series>)
                             FileLink::class.java -> return PersistedFileLinkDeserializer(fileService, deserializer as StdDeserializer<FileLink>)
+                            ArticleSummaryExtractorConfig::class.java -> return PersistedArticleSummaryExtractorConfigDeserializer(articleSummaryExtractorConfigService,
+                                    deserializer as StdDeserializer<ArticleSummaryExtractorConfig>)
                         }
                     }
 
