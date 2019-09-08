@@ -35,7 +35,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
             }
 
             article.select("header").first()?.let { header ->
-                header.select(".article__heading, .article-header__heading").first()?.text()?.let { title ->
+                header.select(".article__heading, .article-header__heading, .a-article-header__title").first()?.text()?.let { title ->
                     parseArticle(extractionResult, header, article, url, title.trim())
                     return
                 }
@@ -89,7 +89,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         var contentHtml = extractArticleMeldungContent(articleMeldungElement, url)
 
         val previewImageElement = articleMeldungElement.select(".article-image").firstOrNull()
-        val summaryElement = articleMeldungElement.select(".article-content__lead, .article-header__lead").firstOrNull()
+        val summaryElement = articleMeldungElement.select(".article-content__lead, .article-header__lead, .a-article-header__lead").firstOrNull()
 
         if(previewImageElement != null || summaryElement != null) {
             previewImageElement?.let { unwrapImagesFromNoscriptElements(it) }
@@ -100,7 +100,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         val item = Item(contentHtml)
 
         val publishingDate = extractPublishingDate(headerElement)
-        val source = Source(title, url, publishingDate)
+        val source = Source(title, url, publishingDate, subTitle = headerElement.select(".a-article-header__label").firstOrNull()?.text()?.trim() ?: "")
 
         previewImageElement?.let {
             source.previewImageUrl = makeLinkAbsolute(previewImageElement.select(".article-image img").first()?.attr("src") ?: "", url)
