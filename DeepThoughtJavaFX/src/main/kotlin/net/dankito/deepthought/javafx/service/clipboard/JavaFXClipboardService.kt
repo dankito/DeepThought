@@ -30,4 +30,12 @@ class JavaFXClipboardService : ClipboardServiceBase() {
         Clipboard.getSystemClipboard().setContent(content)
     }
 
+    override fun copyItemContentAsHtmlToClipboard(item: Item) {
+        val content = ClipboardContent()
+
+        content.putString(item.content)
+
+        Clipboard.getSystemClipboard().setContent(content)
+    }
+
 }

@@ -35,21 +35,15 @@ class AndroidClipboardService : ClipboardServiceBase() {
 
 
     override fun copyUrlToClipboard(url: String) {
-        val shareIntent = Intent()
-        shareIntent.action = Intent.ACTION_SEND
+        val shareIntent = createShareIntent()
 
         shareIntent.putExtra(Intent.EXTRA_TEXT, url)
-
-        shareIntent.type = "text/plain"
 
         share(shareIntent)
     }
 
     override fun copyItemToClipboard(item: Item, tags: Collection<Tag>, source: Source?, series: Series?) {
-        val shareIntent = Intent()
-
-        shareIntent.action = Intent.ACTION_SEND
-        shareIntent.type = "text/plain"
+        val shareIntent = createShareIntent()
 
         addItemToShareIntent(shareIntent, item, tags, source, series)
 
@@ -69,6 +63,27 @@ class AndroidClipboardService : ClipboardServiceBase() {
         source?.let {
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, it.getPreviewWithSeriesAndPublishingDate(series))
         }
+    }
+
+    override fun copyItemContentAsHtmlToClipboard(item: Item) {
+        val shareIntent = createShareIntent("text/html")
+
+        shareIntent.putExtra(Intent.EXTRA_TEXT, item.content)
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            shareIntent.putExtra(Intent.EXTRA_HTML_TEXT, item.content)
+        }
+
+        share(shareIntent)
+    }
+
+
+    private fun createShareIntent(type: String = "text/plain"): Intent {
+        val shareIntent = Intent()
+
+        shareIntent.action = Intent.ACTION_SEND
+        shareIntent.type = type
+
+        return shareIntent
     }
 
     private fun share(shareIntent: Intent) {

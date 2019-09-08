@@ -12,4 +12,6 @@ interface IClipboardService {
 
     fun copyItemToClipboard(item: Item, tags: Collection<Tag>, source: Source?, series: Series?)
 
+    fun copyItemContentAsHtmlToClipboard(item: Item)
+
 }

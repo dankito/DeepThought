@@ -14,7 +14,6 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.dialogs.mainwindow.model.ItemItemViewModel
 import net.dankito.deepthought.javafx.routing.JavaFXRouter
 import net.dankito.deepthought.javafx.ui.controls.IItemsListViewJavaFX
-import net.dankito.utils.javafx.util.LazyLoadingObservableList
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.Tag
@@ -29,6 +28,7 @@ import net.dankito.service.search.ISearchEngine
 import net.dankito.service.search.Search
 import net.dankito.service.search.util.SortOption
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.javafx.util.LazyLoadingObservableList
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.IDialogService
 import tornadofx.*
@@ -276,6 +276,10 @@ class ItemsListView : EntitiesListView(), IItemsListViewJavaFX {
 
         contextMenu.item(messages["context.menu.item.copy.item.to.clipboard"]) {
             action { presenter.copyItemToClipboard(item) }
+        }
+
+        contextMenu.item(messages["context.menu.item.copy.item.content.as.html.to.clipboard"]) {
+            action { presenter.copyItemContentAsHtmlToClipboard(item) }
         }
 
         contextMenu.separator()
