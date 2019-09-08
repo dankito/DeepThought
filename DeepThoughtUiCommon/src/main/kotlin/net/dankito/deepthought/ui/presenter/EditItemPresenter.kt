@@ -46,6 +46,10 @@ class EditItemPresenter(private val itemPersister: ItemPersister, private val re
         clipboardService.copyItemToClipboard(item, tags, source, series)
     }
 
+    fun shareItemContentAsHtml(item: Item) {
+        clipboardService.copyItemContentAsHtmlToClipboard(item)
+    }
+
 
     fun returnToPreviousView() {
         router.returnToPreviousView()

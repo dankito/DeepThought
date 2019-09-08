@@ -134,6 +134,8 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
     protected var mnShareItemContent: MenuItem? = null
 
+    protected var mnShareItemContentAsHtml: MenuItem? = null
+
     private lateinit var floatingActionMenu: EditItemActivityFloatingActionMenuButton
 
 
@@ -438,7 +440,10 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
     private fun updateShowMenuItemShareItem() {
         mnShareItemSourceUrl?.isVisible = lytSourcePreview.source?.url.isNullOrBlank() == false
-        mnShareItemContent?.isVisible = itemToSave.content.isNullOrBlank() == false
+
+        val isContentSet = itemToSave.content.isNullOrBlank() == false
+        mnShareItemContent?.isVisible = isContentSet
+        mnShareItemContentAsHtml?.isVisible = isContentSet
     }
 
     private fun tagsPreviewFocusChanged(hasFocus: Boolean) {
@@ -646,6 +651,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
         mnShareItemSourceUrl = menu.findItem(R.id.mnShareItemSourceUrl)
         mnShareItemContent = menu.findItem(R.id.mnShareItemContent)
+        mnShareItemContentAsHtml = menu.findItem(R.id.mnShareItemContentAsHtml)
         updateShowMenuItemShareItem()
 
         setMenuSaveItemVisibleStateOnUIThread()
@@ -683,6 +689,10 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
                 shareItemContent()
                 return true
             }
+            R.id.mnShareItemContentAsHtml -> {
+                shareItemContentAsHtml()
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)
@@ -701,6 +711,12 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
             presenter.shareItem(Item(content, lytSummaryPreview.getCurrentFieldValue()), tagsOnItem,
                     Source(editedSourceTitle, currentSource?.url ?: "", currentSource?.publishingDate, currentSource?.subTitle), lytSourcePreview.series)
+        }
+    }
+
+    private fun shareItemContentAsHtml() {
+        itemContentView.getCurrentHtmlAsync { content ->
+            presenter.shareItemContentAsHtml(Item(content))
         }
     }
 
