@@ -63,18 +63,23 @@ abstract class ExtractorBase(val webClient : IWebClient, protected val urlUtil: 
 
     protected open fun loadLazyLoadingElements(element: Element) {
         for (lazyLoadingElement in element.select("[data-src]")) {
-            loadLazyLoadingElement(lazyLoadingElement)
+            loadLazyLoadingElement(lazyLoadingElement, "data-src", "src")
+        }
+
+        for (lazyLoadingElement in element.select("[data-srcset]")) {
+            loadLazyLoadingElement(lazyLoadingElement, "data-srcset", "srcset")
         }
     }
 
     protected open fun loadLazyLoadingElement(lazyLoadingElement: Element): Element {
-        val source = lazyLoadingElement.attr("data-src")
+        return loadLazyLoadingElement(lazyLoadingElement, "data-src", "src")
+    }
 
-        if(source.isNotBlank()) {
-            when (lazyLoadingElement.nodeName()) {
-                "img" -> lazyLoadingElement.attr("src", source)
-                else -> lazyLoadingElement.attr("src", source)
-            }
+    protected open fun loadLazyLoadingElement(lazyLoadingElement: Element, lazyLoadingAttributeName: String, destinationAttributeName: String): Element {
+        val source = lazyLoadingElement.attr(lazyLoadingAttributeName)
+
+        if (source.isNotBlank()) {
+            lazyLoadingElement.attr(destinationAttributeName, source)
         }
 
         return lazyLoadingElement
