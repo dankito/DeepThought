@@ -170,6 +170,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun extractMultiPageArticle201908() {
+        getAndTestArticle("https://www.sueddeutsche.de/muenchen/muenchner-originale-historische-personen-1.4581832",
+                "Münchens kolossale Käuze",
+                "\"Münchner Originale\": Ein neues Buch stellt mit wunderbaren Fotografien die Lebensgeschichten von Menschen vor, die das Bild der Stadt einst prägten.",
+                "https://media-cdn.sueddeutsche.de/image/sz.1.4582148/704x396",
+                15000, subTitle = "Geschichte") // first page has a length of little more than 12400
+    }
+
+    @Test
     fun extractKarriereMultiPageArticle() {
         getAndTestArticle("https://www.sueddeutsche.de/karriere/sabbatical-job-auszeit-karriere-1.4212445",
                 "Hilft eine Auszeit vom Job wirklich weiter?",
