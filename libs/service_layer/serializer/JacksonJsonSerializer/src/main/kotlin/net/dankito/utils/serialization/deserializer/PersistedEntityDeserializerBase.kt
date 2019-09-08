@@ -14,6 +14,7 @@ import net.dankito.deepthought.model.BaseEntity
 import net.dankito.service.data.EntityServiceBase
 import org.slf4j.LoggerFactory
 import java.io.IOException
+import java.io.StringReader
 
 
 open class PersistedEntityDeserializerBase<TEntity : BaseEntity>(protected val entityService: EntityServiceBase<TEntity>,
@@ -63,10 +64,11 @@ open class PersistedEntityDeserializerBase<TEntity : BaseEntity>(protected val e
                 val location = jsonParser.currentLocation
 
                 location.sourceRef?.let { sourceRef ->
-                    val objectEndIndex = sourceRef.toString().indexOf('}', location.columnNr)
+                    val serializedString = getSerializedString(sourceRef)
+                    val objectEndIndex = serializedString.indexOf('}', location.columnNr)
 
                     if (objectEndIndex > 0) {
-                        return tryToDeserializePersistedEntity(jsonParser, location, objectEndIndex)
+                        return tryToDeserializePersistedEntity(jsonParser, serializedString, location, objectEndIndex)
                     }
                 }
             } catch(e: Exception) {
@@ -77,8 +79,8 @@ open class PersistedEntityDeserializerBase<TEntity : BaseEntity>(protected val e
         return null
     }
 
-    protected open fun tryToDeserializePersistedEntity(jsonParser: JsonParser, location: JsonLocation, objectEndIndex: Int): TEntity? {
-        val currentSubTree = location.sourceRef.toString().substring(location.columnNr, objectEndIndex)
+    protected open fun tryToDeserializePersistedEntity(jsonParser: JsonParser, serializedString: String, location: JsonLocation, objectEndIndex: Int): TEntity? {
+        val currentSubTree = serializedString.substring(location.columnNr, objectEndIndex)
 
         if (currentSubTree.contains(idFieldName)) {
             val node = jsonParser.codec.readTree<ObjectNode>(jsonParser)
@@ -93,6 +95,22 @@ open class PersistedEntityDeserializerBase<TEntity : BaseEntity>(protected val e
         }
 
         return null
+    }
+
+    protected open fun getSerializedString(sourceRef: Any): String {
+        if (sourceRef is StringReader) {
+            try {
+                // there's not other way to get string from StringReader without manipulating its reader position
+                val strField = StringReader::class.java.getDeclaredField("str")
+                strField.isAccessible = true
+
+                return strField.get(sourceRef) as String
+            } catch (e: Exception) {
+                log.error("Could not get String from private StringReader field 'str'", e)
+            }
+        }
+
+        return sourceRef.toString()
     }
 
 }
