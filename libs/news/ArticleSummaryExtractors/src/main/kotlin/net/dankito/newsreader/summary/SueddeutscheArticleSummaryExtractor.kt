@@ -56,13 +56,17 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
                 item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl)
             }
 
-            teaserElement.select(".sz-teaser__summary").first()?.let { summaryElement ->
+            teaserElement.select(".sz-teaser__summary").firstOrNull()?.let { summaryElement ->
                 summaryElement.select(".author, .more").remove()
                 item.summary = summaryElement.text()
             }
 
-            teaserElement.select(".sz-teaser__overline-title").first()?.let { overlineTitle ->
+            teaserElement.select(".sz-teaser__overline-title").firstOrNull()?.let { overlineTitle ->
                 item.title = overlineTitle.text().trim() + " - " + item.title
+            }
+
+            if (teaserElement.select(".sz-teaser-label-plus").firstOrNull() != null) {
+                item.title = "SZ+ " + item.title
             }
 
             return item
