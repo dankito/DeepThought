@@ -59,4 +59,14 @@ class SueddeutscheJetztArticleExtractorTest : ArticleExtractorTestBase() {
                 6000)
     }
 
+    @Test
+    fun tweetsGetDisplayed() {
+        getAndTestArticle("https://www.jetzt.de/politik/greta-thunberg-trifft-donald-trump",
+                "Showdown zwischen Greta Thunberg und Donald Trump",
+                "Der wohl wütendste Blick aller Zeiten.",
+                null,
+                5500,
+                subTitle = "Greta Thunberg trifft auf Donald Trump")
+    }
+
 }
