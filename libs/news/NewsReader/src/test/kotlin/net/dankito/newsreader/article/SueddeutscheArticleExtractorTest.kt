@@ -143,6 +143,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun videoGetsDisplayed() {
+        getAndTestArticle("https://www.sueddeutsche.de/politik/emotionale-greta-thunberg-was-erlaubt-ihr-euch-1.4613491",
+                " \"Was erlaubt ihr euch?\"",
+                "Die schwedische Klimaschutz-Demonstrantin tritt vor den Vereinten Nationen sichtlich emotional auf und kritisiert wirtschaftsliberale Eliten mit deutlichen Worten. ",
+                null,
+                4500, subTitle = "Emotionale Greta Thunberg")
+    }
+
+    @Test
     fun ensureDataPollGetsRemoved() {
         getAndTestArticle("http://www.sueddeutsche.de/sport/sandro-wagner-ein-abschied-der-lauten-art-1.3983350",
                 "Ein Abschied der lauten Art",

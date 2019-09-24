@@ -76,6 +76,11 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         document.body().select("article.gallery").first()?.let { galleryArticleElement ->
             extractGalleryArticle(extractionResult, galleryArticleElement, url)
+            return
+        }
+
+        document.body().select("article.video-article").first()?.let { articleElement ->
+            extractVideoArticle(extractionResult, articleElement, url)
         }
     }
 
@@ -388,6 +393,42 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         } catch (e: Exception) {
 //            log.error("Could not extract html of next image in gallery from url " + nextImageUrl, e)
         }
+    }
+
+
+    private fun extractVideoArticle(extractionResult: ItemExtractionResult, articleElement: Element, url: String) {
+        val previewImageUrl = articleElement.ownerDocument().body().selectFirst("link[rel=\"image_src\"]")?.attr("href")
+
+        articleElement.ownerDocument().body().selectFirst("link[rel=\"video_src\"]")?.attr("href")?.let { videoSrc ->
+            articleElement.selectFirst("figure div")?.let { playerElement ->
+                appendVideoElement(playerElement, videoSrc, previewImageUrl)
+            }
+        }
+
+        articleElement.selectFirst("time")?.remove()
+        articleElement.selectFirst(".video-sidebar")?.remove()
+
+        val source = extractVideoSource(articleElement, url, previewImageUrl)
+
+        extractionResult.setExtractedContent(Item(articleElement.outerHtml()), source)
+    }
+
+    private fun appendVideoElement(playerElement: Element, videoSrc: String, previewImageUrl: String?) {
+        val videoElement = playerElement.appendElement("video")
+
+        videoElement.attr("src", videoSrc)
+        videoElement.attr("width", "100%")
+        videoElement.attr("controls", "controls")
+
+        previewImageUrl?.let { videoElement.attr("poster", it) }
+    }
+
+    private fun extractVideoSource(articleElement: Element, url: String, previewImageUrl: String?): Source {
+        val title = articleElement.selectFirst(".caption__title")?.text()?.trim() ?: ""
+        val subTitle = articleElement.selectFirst(".caption__overline")?.text()?.trim() ?: ""
+        val publishingDate = extractPublishingDate(articleElement)
+
+        return Source(title, url, publishingDate, previewImageUrl, subTitle = subTitle)
     }
 
 
