@@ -57,9 +57,14 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
         val content = StringBuilder()
 
         // data-type=html and iframe e.g. for WhatsApp Kolumne
-        articleContentElement.select(".apos-item[data-type=\"richText\"], .apos-item[data-type=\"html\"], .apos-rich-text, .apos-slideshow").forEach { itemsContainer ->
-            if(itemsContainer.select("div.apos-slideshow").firstOrNull() != null) { // so that <p>s in slideshow don't get added multiple times in below's forEach
+        articleContentElement.select(".apos-item[data-type=\"richText\"], .apos-item[data-type=\"html\"], .apos-rich-text, " +
+                ".apos-slideshow, .twitter-tweet").forEach { itemsContainer ->
+
+            if (itemsContainer.selectFirst("div.apos-slideshow") != null) { // so that <p>s in slideshow don't get added multiple times in below's forEach
                 content.append(itemsContainer)
+            }
+            else if (itemsContainer.selectFirst(".twitter-tweet") != null) {
+                content.append(itemsContainer.parent().outerHtml())
             }
             else {
                 itemsContainer.select("p, h3, iframe").forEach { paragraph ->
@@ -112,22 +117,20 @@ class SueddeutscheJetztArticleExtractor(webClient: IWebClient) : ArticleExtracto
         val publishingDate = extractPublishingDate(articleElement)
 
         if(title != null && publishingDate != null) {
-            val articleSource = Source(title, articleUrl, publishingDate)
+            val subTitle = articleElement.selectFirst(".breadcrumb-list-item-wrapper [property=\"name\"]")?.text()?.trim() ?: ""
 
-            return articleSource
+            return Source(title, articleUrl, publishingDate, subTitle = subTitle)
         }
 
         return null
     }
 
     private fun extractTitle(articleElement: Element): String? {
-        var title: String? = null
+        val title  = articleElement.selectFirst(".article__header-title")?.text()
 
-        val header2Elements = articleElement.getElementsByClass("article__header-title")
-        if (header2Elements.size > 0)
-            title = header2Elements[0].text()
-        else
+        if (title == null) {
             log.warn("Could not find h1 child Element of article Element with class 'article__header-title'")
+        }
 
         return title
     }
