@@ -405,10 +405,10 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             }
         }
 
+        val source = extractVideoSource(articleElement, url, previewImageUrl)
+
         articleElement.selectFirst("time")?.remove()
         articleElement.selectFirst(".video-sidebar")?.remove()
-
-        val source = extractVideoSource(articleElement, url, previewImageUrl)
 
         extractionResult.setExtractedContent(Item(articleElement.outerHtml()), source)
     }
