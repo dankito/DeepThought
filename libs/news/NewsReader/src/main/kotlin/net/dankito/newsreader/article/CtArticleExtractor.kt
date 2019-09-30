@@ -41,7 +41,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     override fun canExtractItemFromUrl(url: String): Boolean {
         return isHttpOrHttpsUrlFromHost(url, "www.heise.de/ct/")
                 || isHttpOrHttpsUrlFromHost(url, "m.heise.de/ct/")
-                || isHttpOrHttpsUrlFromHost(url, "..heise.de/select/ct")
+                || isHttpOrHttpsUrlFromHost(url, ".heise.de/select/ct")
     }
 
 
