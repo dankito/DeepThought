@@ -77,12 +77,22 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
         }
 
         if (sourceTitle != null) {
-            val existingSource = findExistingSource(sourceTitle)
+            val adjustedSourceTitle = mayAdjustSourceTitle(sourceTitle)
+            val existingSource = findExistingSource(adjustedSourceTitle)
 
-            return existingSource ?: Source(sourceTitle)
+            return existingSource ?: Source(adjustedSourceTitle)
         }
 
         return null
+    }
+
+    private fun mayAdjustSourceTitle(sourceTitle: String): String {
+        return when {
+            // Xodo PDF reader adds 'Selected text from: ' before file name (was Basti's request to remove it)
+            sourceTitle.startsWith("Selected text from: ") -> sourceTitle.substring("Selected text from: ".length)
+            sourceTitle.startsWith("Selektierter Text von: ") -> sourceTitle.substring("Selektierter Text von: ".length)
+            else -> sourceTitle
+        }
     }
 
     private fun findExistingSource(sourceTitle: String): Source? {
