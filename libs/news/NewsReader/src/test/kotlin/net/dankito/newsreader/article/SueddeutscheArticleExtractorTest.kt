@@ -1,6 +1,7 @@
 package net.dankito.newsreader.article
 
 import net.dankito.utils.web.client.IWebClient
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
@@ -95,6 +96,17 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
                 "Diskussionen ohne Eskalationen? Fakten statt Faseln? Tipps, wie Sie souverän über heikle Themen streiten können - auch ohne Ich-Botschaften.",
                 "https://media-cdn.sueddeutsche.de/image/sz.1.4534653/704x396",
                 4500, subTitle = "SZ-Streitbot")
+    }
+
+    @Test
+    fun extractHtmlFromEmbedJs_FilterOutSurveysFromOpinary() {
+        val result = getAndTestArticle("https://www.sueddeutsche.de/wirtschaft/nutri-score-ampel-lebensmittel-naehrwert-logo-1.4621787",
+                "Lebensmittel könnten bald das Nutri-Score-Logo tragen",
+                null,
+                "https://media-cdn.sueddeutsche.de/image/sz.1.4622167/704x396",
+                4500, subTitle = "Gesunde Ernährung")
+
+        assertThat(result!!.item.content).doesNotContain("opinary.com")
     }
 
     @Test

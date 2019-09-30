@@ -199,6 +199,8 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         articleBody.select("script").filter { it.html().contains("AdController.render") }.forEach { it.parent().parent().remove() }
 
+        articleBody.select("script").filter { it.attr("src").contains("opinary.com") }.forEach { it.parent().parent().remove() }
+
         articleBody.select(".asset-infobox").filter { it.html().contains("Interview am Morgen") }.forEach { it.remove() }
 
         removeBaseBoxes(articleBody)
@@ -306,7 +308,8 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         siteContent.select("script").forEach { scriptElement ->
             val src = scriptElement.attr("src")
 
-            if (src.endsWith("/embed.js", true)) {
+            if (src.endsWith("/embed.js", true)
+                    && src.contains("opinary.com/", true) == false) { // filter out surveys from opinary.com
                 val htmlSrc = src.replace("embed.js", "index.html")
 
                 try {
