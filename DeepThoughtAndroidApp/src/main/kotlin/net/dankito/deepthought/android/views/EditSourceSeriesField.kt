@@ -4,13 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
-import net.dankito.deepthought.android.activities.EditSeriesActivity
-import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
 import net.dankito.deepthought.android.adapter.SeriesOnSourceRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.SeriesListPresenter
 import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
@@ -28,9 +24,6 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
-
-    @Inject
-    protected lateinit var router: IRouter
 
     @Inject
     protected lateinit var dialogService: IDialogService
@@ -56,7 +49,7 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
 
         setFieldNameOnUiThread(R.string.activity_edit_source_series_label)
 
-        presenter = SeriesListPresenter(this, searchEngine, router, dialogService, deleteEntityService)
+        presenter = SeriesListPresenter(this, searchEngine, dialogService, deleteEntityService)
 
         existingSeriesSearchResultsAdapter = SeriesOnSourceRecyclerAdapter(presenter)
         existingSeriesSearchResultsAdapter.itemClickListener = { item -> existingSeriesSelected(item) }
@@ -124,9 +117,6 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
 
     override fun editDetails() {
         // currently not used as mnEditDetails is hidden (showEditDetailsMenuItem set to false)
-        activity?.setWaitingForResult(EditSeriesActivity.ResultId)
-
-        router.showEditSourceSeriesView(Source(""), series)
     }
 
     override fun createNewEntity() {
@@ -149,15 +139,6 @@ class EditSourceSeriesField : EditEntityEntityReferenceField, ISeriesListView {
         seriesChanged(series)
 
         hideSearchResultsView()
-    }
-
-    fun editingSeriesDone(result: EditSeriesActivityResult) {
-        if(result.didSaveSeries) {
-            setFieldValueForCurrentSeriesOnUiThread()
-        }
-        else if(result.didDeleteSeries) {
-            removeEntity()
-        }
     }
 
     fun seriesChanged(series: Series?) {

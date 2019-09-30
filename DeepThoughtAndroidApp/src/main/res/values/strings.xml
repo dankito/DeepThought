@@ -203,21 +203,6 @@
     <string name="activity_edit_source_alert_message_source_has_been_edited">Source has been edited (probably on a synchronized device).\n\If
         you now save the source the other changes get overwritten.</string>
 
-    <string name="activity_edit_series_title">Series</string>
-    <string name="activity_edit_series_use_existing_label">Select existing series:</string>
-    <string name="activity_edit_series_create_series">New …</string>
-    <string name="activity_edit_series_create_series_from_isbn">From ISBN …</string>
-    <string name="activity_edit_series_title_label">Series title</string>
-    <string name="activity_edit_series_alert_message_create_new_series">Do you really want to create a new Series?\n\nThe current series then
-        gets discarded and a new one will be created.</string>
-    <string name="activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes">Current series has unsaved changes.\n\nDo you want to
-        save these before?</string>
-    <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Series has unsaved changes.\n\nDo you want to save these changes?</string>
-    <!-- Don't insert line break right before 'When' as otherwise a white space before gets displayed: ' When' -->
-    <string name="activity_edit_series_alert_message_series_has_been_edited">Series has been edited (probably on a synchronized device).\n\If
-        you now save the series the other changes get overwritten.
-    </string>
-
     <string name="edit_entity_source_field_source_label">Source</string>
     <string name="edit_entity_source_field_share_url_menu_item_title">Share link</string>
     <string name="edit_entity_source_field_add_indication_menu_item_title">Set indication</string>

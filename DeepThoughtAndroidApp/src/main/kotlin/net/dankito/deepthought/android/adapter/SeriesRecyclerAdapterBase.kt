@@ -15,8 +15,6 @@ abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterB
 
     abstract val shouldShowChevronRight: Boolean
 
-    abstract val shouldShowButtonEditSeries: Boolean
-
     protected open fun isSetOnSource(series: Series): Boolean {
         return false
     }
@@ -49,13 +47,6 @@ abstract class SeriesRecyclerAdapterBase(private val presenter: SeriesPresenterB
     }
 
     override fun setupSwipeView(viewHolder: SeriesViewHolder, item: Series) {
-        viewHolder.btnEditSeries.visibility = if(shouldShowButtonEditSeries) View.VISIBLE else View.GONE
-
-        viewHolder.btnEditSeries.setOnClickListener {
-            presenter.editSeries(item)
-            closeSwipeView(viewHolder)
-        }
-
         viewHolder.btnDeleteSeries.setOnClickListener {
             closeSwipeView(viewHolder)
             presenter.confirmDeleteSeriesAsync(item)

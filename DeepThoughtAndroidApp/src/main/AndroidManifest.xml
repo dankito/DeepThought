@@ -106,13 +106,6 @@
         />
 
         <activity
-            android:name=".activities.EditSeriesActivity"
-            android:label="@string/activity_edit_source_title"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize"
-        />
-
-        <activity
             android:name=".activities.TagsListViewActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme"

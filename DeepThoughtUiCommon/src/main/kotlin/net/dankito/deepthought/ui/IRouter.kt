@@ -40,11 +40,6 @@ interface IRouter : IRouter {
     fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String? = null)
 
 
-    fun showEditSeriesView(series: Series)
-
-    fun showEditSourceSeriesView(forSource: Source, series: Series?)
-
-
     fun showPdfView(addNewPdfFile: File, sourceForFile: Source? = null)
 
     fun showPdfView(persistedPdfFile: FileLink, sourceForFile: Source? = null)

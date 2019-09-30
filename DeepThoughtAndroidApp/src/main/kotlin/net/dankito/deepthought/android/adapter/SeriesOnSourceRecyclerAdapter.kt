@@ -15,9 +15,6 @@ class SeriesOnSourceRecyclerAdapter(presenter: SeriesPresenterBase): SeriesRecyc
     override val shouldShowChevronRight: Boolean
         get() = false
 
-    override val shouldShowButtonEditSeries: Boolean
-        get() = false
-
 
     override fun isSetOnSource(series: Series): Boolean {
         return selectedSeries?.id == series.id

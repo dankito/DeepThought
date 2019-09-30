@@ -115,15 +115,6 @@ class JavaFXRouter(private val mainWindowController: MainWindowController) : Jav
     }
 
 
-    override fun showEditSeriesView(series: Series) {
-        // TODO
-    }
-
-    override fun showEditSourceSeriesView(forSource: Source, series: Series?) {
-        // there should be no need for this on JavaFX
-    }
-
-
     override fun showPdfView(addNewPdfFile: File, sourceForFile: Source?) {
         showImportFromPdfView(addNewPdfFile, null, sourceForFile)
     }

@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_edit_source.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.data.SourcePersister
@@ -235,10 +234,6 @@ class EditSourceActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        (getAndClearResult(EditSeriesActivity.ResultId) as? EditSeriesActivityResult)?.let { result ->
-            lytEditSourceSeries.editingSeriesDone(result)
-        }
-
         (supportFragmentManager.findFragmentByTag(PickDateDialog.TAG) as? PickDateDialog)?.let { dialog ->
             dialog.restoreDialog { selectedPublishingDate(it) }
         }
@@ -254,12 +249,6 @@ class EditSourceActivity : BaseActivity() {
         lytEditAttachedFiles.viewGetsHidden()
 
         super.onPause()
-    }
-
-    override fun onDestroy() {
-        parameterHolderField.clearActivityResults(EditSeriesActivity.ResultId)
-
-        super.onDestroy()
     }
 
 

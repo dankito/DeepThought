@@ -3,7 +3,6 @@ package net.dankito.deepthought.android.routing
 import android.content.Context
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.*
-import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityParameters
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.dialogs.SourceItemsListDialog
@@ -115,19 +114,6 @@ class AndroidRouter(context: Context, windowRegistry: WindowRegistry, parameterH
 
     private fun showEditSourceView(parameters: EditSourceWindowData) {
         navigateToActivity(EditSourceActivity::class.java, parameters)
-    }
-
-
-    override fun showEditSeriesView(series: Series) {
-        showEditSeriesView(EditSeriesActivityParameters(series))
-    }
-
-    override fun showEditSourceSeriesView(forSource: Source, series: Series?) {
-        showEditSeriesView(EditSeriesActivityParameters(series))
-    }
-
-    private fun showEditSeriesView(parameters: EditSeriesActivityParameters) {
-        navigateToActivity(EditSeriesActivity::class.java, parameters)
     }
 
 

@@ -72,9 +72,4 @@ class EditSourcePresenter(router: IRouter, dialogService: IDialogService, clipbo
         sourcePersister.saveSourceAsync(source, series, editedFiles, callback)
     }
 
-
-    fun editSeries(source: Source, series: Series?) {
-        router.showEditSourceSeriesView(source, series)
-    }
-
 }

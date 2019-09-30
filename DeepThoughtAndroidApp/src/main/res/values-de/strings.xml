@@ -243,21 +243,6 @@
     <string name="activity_edit_source_alert_message_source_has_been_edited">Quelle wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
         Sie die Quelle hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
 
-    <string name="activity_edit_series_title">Reihe</string>
-    <string name="activity_edit_series_use_existing_label">Bestehende verwenden:</string>
-    <string name="activity_edit_series_create_series">Neu …</string>
-    <string name="activity_edit_series_create_series_from_isbn">Von ISBN …</string>
-    <string name="activity_edit_series_title_label">Titel der Reihe</string>
-    <string name="activity_edit_series_alert_message_create_new_series">Möchten Sie wirklich eine neue Reihe erstellen?\n\nDie aktuelle wird dann verworfen
-        und eine neue Reihe wird angelegt.</string>
-    <string name="activity_edit_series_alert_message_create_new_series_current_one_has_unsaved_changes">Die aktuelle Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese
-        Änderungen zuvor gespeichert werden?</string>
-    <string name="activity_edit_series_alert_message_series_contains_unsaved_changes">Reihe enthält nicht gespeicherte Änderungen.\n\nSollen diese Änderungen gespeichert
-        werden?</string>
-    <!-- Don't insert line break right before 'Wenn' as otherwise a white space before gets displayed: ' Wenn' -->
-    <string name="activity_edit_series_alert_message_series_has_been_edited">Reihe wurde geändert, wahrscheinlich auf einem synchronisierten Gerät.\n\nWenn
-        Sie die Reihe hier nun ebenfalls speichern, überschreiben Sie jene Änderungen.</string>
-
     <string name="edit_entity_source_field_source_label">Quelle</string>
     <string name="edit_entity_source_field_share_url_menu_item_title">Link teilen</string>
     <string name="edit_entity_source_field_add_indication_menu_item_title">Stelle setzen</string>

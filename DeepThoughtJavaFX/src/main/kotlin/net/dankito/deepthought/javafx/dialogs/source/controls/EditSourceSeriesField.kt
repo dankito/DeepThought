@@ -4,7 +4,6 @@ import net.dankito.deepthought.javafx.di.AppComponent
 import net.dankito.deepthought.javafx.ui.controls.EditEntityField
 import net.dankito.deepthought.javafx.ui.controls.EditEntityReferenceField
 import net.dankito.deepthought.model.Series
-import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.SeriesListPresenter
 import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
@@ -35,9 +34,6 @@ class EditSourceSeriesField : EditEntityReferenceField<Series>(FX.messages["edit
     @Inject
     protected lateinit var deleteEntityService: DeleteEntityService
 
-    @Inject
-    protected lateinit var router: IRouter
-
 
     init {
         AppComponent.component.inject(this)
@@ -48,7 +44,7 @@ class EditSourceSeriesField : EditEntityReferenceField<Series>(FX.messages["edit
                 retrievedSearchResults(entities)
             }
 
-        }, searchEngine, router, dialogService, deleteEntityService)
+        }, searchEngine, dialogService, deleteEntityService)
     }
 
 
@@ -62,7 +58,7 @@ class EditSourceSeriesField : EditEntityReferenceField<Series>(FX.messages["edit
 
 
     override fun editEntity(entity: Series) {
-        seriesListPresenter.editSeries(entity)
+        // method never gets called as showEditEntityDetailsMenuItem is set to false, therefore nothing to do here
     }
 
     override fun deleteEntity(entity: Series) {

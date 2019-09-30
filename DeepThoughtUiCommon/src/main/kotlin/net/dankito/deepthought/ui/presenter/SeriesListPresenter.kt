@@ -3,7 +3,6 @@ package net.dankito.deepthought.ui.presenter
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
-import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.view.ISeriesListView
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.messages.EntitiesOfTypeChanged
@@ -17,8 +16,8 @@ import javax.inject.Inject
 import kotlin.concurrent.thread
 
 
-class SeriesListPresenter(private val view: ISeriesListView, private val searchEngine: ISearchEngine, router: IRouter, dialogService: IDialogService, deleteEntityService: DeleteEntityService)
-    : SeriesPresenterBase(router, dialogService, deleteEntityService), IMainViewSectionPresenter {
+class SeriesListPresenter(private val view: ISeriesListView, private val searchEngine: ISearchEngine, dialogService: IDialogService, deleteEntityService: DeleteEntityService)
+    : SeriesPresenterBase(dialogService, deleteEntityService), IMainViewSectionPresenter {
 
 
     @Inject
