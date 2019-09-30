@@ -21,10 +21,12 @@ abstract class ArticleExtractorTestBase {
 
 
     protected open fun getAndTestArticle(url: String, title: String, summary: String?, previewImageUrl: String? = null, minContentLength: Int? = null,
-                                         canPublishingDateBeNull: Boolean = false, subTitle: String? = null) {
+                                         canPublishingDateBeNull: Boolean = false, subTitle: String? = null): ItemExtractionResult? {
         val article = getArticle(url)
 
         testArticle(article, url, title, summary, previewImageUrl, minContentLength, canPublishingDateBeNull, subTitle)
+
+        return article
     }
 
     protected open fun getArticle(url: String) : ItemExtractionResult? {
