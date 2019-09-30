@@ -87,6 +87,12 @@ class MainActivity : BaseActivity() {
         dataManager.addInitializationListener { initializedDataManager() }
     }
 
+    override fun initMainWindow() {
+        dataManager.addInitializationListener {
+            super.initMainWindow()
+        }
+    }
+
 
     private fun setupUI() {
         setContentView(R.layout.activity_main)
