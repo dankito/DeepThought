@@ -9,6 +9,7 @@ import net.dankito.utils.web.client.WebClientResponse
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
+import org.slf4j.LoggerFactory
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,6 +19,8 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
     companion object {
         val SueddeutscheHeaderDateFormat: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
+        private val log = LoggerFactory.getLogger(SueddeutscheArticleExtractor::class.java)
     }
 
 
@@ -306,18 +309,27 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
             if (src.endsWith("/embed.js", true)) {
                 val htmlSrc = src.replace("embed.js", "index.html")
 
-                val embedHtmlResponse = webClient.get(RequestParameters(htmlSrc))
-                if (embedHtmlResponse.isSuccessful) {
-                    insertHtmlFromEmbedHtml(embedHtmlResponse, scriptElement, src)
-                }
-                else {
-                    val iframe = Element("iframe")
-
-                    iframe.attr("src", htmlSrc)
-
-                    scriptElement.replaceWith(iframe)
+                try {
+                    insertHtmlFromEmbedJs(htmlSrc, scriptElement, src)
+                } catch (e: Exception) {
+                    log.error("Could not insert html from embed.js", e)
                 }
             }
+        }
+    }
+
+    private fun insertHtmlFromEmbedJs(htmlSrc: String, scriptElement: Element, src: String) {
+        val embedHtmlResponse = webClient.get(RequestParameters(htmlSrc))
+
+        if (embedHtmlResponse.isSuccessful) {
+            insertHtmlFromEmbedHtml(embedHtmlResponse, scriptElement, src)
+        }
+        else {
+            val iframe = Element("iframe")
+
+            iframe.attr("src", htmlSrc)
+
+            scriptElement.replaceWith(iframe)
         }
     }
 
