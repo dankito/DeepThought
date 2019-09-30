@@ -5,10 +5,17 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.search.ISearchEngine
+import net.dankito.service.search.specific.SourceSearch
 import net.dankito.utils.web.UrlUtil
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicReference
 
 
-class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, private val router: IRouter, private val urlUtil: UrlUtil) {
+class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, private val searchEngine: ISearchEngine,
+                    private val router: IRouter, private val urlUtil: UrlUtil) {
+
 
     fun handle(intent: Intent) {
         val action = intent.action
@@ -45,7 +52,7 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
                 extractArticleHandler.extractAndShowArticleUserDidSeeBefore(extractedUrl)
             }
             else {
-                handleReceivedText(intent, sharedText)
+                handleReceivedText(intent, trimmedText)
             }
         }
     }
@@ -57,15 +64,42 @@ class IntentHandler(private val extractArticleHandler: ExtractArticleHandler, pr
     }
 
     private fun handleReceivedText(intent: Intent, sharedText: String) {
-        var sourceTitle: String? = intent.getStringExtra(Intent.EXTRA_SUBJECT) // e.g. Firefox also sends Page Title // TODO: shouldn't it then be used as source title?
-        if(sourceTitle == null && intent.hasExtra(Intent.EXTRA_TITLE)) {
-            sourceTitle = intent.getStringExtra(Intent.EXTRA_TITLE)
-        }
-
-        val source = if (sourceTitle != null) Source(sourceTitle) else null
+        val source = getSource(intent)
         val extractionResult = ItemExtractionResult(Item("<p>$sharedText</p>"), source, couldExtractContent = true)
 
         router.showEditItemView(extractionResult)
+    }
+
+    private fun getSource(intent: Intent): Source? {
+        var sourceTitle: String? = intent.getStringExtra(Intent.EXTRA_SUBJECT) // e.g. Firefox also sends Page Title // TODO: shouldn't it then be used as source title?
+        if (sourceTitle == null && intent.hasExtra(Intent.EXTRA_TITLE)) {
+            sourceTitle = intent.getStringExtra(Intent.EXTRA_TITLE)
+        }
+
+        if (sourceTitle != null) {
+            val existingSource = findExistingSource(sourceTitle)
+
+            return existingSource ?: Source(sourceTitle)
+        }
+
+        return null
+    }
+
+    private fun findExistingSource(sourceTitle: String): Source? {
+        val foundSource = AtomicReference<Source>(null)
+        val countDownLatch = CountDownLatch(1)
+
+        searchEngine.searchSources(SourceSearch(sourceTitle) { searchResult ->
+            if (searchResult.isNotEmpty()) {
+                foundSource.set(searchResult.first())
+            }
+
+            countDownLatch.count
+        })
+
+        try { countDownLatch.await(2, TimeUnit.SECONDS) } catch (ignored: Exception) { }
+
+        return foundSource.get()
     }
 
 
