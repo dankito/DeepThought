@@ -7,7 +7,7 @@ import android.support.test.espresso.core.deps.guava.collect.Iterables
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import android.support.test.runner.lifecycle.Stage
-import net.dankito.deepthought.android.service.ActivityParameterHolder
+import net.dankito.utils.android.ui.activities.ActivityParameterHolder
 import net.dankito.utils.windowregistry.android.ui.AndroidWindow
 
 

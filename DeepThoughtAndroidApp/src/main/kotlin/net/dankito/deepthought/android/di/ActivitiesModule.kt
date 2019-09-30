@@ -8,7 +8,10 @@ import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.appstart.CommunicationManagerStarter
 import net.dankito.deepthought.android.dialogs.AndroidDialogService
 import net.dankito.deepthought.android.routing.AndroidRouter
-import net.dankito.deepthought.android.service.*
+import net.dankito.deepthought.android.service.AndroidApplicationsService
+import net.dankito.deepthought.android.service.AndroidClipboardService
+import net.dankito.deepthought.android.service.ExtractArticleHandler
+import net.dankito.deepthought.android.service.SnackbarService
 import net.dankito.deepthought.android.service.clipboard.AndroidClipboardWatcher
 import net.dankito.deepthought.android.service.communication.AndroidDeviceRegistrationHandler
 import net.dankito.deepthought.android.service.permissions.AndroidPermissionsService
@@ -73,8 +76,8 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideActivityParameterHolder() : ActivityParameterHolder {
-        return ActivityParameterHolder()
+    fun provideWindowRegistryActivityParameterHolder() : net.dankito.utils.android.ui.activities.ActivityParameterHolder {
+        return net.dankito.utils.android.ui.activities.ActivityParameterHolder()
     }
 
     @Provides
@@ -125,12 +128,6 @@ class ActivitiesModule(private val applicationContext: Context) {
         return AndroidDialogService(windowRegistry, localization)
     }
 
-
-    @Provides
-    @Singleton
-    fun provideWindowRegistryActivityParameterHolder() : net.dankito.utils.android.ui.activities.ActivityParameterHolder {
-        return net.dankito.utils.android.ui.activities.ActivityParameterHolder()
-    }
 
     @Provides
     @Singleton

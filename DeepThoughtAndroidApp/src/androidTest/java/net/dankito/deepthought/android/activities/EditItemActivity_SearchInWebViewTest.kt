@@ -13,9 +13,8 @@ import android.widget.TextView
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.android.di.TestComponent
-import net.dankito.deepthought.android.service.ActivityParameterHolder
+import net.dankito.utils.android.ui.activities.ActivityParameterHolder
 import net.dankito.deepthought.android.util.Assert
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule

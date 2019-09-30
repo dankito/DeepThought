@@ -13,7 +13,7 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.FileLinkViewHolder
 import net.dankito.deepthought.android.di.TestComponent
-import net.dankito.deepthought.android.service.ActivityParameterHolder
+import net.dankito.utils.android.ui.activities.ActivityParameterHolder
 import net.dankito.deepthought.android.util.matchers.RecyclerViewItemCountAssertion
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
 import net.dankito.deepthought.android.views.EditEntityFilesField
