@@ -5,8 +5,9 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_edit_item.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.ui.windowdata.EditItemWindowData
+import net.dankito.deepthought.ui.windowdata.EditItemWindowDataBase
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.ItemChanged
 import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
@@ -26,6 +27,9 @@ class EditItemActivity : EditItemActivityBase() {
     private var eventBusListener: EventBusListener? = null
 
 
+    override val windowDataClass = EditItemWindowData::class.java
+
+
     override fun onResume() {
         super.onResume()
 
@@ -39,12 +43,8 @@ class EditItemActivity : EditItemActivityBase() {
     }
 
 
-    override fun showParameters(parameters: EditItemActivityParameters) {
-        parameters.item?.let { editItem(it) }
-
-        if(parameters.createItem) {
-            createItem()
-        }
+    override fun showParameters(parameters: EditItemWindowDataBase) {
+        editItem((parameters as EditItemWindowData).item)
     }
 
     override fun restoreEntity(savedInstanceState: Bundle) {

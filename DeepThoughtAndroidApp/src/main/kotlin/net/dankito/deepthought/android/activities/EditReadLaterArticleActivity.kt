@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.model.ReadLaterArticle
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.deepthought.ui.windowdata.EditItemWindowDataBase
+import net.dankito.deepthought.ui.windowdata.EditReadLaterArticleWindowData
 import net.dankito.service.data.messages.EntityChangeSource
 import net.dankito.service.data.messages.ReadLaterArticleChanged
 import net.dankito.utils.android.extensions.HtmlExtensions
@@ -30,6 +31,9 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
     private var mnDeleteReadLaterArticle: MenuItem? = null
 
 
+    override val windowDataClass = EditReadLaterArticleWindowData::class.java
+
+
     override fun getItemExtractionResult(): ItemExtractionResult? {
         return readLaterArticle.itemExtractionResult
     }
@@ -48,10 +52,8 @@ class EditReadLaterArticleActivity : EditItemActivityBase() {
     }
 
 
-    override fun showParameters(parameters: EditItemActivityParameters) {
-        parameters.readLaterArticle?.let {
-            editReadLaterArticle(it)
-        }
+    override fun showParameters(parameters: EditItemWindowDataBase) {
+        editReadLaterArticle((parameters as EditReadLaterArticleWindowData).readLaterArticle)
     }
 
     override fun restoreEntity(savedInstanceState: Bundle) {

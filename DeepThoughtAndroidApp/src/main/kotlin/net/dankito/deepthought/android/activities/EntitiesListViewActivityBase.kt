@@ -14,6 +14,11 @@ abstract class EntitiesListViewActivityBase<T : EntitiesListViewFragment<*>>(pri
     abstract fun instantiateListViewFragment(): EntitiesListViewFragment<*>
 
 
+    override val windowDataClass = null
+
+    override fun getCurrentWindowData() = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

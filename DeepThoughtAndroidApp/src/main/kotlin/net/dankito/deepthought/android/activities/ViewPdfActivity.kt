@@ -3,9 +3,7 @@ package net.dankito.deepthought.android.activities
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_view_pdf.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.ViewPdfActivityParameters
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.android.extensions.hideKeyboard
 import net.dankito.deepthought.files.FileManager
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item
@@ -13,6 +11,8 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.importexport.pdf.*
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.windowdata.ViewPdfWindowData
+import net.dankito.utils.android.extensions.hideKeyboard
 import net.dankito.utils.localization.Localization
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -48,8 +48,18 @@ class ViewPdfActivity : BaseActivity() {
     private var sourceForFile: Source? = null
 
 
+    private val viewPdfWindowData: ViewPdfWindowData?
+
+
+    override val windowDataClass = ViewPdfWindowData::class.java
+
+    override fun getCurrentWindowData() = viewPdfWindowData
+
+
     init {
         AppComponent.component.inject(this)
+
+        this.viewPdfWindowData = windowData as? ViewPdfWindowData
     }
 
 
@@ -59,7 +69,9 @@ class ViewPdfActivity : BaseActivity() {
         setupUi()
 
         if(savedInstanceState == null) {
-            showParameters(getParameters() as? ViewPdfActivityParameters)
+            viewPdfWindowData?.addNewPdfFile?.let { loadPdf(it) }
+
+            viewPdfWindowData?.persistedPdfFile?.let { loadPdf(it) }
         }
     }
 
@@ -113,21 +125,6 @@ class ViewPdfActivity : BaseActivity() {
         super.onDestroy()
     }
 
-
-    private fun showParameters(parameters: ViewPdfActivityParameters?) {
-        parameters?.let {
-            this.sourceForFile = parameters.sourceForFile
-
-            parameters.persistedPdfFile?.let {
-                loadPdf(it)
-            }
-
-            parameters.addNewPdfFile?.let {
-                loadPdf(it)
-            }
-        }
-    }
-
     private fun loadPdf(pdfFile: File) {
         loadPdf(fileManager.createLocalFile(pdfFile))
     }
@@ -155,8 +152,11 @@ class ViewPdfActivity : BaseActivity() {
     private fun loadedFileOnUiThread(pdfFile: FileLink, metadata: FileMetadata) {
         fileMetaData = metadata
 
+        var sourceForFile = viewPdfWindowData?.sourceForFile
+
+        // TODO: check if source for this file (SearchEngine.searchSources()) already exists first
         if(sourceForFile == null) {
-            sourceForFile = createSource(metadata, pdfFile)
+            viewPdfWindowData?.sourceForFile = createSource(metadata, pdfFile)
         }
         else if(sourceForFile?.isPersisted() == false) { // when coming to this from downloading file
             sourceForFile?.let { setSourceProperties(it, metadata) }
@@ -242,7 +242,7 @@ class ViewPdfActivity : BaseActivity() {
                 if (fileMetaData != null) localization.getLocalizedString("file.page.indication.with.count.pages.known", currentPage, fileMetaData?.countPages ?: 0)
                 else localization.getLocalizedString("file.page.indication", currentPage)
 
-        router.showEditItemView(ItemExtractionResult(item, sourceForFile, couldExtractContent = true))
+        router.showEditItemView(ItemExtractionResult(item, viewPdfWindowData?.sourceForFile, couldExtractContent = true))
     }
 
 }

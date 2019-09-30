@@ -104,10 +104,22 @@ class EditHtmlView : View, IHandlesBackButtonPress {
         return retrievedHtml.get()
     }
 
+    fun getCachedHtml(): String {
+        return editor.getCachedHtml()
+    }
+
+    fun isDefaultRichTextEditorHtml(html: String): Boolean {
+        return editor.isDefaultRichTextEditorHtml(html)
+    }
+
     fun setHtml(html: String, baseUrl: String?) {
         setHtml = html
 
         editor.setHtml(html, baseUrl)
+    }
+
+    fun setEditedHtml(html: String) {
+        editor.setHtml(html, editor.baseUrl)
     }
 
     fun setHtmlChangedCallback(callback: (Boolean) -> Unit) {

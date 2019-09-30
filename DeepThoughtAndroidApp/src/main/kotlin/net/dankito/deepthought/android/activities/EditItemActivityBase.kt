@@ -10,7 +10,6 @@ import com.github.clans.fab.FloatingActionMenu
 import kotlinx.android.synthetic.main.activity_edit_item.*
 import kotlinx.android.synthetic.main.view_floating_action_button_item_fields.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityResult
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
@@ -24,6 +23,7 @@ import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
+import net.dankito.deepthought.ui.windowdata.EditItemWindowDataBase
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ItemService
 import net.dankito.service.data.ReadLaterArticleService
@@ -142,7 +142,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     private val dataManager: DataManager
 
 
-    protected abstract fun showParameters(parameters: EditItemActivityParameters)
+    protected abstract fun showParameters(parameters: EditItemWindowDataBase)
 
     protected abstract fun restoreEntity(savedInstanceState: Bundle)
 
@@ -174,8 +174,15 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
         savedInstanceState?.let { restoreState(it) }
 
         if(savedInstanceState == null) {
-            (getParameters() as? EditItemActivityParameters)?.let { showParameters(it) }
+            (getParameters() as? EditItemWindowDataBase)?.let { showParametersAndRestoreWindowData(it) }
+            (windowData as? EditItemWindowDataBase)?.let { showParametersAndRestoreWindowData(it) }
         }
+    }
+
+    private fun showParametersAndRestoreWindowData(windowData: EditItemWindowDataBase) {
+        showParameters(windowData)
+
+        restoreWindowData(windowData)
     }
 
     private fun restoreState(savedInstanceState: Bundle) {
@@ -213,6 +220,13 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
             floatingActionMenu.saveInstanceState(outState)
         }
+    }
+
+
+    override fun getCurrentWindowData(): Any? {
+        updateWindowData(windowData as EditItemWindowDataBase)
+
+        return windowData
     }
 
 
@@ -255,6 +269,8 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
         floatingActionMenu = EditItemActivityFloatingActionMenuButton(findViewById(R.id.floatingActionMenu) as FloatingActionMenu, { addTagsToItem() },
                 { addSourceToItem() }, { addSummaryToItem() }, { addFilesToItem() } )
+
+        itemContentView.initialize(this, permissionsService)
 
         itemContentView.didContentChangeListener = { didChange ->
             updateItemFieldChanged(ItemField.Content, didChange)
@@ -774,7 +790,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
         item.summary = summary
 
         if(changedFields.contains(ItemField.Indication)) {
-            item.indication = lytSourcePreview.getEditedSecondaryInformation()
+            item.indication = lytSourcePreview.editedSecondaryInformation
         }
 
         if(changedFields.contains(ItemField.Tags)) {
@@ -843,7 +859,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
     protected fun editItem(item: Item, source: Source?, series: Series? = source?.series, tags: MutableCollection<Tag>, files: MutableCollection<FileLink>,
                          updateContentPreview: Boolean = true) {
         itemToSave = item
-        itemContentView.initialize(item.content, this, permissionsService)
+        itemContentView.setContentToEdit(item.content)
         originalTags = tags
 
         if(item.summary.isEmpty() == false) { this.forceShowSummaryPreview = true } // forcing that once it has been shown it doesn't get hidden anymore
@@ -892,6 +908,44 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
         tagsOnItem.addAll(restoredTagsOnItem)
 
         runOnUiThread { setTagsOnItemPreviewOnUIThread() }
+    }
+
+
+    protected open fun restoreWindowData(editItemWindowData: EditItemWindowDataBase) {
+        editItemWindowData.editedContent?.let {
+            itemContentView.setEditedHtml(it)
+        }
+
+        editItemWindowData.editedSummary?.let {
+            lytSummaryPreview.setEditedFieldValueOnUiThread(it)
+        }
+
+        editItemWindowData.editedTags?.let {
+            lytTagsPreview.setEditedTags(it.toMutableList())
+        }
+
+        editItemWindowData.editedSourceTitle?.let {
+            lytSourcePreview.setEditedFieldValueOnUiThread(it)
+        }
+        editItemWindowData.editedIndicator?.let {
+            lytSourcePreview.editedSecondaryInformation = it
+        }
+
+        editItemWindowData.editedFiles?.let {
+            lytFilesPreview.setEditedFiles(it.toMutableList())
+        }
+    }
+
+    protected open fun updateWindowData(editItemWindowData: EditItemWindowDataBase) {
+        editItemWindowData.editedContent = itemContentView.getCachedHtml()
+        editItemWindowData.editedSummary = lytSummaryPreview.getCurrentFieldValue()
+
+        editItemWindowData.editedTags = lytTagsPreview.getMergedTags()
+
+        editItemWindowData.editedSourceTitle = lytSourcePreview.getEditedValue()
+        editItemWindowData.editedIndicator = lytSourcePreview.editedSecondaryInformation
+
+        editItemWindowData.editedFiles = lytFilesPreview.getEditedFiles()
     }
 
 

@@ -3,53 +3,54 @@ package net.dankito.deepthought.android.routing
 import android.content.Context
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.*
-import net.dankito.deepthought.android.activities.arguments.*
+import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityParameters
 import net.dankito.deepthought.android.dialogs.AddArticleSummaryExtractorDialog
 import net.dankito.deepthought.android.dialogs.ArticleSummaryExtractorsDialog
 import net.dankito.deepthought.android.dialogs.SourceItemsListDialog
 import net.dankito.deepthought.android.dialogs.TagItemsListDialog
-import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.model.*
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.deepthought.ui.windowdata.*
 import net.dankito.filechooserdialog.FileChooserDialog
 import net.dankito.filechooserdialog.model.FileChooserDialogConfig
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.utils.android.ui.activities.ActivityParameterHolder
+import net.dankito.utils.windowregistry.android.ui.extensions.currentAndroidWindow
 import net.dankito.utils.windowregistry.android.ui.router.AndroidRouterBase
 import net.dankito.utils.windowregistry.window.WindowRegistry
 import java.io.File
 
 
-class AndroidRouter(private val context: Context, windowRegistry: WindowRegistry, parameterHolder: ActivityParameterHolder, private val activityTracker: CurrentActivityTracker,
-                    private val dataManager: DataManager) : AndroidRouterBase(context, windowRegistry, parameterHolder), IRouter {
+class AndroidRouter(context: Context, windowRegistry: WindowRegistry, parameterHolder: ActivityParameterHolder, private val dataManager: DataManager)
+    : AndroidRouterBase(context, windowRegistry, parameterHolder), IRouter {
 
 
     override fun showItemsForTag(tag: Tag, tagsFilter: List<Tag>) {
-        activityTracker.currentActivity?.let { currentActivity ->
+        windowRegistry.currentAndroidWindow?.let { currentAndroidWindow ->
             val dialog = TagItemsListDialog()
-            dialog.showDialog(currentActivity.supportFragmentManager, tag, tagsFilter)
+            dialog.showDialog(currentAndroidWindow.supportFragmentManager, tag, tagsFilter)
         }
     }
 
     override fun showItemsForSource(source: Source) {
-        activityTracker.currentActivity?.let { currentActivity ->
+        windowRegistry.currentAndroidWindow?.let { currentAndroidWindow ->
             val dialog = SourceItemsListDialog()
-            dialog.showDialog(currentActivity.supportFragmentManager, source)
+            dialog.showDialog(currentAndroidWindow.supportFragmentManager, source)
         }
     }
 
 
     override fun showArticleSummaryExtractorsView() {
-        activityTracker.currentActivity?.let { currentActivity ->
-            val articleSummaryExtractorsDialog = ArticleSummaryExtractorsDialog(currentActivity)
+        windowRegistry.currentAndroidWindow?.let { currentAndroidWindow ->
+            val articleSummaryExtractorsDialog = ArticleSummaryExtractorsDialog(currentAndroidWindow)
             articleSummaryExtractorsDialog.showDialog()
         }
     }
 
     override fun showAddArticleSummaryExtractorView() {
-        activityTracker.currentActivity?.supportFragmentManager?.let { fragmentManager ->
+        windowRegistry.currentAndroidWindow?.supportFragmentManager?.let { fragmentManager ->
             val addArticleSummaryExtractorDialog = AddArticleSummaryExtractorDialog()
 
             addArticleSummaryExtractorDialog.show(fragmentManager, AddArticleSummaryExtractorDialog.TAG)
@@ -57,7 +58,7 @@ class AndroidRouter(private val context: Context, windowRegistry: WindowRegistry
     }
 
     override fun showArticleSummaryView(extractor: ArticleSummaryExtractorConfig, summary: ArticleSummary?) {
-        navigateToActivity(ArticleSummaryActivity::class.java, ArticleSummaryActivityParameters(extractor, summary))
+        navigateToActivity(ArticleSummaryActivity::class.java, ArticleSummaryWindowData(extractor, summary))
     }
 
     override fun showReadLaterArticlesView() {
@@ -66,22 +67,22 @@ class AndroidRouter(private val context: Context, windowRegistry: WindowRegistry
 
 
     override fun showCreateItemView() {
-        showEditItemView(EditItemActivity::class.java, EditItemActivityParameters(createItem = true))
+        showEditItemView(EditItemActivity::class.java, EditItemWindowData(Item("")))
     }
 
     override fun showEditItemView(item: Item) {
-        showEditItemView(EditItemActivity::class.java, EditItemActivityParameters(item))
+        showEditItemView(EditItemActivity::class.java, EditItemWindowData(item))
     }
 
     override fun showEditItemView(article: ReadLaterArticle) {
-        showEditItemView(EditReadLaterArticleActivity::class.java, EditItemActivityParameters(readLaterArticle = article))
+        showEditItemView(EditReadLaterArticleActivity::class.java, EditReadLaterArticleWindowData(article))
     }
 
     override fun showEditItemView(extractionResult: ItemExtractionResult) {
-        showEditItemView(EditItemExtractionResultActivity::class.java, EditItemActivityParameters(itemExtractionResult = extractionResult))
+        showEditItemView(EditItemExtractionResultActivity::class.java, EditItemExtractionResultWindowData(extractionResult))
     }
 
-    private fun showEditItemView(editItemActivityClass: Class<out EditItemActivityBase>, parameters: EditItemActivityParameters) {
+    private fun showEditItemView(editItemActivityClass: Class<out EditItemActivityBase>, parameters: EditItemWindowDataBase) {
         dataManager.addInitializationListener { // if you have a very large data set and are very, very quick, you can enter EditItemActivityBase before DataManager is initialized -> localSettings is null
             navigateToActivity(editItemActivityClass, parameters)
         }
@@ -89,7 +90,7 @@ class AndroidRouter(private val context: Context, windowRegistry: WindowRegistry
 
 
     override fun createItemFromPdf() {
-        activityTracker.currentActivity?.let { activity ->
+        (windowRegistry.currentAndroidWindow as? BaseActivity)?.let { activity ->
             val permissionsService = activity.registerPermissionsService()
             val config = FileChooserDialogConfig(listOf("pdf"), permissionToReadExternalStorageRationaleResourceId = R.string.open_file_permission_request_message)
 
@@ -103,14 +104,16 @@ class AndroidRouter(private val context: Context, windowRegistry: WindowRegistry
 
 
     override fun showEditSourceView(source: Source) {
-        showEditSourceView(EditSourceActivityParameters(source))
+        showEditSourceView(EditSourceWindowData(source))
     }
 
     override fun showEditItemSourceView(source: Source?, series: Series?, editedSourceTitle: String?) {
-        showEditSourceView(EditSourceActivityParameters(source, series, editedSourceTitle))
+        val sourceToEdit = source ?: Source("")
+
+        showEditSourceView(EditSourceWindowData(sourceToEdit, series, editedSourceTitle))
     }
 
-    private fun showEditSourceView(parameters: EditSourceActivityParameters) {
+    private fun showEditSourceView(parameters: EditSourceWindowData) {
         navigateToActivity(EditSourceActivity::class.java, parameters)
     }
 
@@ -129,20 +132,20 @@ class AndroidRouter(private val context: Context, windowRegistry: WindowRegistry
 
 
     override fun showPdfView(addNewPdfFile: File, sourceForFile: Source?) {
-        showImportFromPdfView(ViewPdfActivityParameters(null, addNewPdfFile, sourceForFile))
+        showImportFromPdfView(ViewPdfWindowData(addNewPdfFile, null, sourceForFile))
     }
 
     override fun showPdfView(persistedPdfFile: FileLink, sourceForFile: Source?) {
-        showImportFromPdfView(ViewPdfActivityParameters(persistedPdfFile, null, sourceForFile))
+        showImportFromPdfView(ViewPdfWindowData(null, persistedPdfFile, sourceForFile))
     }
 
-    private fun showImportFromPdfView(parameters: ViewPdfActivityParameters) {
+    private fun showImportFromPdfView(parameters: ViewPdfWindowData) {
         navigateToActivity(ViewPdfActivity::class.java, parameters)
     }
 
 
     override fun returnToPreviousView() {
-        activityTracker.currentActivity?.let { activity ->
+        windowRegistry.currentAndroidWindow?.let { activity ->
             activity.runOnUiThread { activity.onBackPressed() }
         }
     }

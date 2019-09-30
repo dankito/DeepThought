@@ -20,6 +20,7 @@ import net.dankito.deepthought.android.util.Assert
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.ui.windowdata.EditItemWindowData
 import net.dankito.richtexteditor.android.toolbar.SearchView
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matcher
@@ -53,7 +54,7 @@ class EditItemActivity_SearchInWebViewTest : DeepThoughtAndroidTestBase() {
     init {
         TestComponent.component.inject(this)
 
-        testRule.setActivityParameter(parameterHolder, EditItemActivityParameters(testItem))
+        testRule.setActivityParameter(parameterHolder, EditItemWindowData(testItem))
 
         dataManager.localSettings.didShowItemInformationFullscreenHelp = true
     }

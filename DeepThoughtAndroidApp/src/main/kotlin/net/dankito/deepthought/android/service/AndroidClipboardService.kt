@@ -11,19 +11,16 @@ import net.dankito.deepthought.model.Tag
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
 import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.utils.ui.ClipboardServiceBase
-import org.slf4j.LoggerFactory
+import net.dankito.utils.windowregistry.android.ui.extensions.currentActivity
+import net.dankito.utils.windowregistry.window.WindowRegistry
 import javax.inject.Inject
 
 
 class AndroidClipboardService : ClipboardServiceBase() {
 
-    companion object {
-        private val log = LoggerFactory.getLogger(AndroidClipboardService::class.java)
-    }
-
 
     @Inject
-    protected lateinit var activityTracker: CurrentActivityTracker
+    protected lateinit var windowRegistry: WindowRegistry
 
 
     private var shareActionProvider: ShareActionProvider? = null
@@ -89,7 +86,7 @@ class AndroidClipboardService : ClipboardServiceBase() {
     private fun share(shareIntent: Intent) {
         shareActionProvider?.setShareIntent(shareIntent)
 
-        activityTracker.currentActivity?.startActivity(shareIntent)
+        windowRegistry.currentActivity?.startActivity(shareIntent)
     }
 
 }

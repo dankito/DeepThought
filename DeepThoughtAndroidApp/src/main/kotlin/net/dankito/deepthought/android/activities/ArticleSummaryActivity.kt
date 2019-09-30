@@ -14,7 +14,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import kotlinx.android.synthetic.main.activity_article_summary.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.ArticleSummaryActivityParameters
 import net.dankito.deepthought.android.adapter.ArticleSummaryItemRecyclerAdapter
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.data.ItemPersister
@@ -23,6 +22,7 @@ import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
+import net.dankito.deepthought.ui.windowdata.ArticleSummaryWindowData
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.service.data.ReadLaterArticleService
@@ -88,6 +88,15 @@ class ArticleSummaryActivity : BaseActivity() {
     private val toolbarUtil = ToolbarUtil()
 
 
+    override val windowDataClass = ArticleSummaryWindowData::class.java
+
+    override fun getCurrentWindowData(): Any? {
+        (windowData as ArticleSummaryWindowData).summary = presenter.lastLoadedSummary
+
+        return windowData
+    }
+
+
     init {
         AppComponent.component.inject(this)
 
@@ -105,13 +114,9 @@ class ArticleSummaryActivity : BaseActivity() {
         savedInstanceState?.let { restoreState(it) }
 
         if(savedInstanceState == null) {
-            showParameters(getParameters() as? ArticleSummaryActivityParameters)
-        }
-    }
-
-    private fun showParameters(parameters: ArticleSummaryActivityParameters?) {
-        if(parameters != null) {
-            restoreState(parameters.extractorConfig.url, parameters.summary)
+            (windowData as? ArticleSummaryWindowData)?.let {
+                restoreState(it.extractorConfig.url, it.summary)
+            }
         }
     }
 

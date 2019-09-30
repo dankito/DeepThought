@@ -56,12 +56,12 @@ class ArticleSummaryView : DialogFragment() {
 
         presenter = ArticleSummaryPresenter(itemPersister, readLaterArticleService, articleExtractorManager, router, clipboardService, dialogService)
 
-        this.extractorConfig = (windowData as ArticleSummaryWindowData).articleSummaryExtractorConfig
+        this.extractorConfig = (windowData as ArticleSummaryWindowData).extractorConfig
 
         articleSummaryItemsView = ArticleSummaryItemsView(presenter)
 
         (windowData as? ArticleSummaryWindowData)?.let { data ->
-            data.articleSummary?.let { presenter.retrievedArticleSummary(it, extractorConfig) }
+            data.summary?.let { presenter.retrievedArticleSummary(it, extractorConfig) }
             articleSummaryItemsView.checkedItems.addAll(data.selectedItems)
         }
 
@@ -82,7 +82,7 @@ class ArticleSummaryView : DialogFragment() {
 
     override fun getCurrentWindowData(): Any? {
         (windowData as? ArticleSummaryWindowData)?.let { data ->
-            data.articleSummary = presenter.lastLoadedSummary
+            data.summary = presenter.lastLoadedSummary
             data.selectedItems = articleSummaryItemsView.checkedItems.toList()
         }
 

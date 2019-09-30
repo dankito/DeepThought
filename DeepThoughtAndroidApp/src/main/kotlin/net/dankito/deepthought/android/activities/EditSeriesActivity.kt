@@ -80,6 +80,12 @@ class EditSeriesActivity : BaseActivity() {
     private var eventBusListener: EventBusListener? = null
 
 
+    // TODO: implement if activity is used again
+    override val windowDataClass = null
+
+    override fun getCurrentWindowData() = null
+
+
 
     init {
         AppComponent.component.inject(this)

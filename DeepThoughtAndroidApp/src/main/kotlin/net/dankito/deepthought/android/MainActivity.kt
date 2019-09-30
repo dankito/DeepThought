@@ -1,6 +1,5 @@
 package net.dankito.deepthought.android
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -64,6 +63,13 @@ class MainActivity : BaseActivity() {
 
     @Inject
     protected lateinit var searchEngine: ISearchEngine
+
+
+    override val isMainWindow = true
+
+    override val windowDataClass = null
+
+    override fun getCurrentWindowData() = null
 
 
     init {
@@ -254,21 +260,8 @@ class MainActivity : BaseActivity() {
         true
     }
 
-    // TODO: move to Router
-    private fun navigateToActivity(activityClass: Class<out BaseActivity>, parameters: Any? = null) {
-        val intent = Intent(this, activityClass)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
-        parameters?.let { addParametersToIntent(intent, parameters) }
-
-        startActivity(intent)
-    }
-
-
-    private fun addParametersToIntent(intent: Intent, parameters: Any) {
-        val id = parameterHolderField.setParameters(parameters)
-
-        intent.putExtra(BaseActivity.ParametersId, id)
+    private fun navigateToActivity(activityClass: Class<out BaseActivity>) {
+        router.showWindow(activityClass, null as? String)
     }
 
 }

@@ -7,15 +7,16 @@ import android.text.InputType
 import android.widget.EditText
 import android.widget.Toast
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.utils.android.extensions.showKeyboardDelayed
 import net.dankito.utils.localization.Localization
-import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.windowregistry.android.ui.extensions.currentAndroidWindow
+import net.dankito.utils.windowregistry.window.WindowRegistry
 
 
-class AndroidDialogService(private val currentActivityTracker: CurrentActivityTracker, private val localizationProperty: Localization) : IDialogService {
+class AndroidDialogService(private val windowRegistry: WindowRegistry, private val localizationProperty: Localization) : IDialogService {
 
     override fun getLocalization(): Localization {
         return localizationProperty
@@ -23,7 +24,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
 
 
     override fun showLittleInfoMessage(infoMessage: CharSequence) {
-        currentActivityTracker.currentActivity?.let { currentActivity ->
+        windowRegistry.currentAndroidWindow?.let { currentActivity ->
             currentActivity.runOnUiThread { showLittleInfoMessageOnUIThread(currentActivity, infoMessage) }
         }
     }
@@ -33,7 +34,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
     }
 
     override fun showInfoMessage(infoMessage: CharSequence, alertTitle: CharSequence?) {
-        currentActivityTracker.currentActivity?.let { activity ->
+        windowRegistry.currentAndroidWindow?.let { activity ->
             activity.runOnUiThread { showInfoMessageOnUIThread(activity, infoMessage, alertTitle) }
         }
     }
@@ -45,7 +46,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
     }
 
     override fun showConfirmationDialog(message: CharSequence, alertTitle: CharSequence?, config: ConfirmationDialogConfig, optionSelected: (ConfirmationDialogButton) -> Unit) {
-        currentActivityTracker.currentActivity?.let { activity ->
+        windowRegistry.currentAndroidWindow?.let { activity ->
             if(Looper.getMainLooper().getThread() == Thread.currentThread()) {
                 showConfirmMessageOnUiThread(activity, message, alertTitle, config, optionSelected)
             }
@@ -82,7 +83,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
     }
 
     override fun showErrorMessage(errorMessage: CharSequence, alertTitle: CharSequence?, exception: Exception?) {
-        currentActivityTracker.currentActivity?.let { activity ->
+        windowRegistry.currentAndroidWindow?.let { activity ->
             activity.runOnUiThread { showErrorMessageOnUIThread(activity, errorMessage, alertTitle, exception) }
         }
     }
@@ -99,7 +100,7 @@ class AndroidDialogService(private val currentActivityTracker: CurrentActivityTr
     }
 
     override fun askForTextInput(questionText: CharSequence, alertTitleText: CharSequence?, defaultValue: CharSequence?, type: net.dankito.utils.ui.dialogs.InputType, callback: (Boolean, String?) -> Unit) {
-        currentActivityTracker.currentActivity?.let { activity ->
+        windowRegistry.currentAndroidWindow?.let { activity ->
             activity.runOnUiThread { askForTextInputOnUIThread(activity, questionText, alertTitleText, defaultValue, type, callback) }
         }
     }

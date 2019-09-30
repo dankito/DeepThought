@@ -15,6 +15,7 @@ import net.dankito.deepthought.android.service.ActivityParameterHolder
 import net.dankito.deepthought.android.util.TestUtil
 import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTestRule
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.ui.windowdata.EditItemWindowData
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
@@ -48,7 +49,7 @@ class EditItemActivity_EditItemWithNoSourceTest : DeepThoughtAndroidTestBase() {
     init {
         TestComponent.component.inject(this)
 
-        testRule.setActivityParameter(parameterHolder, EditItemActivityParameters(testItem))
+        testRule.setActivityParameter(parameterHolder, EditItemWindowData(testItem))
     }
 
 

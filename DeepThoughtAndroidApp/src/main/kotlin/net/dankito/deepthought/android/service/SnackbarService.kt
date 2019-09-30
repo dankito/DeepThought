@@ -12,15 +12,18 @@ import kotlinx.android.synthetic.main.snackbar_ask_sync_data_with_device.view.*
 import kotlinx.android.synthetic.main.snackbar_clipboard_content.view.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.android.extensions.getDimension
-import net.dankito.utils.android.extensions.setViewsEnabledState
 import net.dankito.deepthought.model.Device
 import net.dankito.deepthought.model.DiscoveredDevice
-import net.dankito.utils.clipboard.ClipboardContentOption
-import net.dankito.utils.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.utils.android.extensions.getColorFromResource
+import net.dankito.utils.android.extensions.getDimension
+import net.dankito.utils.android.extensions.setViewsEnabledState
 import net.dankito.utils.android.ui.activities.AppLifeCycleListener
+import net.dankito.utils.clipboard.ClipboardContentOption
+import net.dankito.utils.clipboard.OptionsForClipboardContent
+import net.dankito.utils.windowregistry.android.ui.extensions.asActivity
+import net.dankito.utils.windowregistry.android.ui.extensions.currentActivity
+import net.dankito.utils.windowregistry.window.WindowRegistry
 import org.slf4j.LoggerFactory
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -40,7 +43,7 @@ class SnackbarService {
 
 
     @Inject
-    protected lateinit var currentActivityTracker: CurrentActivityTracker
+    protected lateinit var windowRegistry: WindowRegistry
 
     @Inject
     protected lateinit var lifeCycleListener: AppLifeCycleListener
@@ -170,14 +173,16 @@ class SnackbarService {
             return
         }
 
-        val activity = currentActivityTracker.currentActivity
+        val activity = windowRegistry.currentActivity
         if(activity != null) {
             activity.runOnUiThread { askUserToSyncDataWithDeviceOnUiThread(activity, unknownDevice, callback) }
         }
         else { // when there's not current activity, e.g. only DeepThoughtBackgroundAndroidService is running but no UI is displayed, wait till UI is available again
-            currentActivityTracker.addNextActivitySetListener {
-                showSnackbarAfterAppStartupDelay { // wait PeriodToWaitBeforeShowingFirstSnackbarOnStartUp and PeriodToWaitBeforeShowingNextSnackbar so that Snackbar for discovered URL gets shown before Snackbar for unknown device
-                    showUnknownDeviceDiscoveredViewAfterDelay(unknownDevice, callback)
+            windowRegistry.addNextWindowCreatedListener { window ->
+                window.asActivity()?.runOnUiThread {
+                    showSnackbarAfterAppStartupDelay { // wait PeriodToWaitBeforeShowingFirstSnackbarOnStartUp and PeriodToWaitBeforeShowingNextSnackbar so that Snackbar for discovered URL gets shown before Snackbar for unknown device
+                        showUnknownDeviceDiscoveredViewAfterDelay(unknownDevice, callback)
+                    }
                 }
             }
         }
@@ -248,7 +253,7 @@ class SnackbarService {
 
     fun checkIfSnackbarForDeviceShouldBeDismissed(device: DiscoveredDevice) {
         if(currentSnackbarId == device.device.id) {
-            currentActivityTracker.currentActivity?.let { activity ->
+            windowRegistry.currentActivity?.let { activity ->
                 activity.runOnUiThread { currentSnackbar?.dismiss() }
             }
         }

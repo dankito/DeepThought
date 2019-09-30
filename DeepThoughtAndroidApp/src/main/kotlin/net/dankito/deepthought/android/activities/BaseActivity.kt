@@ -2,33 +2,23 @@ package net.dankito.deepthought.android.activities
 
 import android.os.Bundle
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.deepthought.android.service.ActivityParameterHolder
-import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.ui.UiStatePersister
 import net.dankito.deepthought.android.ui.theme.AppThemes
 import net.dankito.utils.android.permissions.IPermissionsService
 import net.dankito.utils.android.permissions.PermissionsService
-import net.dankito.utils.android.ui.activities.ThemeableActivity
+import net.dankito.utils.android.ui.activities.ActivityParameterHolder
 import net.dankito.utils.android.ui.theme.Theme
+import net.dankito.utils.windowregistry.android.ui.AndroidWindow
 import net.dankito.utils.windowregistry.window.WindowRegistry
-import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 
-abstract class BaseActivity : ThemeableActivity() {
-//abstract class BaseActivity : AndroidWindow() {
+abstract class BaseActivity : AndroidWindow() {
 
     companion object {
-        const val ParametersId = "BASE_ACTIVITY_PARAMETERS_ID"
-
         const val WaitingForResultForIdBundleExtraName = "WAITING_FOR_RESULT_FOR_ID"
-
-        private val log = LoggerFactory.getLogger(BaseActivity::class.java)
     }
 
-
-    @Inject
-    protected lateinit var currentActivityTracker: CurrentActivityTracker
 
     @Inject
     protected lateinit var parameterHolderField: ActivityParameterHolder
@@ -45,7 +35,18 @@ abstract class BaseActivity : ThemeableActivity() {
     private val registeredPermissionsServices = mutableListOf<IPermissionsService>()
 
 
-    init {
+    override fun getParameterHolder(): ActivityParameterHolder {
+        return parameterHolderField
+    }
+
+    override fun getWindowRegistryInstance(): WindowRegistry {
+        return windowRegistryField
+    }
+
+
+    override fun setupDependencyInjection() {
+        super.setupDependencyInjection()
+
         AppComponent.component.inject(this)
     }
 
@@ -66,7 +67,6 @@ abstract class BaseActivity : ThemeableActivity() {
         registeredPermissionsServices.clear()
 
         super.onDestroy()
-        log.info("Destroyed Activity $this")
     }
 
 
@@ -99,10 +99,6 @@ abstract class BaseActivity : ThemeableActivity() {
         }
 
         return null
-    }
-
-    private fun getParametersId(): String? {
-        return intent?.getStringExtra(ParametersId)
     }
 
 

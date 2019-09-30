@@ -4,14 +4,16 @@ import android.app.Activity
 import android.content.ClipboardManager
 import android.content.Context
 import net.dankito.deepthought.android.di.AppComponent
-import net.dankito.utils.android.ui.activities.AppLifeCycleListener
-import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.android.service.SnackbarService
-import net.dankito.utils.clipboard.OptionsForClipboardContent
 import net.dankito.deepthought.service.clipboard.OptionsForClipboardContentDetector
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.utils.android.clipboard.AndroidClipboardContent
+import net.dankito.utils.android.ui.activities.AppLifeCycleListener
+import net.dankito.utils.clipboard.OptionsForClipboardContent
 import net.dankito.utils.web.UrlUtil
+import net.dankito.utils.windowregistry.android.ui.extensions.asActivity
+import net.dankito.utils.windowregistry.android.ui.extensions.currentActivity
+import net.dankito.utils.windowregistry.window.WindowRegistry
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -27,7 +29,7 @@ class AndroidClipboardWatcher(dataManager: DataManager)  {
     protected lateinit var lifeCycleListener: AppLifeCycleListener
 
     @Inject
-    protected lateinit var activityTracker: CurrentActivityTracker
+    protected lateinit var windowRegistry: WindowRegistry
 
     @Inject
     protected lateinit var snackbarService: SnackbarService
@@ -53,12 +55,18 @@ class AndroidClipboardWatcher(dataManager: DataManager)  {
 
             lifeCycleListener.addActivityResumedListener(activityResumedListener)
 
-            activityTracker.currentActivity?.let { activity ->
+            windowRegistry.currentActivity?.let { activity ->
                 activity.runOnUiThread {
                     checkIfClipboardContainsUrlOnUiThread(activity)
                 }
             } ?: run {
-                activityTracker.addNextActivitySetListener { checkIfClipboardContainsUrlOnUiThread(it) }
+                windowRegistry.addNextWindowCreatedListener { window ->
+                    window.asActivity()?.let {activity ->
+                        activity.runOnUiThread {
+                            checkIfClipboardContainsUrlOnUiThread(activity)
+                        }
+                    }
+                }
             }
         }
     }

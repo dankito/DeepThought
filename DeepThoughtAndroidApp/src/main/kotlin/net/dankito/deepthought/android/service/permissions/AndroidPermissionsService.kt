@@ -4,12 +4,13 @@ import android.Manifest
 import android.content.Context
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.BaseActivity
-import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.deepthought.service.permissions.IPermissionsService
 import net.dankito.utils.android.permissions.PermissionsService
+import net.dankito.utils.windowregistry.android.ui.extensions.currentAndroidWindow
+import net.dankito.utils.windowregistry.window.WindowRegistry
 
 
-class AndroidPermissionsService(private val applicationContext: Context, private val activityTracker: CurrentActivityTracker) : IPermissionsService {
+class AndroidPermissionsService(private val applicationContext: Context, private val windowRegistry: WindowRegistry) : IPermissionsService {
 
     companion object {
         private const val WriteSynchronizedFilePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -21,14 +22,16 @@ class AndroidPermissionsService(private val applicationContext: Context, private
     }
 
     override fun requestPermissionToWriteSynchronizedFiles(requestPermissionResult: (Boolean) -> Unit) {
-        val currentActivity = activityTracker.currentActivity
+        val currentActivity = windowRegistry.currentAndroidWindow as? BaseActivity
 
-        if(currentActivity != null) {
+        if (currentActivity != null) {
             requestPermissionToWriteSynchronizedFiles(currentActivity, requestPermissionResult)
         }
         else {
-            activityTracker.addNextActivitySetListener {
-                requestPermissionToWriteSynchronizedFiles(it, requestPermissionResult)
+            windowRegistry.addNextWindowCreatedListener { window ->
+                (window as? BaseActivity)?.let {
+                    requestPermissionToWriteSynchronizedFiles(it, requestPermissionResult)
+                }
             }
         }
     }

@@ -146,9 +146,14 @@ class EditEntityFilesField : EditEntityField {
         this.originalFiles = originalFiles
         this.permissionsService = permissionsManager
 
+        attachedFilesAdapter.sourceForFile = sourceForFile
+
+        setEditedFiles(originalFiles)
+    }
+
+    fun setEditedFiles(originalFiles: MutableCollection<FileLink>) {
         fileListPresenter.forLocalFilesEnsureLocalFileInfoIsSetAndMayStartSynchronization(originalFiles)
 
-        attachedFilesAdapter.sourceForFile = sourceForFile
         attachedFilesAdapter.items = ArrayList(originalFiles) // make a copy to not edit original files
     }
 

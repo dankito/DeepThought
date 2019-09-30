@@ -21,8 +21,6 @@ import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.WebPageLoader
-import net.dankito.utils.android.extensions.hideKeyboard
-import net.dankito.utils.android.extensions.hideKeyboardDelayed
 import net.dankito.deepthought.android.ui.UiStatePersister
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
@@ -31,14 +29,16 @@ import net.dankito.deepthought.service.data.DataManager
 import net.dankito.richtexteditor.JavaScriptExecutorBase
 import net.dankito.richtexteditor.android.FullscreenWebView
 import net.dankito.richtexteditor.android.RichTextEditor
-import net.dankito.utils.android.animation.ShowHideViewAnimator
-import net.dankito.utils.android.OnSwipeTouchListener
-import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.android.OnSwipeTouchListener
+import net.dankito.utils.android.animation.ShowHideViewAnimator
 import net.dankito.utils.android.extensions.HtmlExtensions
+import net.dankito.utils.android.extensions.hideKeyboard
+import net.dankito.utils.android.extensions.hideKeyboardDelayed
 import net.dankito.utils.android.permissions.IPermissionsService
-import net.dankito.utils.ui.dialogs.IDialogService
+import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.web.UrlUtil
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -91,9 +91,17 @@ class ItemContentView @JvmOverloads constructor(
         editHtmlView.getCurrentHtmlAsync(callback)
     }
 
+    fun getCachedHtml(): String {
+        return editHtmlView.getCachedHtml()
+    }
+
+    fun setEditedHtml(html: String) { // for restoring state
+        editHtmlView.setEditedHtml(html)
+    }
+
     val isContentSet: Boolean
         get() {
-            return contentToEdit.isBlank() == false && contentToEdit != "<p>\u200B</p>" // = RichTextEditor's default html
+            return editHtmlView.isDefaultRichTextEditorHtml(contentToEdit) == false
         }
 
     var didContentChange: Boolean = false
@@ -245,14 +253,8 @@ class ItemContentView @JvmOverloads constructor(
     }
 
 
-    fun initialize(contentToEdit: String, editItemView: IEditItemView, permissionsService: IPermissionsService) {
-        originalContent = contentToEdit
-        this.contentToEdit = contentToEdit
-
+    fun initialize(editItemView: IEditItemView, permissionsService: IPermissionsService) {
         this.editItemView = editItemView
-
-        isInReaderMode = editItemView.getItemExtractionResult()?.couldExtractContent ?: false
-        readerModeContent = editItemView.getItemExtractionResult()?.item?.content ?: contentToEdit // TODO: is this correct?
 
         contentEditor.permissionsService = permissionsService
 
@@ -261,6 +263,14 @@ class ItemContentView @JvmOverloads constructor(
         contentEditor.changeDisplayModeListener = { mode -> handleChangeDisplayModeEvent(mode) }
 
         contentEditor.swipeListener = { isInFullscreen, swipeDirection -> handleWebViewSwipe(isInFullscreen, swipeDirection) }
+    }
+
+    fun setContentToEdit(contentToEdit: String) {
+        originalContent = contentToEdit
+        this.contentToEdit = contentToEdit
+
+        isInReaderMode = editItemView.getItemExtractionResult()?.couldExtractContent ?: false
+        readerModeContent = editItemView.getItemExtractionResult()?.item?.content ?: contentToEdit // TODO: is this correct?
     }
 
     fun optionMenuCreated(mnToggleReaderMode: MenuItem, toolbarUtil: ToolbarUtil) {
@@ -383,7 +393,7 @@ class ItemContentView @JvmOverloads constructor(
     }
 
     private fun shouldShowContent(content: String?): Boolean {
-        // TODO: currently we assume that for item content is always set, this may change in the feature
+        // TODO: currently we assume that for item content is always set, this may change in the future
         val extractionResult = editItemView.getItemExtractionResult()
 
         return isContentSet &&

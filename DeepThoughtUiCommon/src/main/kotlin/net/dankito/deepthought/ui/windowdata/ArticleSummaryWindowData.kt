@@ -5,8 +5,8 @@ import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 
 
-data class ArticleSummaryWindowData(val articleSummaryExtractorConfig: ArticleSummaryExtractorConfig,
-                                    var articleSummary: ArticleSummary? = null,
+data class ArticleSummaryWindowData(val extractorConfig: ArticleSummaryExtractorConfig,
+                                    var summary: ArticleSummary? = null,
                                     var selectedItems: List<ArticleSummaryItem> = listOf()) {
 
     private constructor() : this(ArticleSummaryExtractorConfig("", "")) // for Jackson

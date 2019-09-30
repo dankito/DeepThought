@@ -7,8 +7,8 @@ import android.support.test.espresso.core.deps.guava.collect.Iterables
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry
 import android.support.test.runner.lifecycle.Stage
-import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.service.ActivityParameterHolder
+import net.dankito.utils.windowregistry.android.ui.AndroidWindow
 
 
 class DeepThoughtActivityTestRule<T : Activity>(activityClass: Class<T>, private val beforeActivityLaunched: (() -> Unit)? = null) : ActivityTestRule<T>(activityClass) {
@@ -38,7 +38,7 @@ class DeepThoughtActivityTestRule<T : Activity>(activityClass: Class<T>, private
             parameterHolder?.let { parameterHolder ->
                 val id = parameterHolder.setParameters(parameters)
 
-                intent.putExtra(BaseActivity.ParametersId, id)
+                intent.putExtra(AndroidWindow.WindowStateIdIntentExtraName, id)
             }
         }
 

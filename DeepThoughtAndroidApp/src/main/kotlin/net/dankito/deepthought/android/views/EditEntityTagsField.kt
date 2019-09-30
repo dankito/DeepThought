@@ -121,8 +121,13 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
         this.originalTagsOnItem = originalTagsOnItem
         this.activity = activity
 
-        adapter.tagsOnItem = LinkedHashSet(originalTagsOnItem) // make a copy so that original collection doesn't get manipulated
-        setTagsOnItemPreviewOnUIThread(originalTagsOnItem)
+        setEditedTags(originalTagsOnItem)
+    }
+
+    fun setEditedTags(tags: Collection<Tag>) {
+        adapter.tagsOnItem = LinkedHashSet(tags) // make a copy so that original collection doesn't get manipulated
+
+        setTagsOnItemPreviewOnUIThread(tags)
     }
 
 
@@ -234,7 +239,7 @@ class EditEntityTagsField : EditEntityCollectionField, ITagsOnItemListView {
         setTagsOnItemPreviewOnUIThread(getMergedTags())
     }
 
-    private fun getMergedTags(): Collection<Tag> {
+    fun getMergedTags(): Collection<Tag> {
         return presenter.getMergedTags(adapter.tagsOnItem, autoCompleteResult)
     }
 

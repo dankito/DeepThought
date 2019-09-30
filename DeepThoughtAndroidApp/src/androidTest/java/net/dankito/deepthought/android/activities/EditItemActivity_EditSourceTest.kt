@@ -21,6 +21,7 @@ import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Series
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.extensions.getPreviewWithSeriesAndPublishingDate
+import net.dankito.deepthought.ui.windowdata.EditItemWindowData
 import org.hamcrest.CoreMatchers.*
 import org.junit.Assert.assertThat
 import org.junit.Rule
@@ -73,7 +74,7 @@ class EditItemActivity_EditSourceTest : DeepThoughtAndroidTestBase() {
 
         testItem.source = source
 
-        testRule.setActivityParameter(parameterHolder, EditItemActivityParameters(testItem))
+        testRule.setActivityParameter(parameterHolder, EditItemWindowData(testItem))
     }
 
 

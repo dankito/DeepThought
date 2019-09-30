@@ -100,7 +100,7 @@ open class EditEntityField : RelativeLayout {
         // TODO: also save and restore originalValue
 
         bundle.putBoolean(IS_SECONDARY_INFORMATION_VISIBLE_BUNDLE_EXTRA_NAME, isSecondaryInformationVisible())
-        bundle.putString(SECONDARY_INFORMATION_VALUE_BUNDLE_EXTRA_NAME, getEditedSecondaryInformation())
+        bundle.putString(SECONDARY_INFORMATION_VALUE_BUNDLE_EXTRA_NAME, editedSecondaryInformation)
 
         return bundle
     }
@@ -220,6 +220,12 @@ open class EditEntityField : RelativeLayout {
 
         originalValue = fieldValue
         updateDidValueChange(false)
+    }
+
+    open fun setEditedFieldValueOnUiThread(fieldValue: String?) {
+        setEditTextEntityFieldValueOnUiThread(fieldValue ?: "")
+
+        updateDidValueChange(fieldValue == originalValue)
     }
 
     open fun setOnboardingTextOnUiThread(onboardingTextResourceId: Int) {
@@ -451,7 +457,11 @@ open class EditEntityField : RelativeLayout {
         return false
     }
 
-    fun getEditedSecondaryInformation() = edtxtSecondaryInformationValue.text.toString()
+    var editedSecondaryInformation: String
+        get() = edtxtSecondaryInformationValue.text.toString()
+        set(value) {
+            edtxtSecondaryInformationValue.setText(value)
+        }
 
 
 }

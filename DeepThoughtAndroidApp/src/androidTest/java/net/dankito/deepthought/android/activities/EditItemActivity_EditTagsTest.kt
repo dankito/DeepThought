@@ -25,6 +25,7 @@ import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTest
 import net.dankito.deepthought.android.views.TagsPreviewViewHelper
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Tag
+import net.dankito.deepthought.ui.windowdata.EditItemWindowData
 import net.dankito.service.search.SearchEngineBase
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf
@@ -78,7 +79,7 @@ class EditItemActivity_EditTagsTest : DeepThoughtAndroidTestBase() {
         testItem.addTag(persistedTag2)
         testItem.addTag(persistedTag3)
 
-        testRule.setActivityParameter(parameterHolder, EditItemActivityParameters(testItem))
+        testRule.setActivityParameter(parameterHolder, EditItemWindowData(testItem))
     }
 
 

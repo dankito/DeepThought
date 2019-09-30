@@ -5,9 +5,10 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_edit_item.*
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditItemActivityResult
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.deepthought.ui.windowdata.EditItemExtractionResultWindowData
+import net.dankito.deepthought.ui.windowdata.EditItemWindowDataBase
 
 
 class EditItemExtractionResultActivity : EditItemActivityBase() {
@@ -20,14 +21,15 @@ class EditItemExtractionResultActivity : EditItemActivityBase() {
     private lateinit var itemExtractionResult: ItemExtractionResult
 
 
+    override val windowDataClass = EditItemExtractionResultWindowData::class.java
+
+
     override fun getItemExtractionResult(): ItemExtractionResult? {
         return this.itemExtractionResult
     }
 
-    override fun showParameters(parameters: EditItemActivityParameters) {
-        parameters.itemExtractionResult?.let {
-            editItemExtractionResult(it)
-        }
+    override fun showParameters(parameters: EditItemWindowDataBase) {
+        editItemExtractionResult((parameters as EditItemExtractionResultWindowData).itemExtractionResult)
     }
 
     override fun restoreEntity(savedInstanceState: Bundle) {

@@ -73,12 +73,6 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideCurrentActivityTracker() : CurrentActivityTracker {
-        return CurrentActivityTracker()
-    }
-
-    @Provides
-    @Singleton
     fun provideActivityParameterHolder() : ActivityParameterHolder {
         return ActivityParameterHolder()
     }
@@ -115,8 +109,8 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun providePermissionsService(context: Context, currentActivityTracker: CurrentActivityTracker) : IPermissionsService {
-        return AndroidPermissionsService(context, currentActivityTracker)
+    fun providePermissionsService(context: Context, windowRegistry: WindowRegistry) : IPermissionsService {
+        return AndroidPermissionsService(context, windowRegistry)
     }
 
     @Provides
@@ -127,8 +121,8 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideDialogService(currentActivityTracker: CurrentActivityTracker, localization: Localization) : IDialogService {
-        return AndroidDialogService(currentActivityTracker, localization)
+    fun provideDialogService(windowRegistry: WindowRegistry, localization: Localization) : IDialogService {
+        return AndroidDialogService(windowRegistry, localization)
     }
 
 
@@ -140,8 +134,8 @@ class ActivitiesModule(private val applicationContext: Context) {
 
     @Provides
     @Singleton
-    fun provideRouter(context: Context, windowRegistry: WindowRegistry, parameterHolder: net.dankito.utils.android.ui.activities.ActivityParameterHolder, activityTracker: CurrentActivityTracker, dataManager: DataManager) : IRouter {
-        return AndroidRouter(context, windowRegistry, parameterHolder, activityTracker, dataManager)
+    fun provideRouter(context: Context, windowRegistry: WindowRegistry, parameterHolder: net.dankito.utils.android.ui.activities.ActivityParameterHolder, dataManager: DataManager) : IRouter {
+        return AndroidRouter(context, windowRegistry, parameterHolder, dataManager)
     }
 
     @Provides

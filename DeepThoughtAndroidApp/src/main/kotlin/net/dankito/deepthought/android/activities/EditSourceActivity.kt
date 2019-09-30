@@ -6,7 +6,6 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_edit_source.*
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.activities.arguments.EditSeriesActivityResult
-import net.dankito.deepthought.android.activities.arguments.EditSourceActivityParameters
 import net.dankito.deepthought.android.activities.arguments.EditSourceActivityResult
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.data.SourcePersister
@@ -15,6 +14,7 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.fields.SourceField
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditSourcePresenter
+import net.dankito.deepthought.ui.windowdata.EditSourceWindowData
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.SeriesService
 import net.dankito.service.data.SourceService
@@ -76,7 +76,8 @@ class EditSourceActivity : BaseActivity() {
 
     private val presenter: EditSourcePresenter
 
-    private var source: Source? = null
+    private val source: Source?
+        get() = editSourceWindowData?.source
 
     private var originallySetSeries: Series? = null
 
@@ -98,6 +99,32 @@ class EditSourceActivity : BaseActivity() {
     private var eventBusListener: EventBusListener? = null
 
 
+    private var editSourceWindowData: EditSourceWindowData? = null
+
+
+    override val windowDataClass = EditSourceWindowData::class.java
+
+    override fun getCurrentWindowData(): Any? {
+        editSourceWindowData?.let { windowData ->
+            windowData.editedTitle = lytEditSourceTitle.getCurrentFieldValue()
+
+            windowData.editedSeriesTitle = lytEditSourceSeries.getCurrentFieldValue() // TODO: save edited / changed Series instance
+
+            windowData.editedIssue = lytEditSourceIssue.getCurrentFieldValue()
+
+            windowData.editedLength = lytEditSourceLength.getCurrentFieldValue()
+
+            windowData.editedPublishingDateString = lytEditSourcePublishingDate.getCurrentFieldValue()
+
+            windowData.editedUrl = lytEditSourceUrl.getCurrentFieldValue()
+
+            windowData.editedFiles = lytEditAttachedFiles.getEditedFiles()
+        }
+
+        return editSourceWindowData
+    }
+
+
     init {
         AppComponent.component.inject(this)
 
@@ -112,7 +139,7 @@ class EditSourceActivity : BaseActivity() {
 
         setupUI()
 
-        showParameters(getParameters() as? EditSourceActivityParameters)
+        showParameters(windowData as? EditSourceWindowData)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -372,12 +399,16 @@ class EditSourceActivity : BaseActivity() {
     }
 
 
-    private fun showParameters(parameters: EditSourceActivityParameters?) {
+    private fun showParameters(parameters: EditSourceWindowData?) {
+        this.editSourceWindowData = editSourceWindowData
+
         parameters?.let {
             if(parameters.source != null) {
                 this.originallySetSeries = parameters.series ?: parameters.source.series
 
                 showSource(parameters.source, parameters.series, parameters.editedSourceTitle)
+
+                restoreEditedValues(parameters)
             }
             else {
                 createSource()
@@ -396,8 +427,6 @@ class EditSourceActivity : BaseActivity() {
     }
 
     private fun showSource(source: Source, series: Series? = null, editedSourceTitle: String? = null) {
-        this.source = source
-
         lytEditSourceTitle.setFieldValueOnUiThread(editedSourceTitle ?: source.title)
 
         lytEditSourceSeries.setOriginalSeriesToEdit(series ?: source.series, this) { setSeriesToEdit(it) }
@@ -429,6 +458,36 @@ class EditSourceActivity : BaseActivity() {
         }
 
         lytEditSourcePublishingDate.setFieldValueOnUiThread(publishingDateStringToShow)
+    }
+
+    private fun restoreEditedValues(windowData: EditSourceWindowData) {
+        windowData.editedTitle?.let {
+            lytEditSourceTitle.setEditedFieldValueOnUiThread(it)
+        }
+
+        windowData.editedSeriesTitle?.let {
+            lytEditSourceSeries.setEditedFieldValueOnUiThread(it) // TODO: set edited / changed series instance
+        }
+
+        windowData.editedIssue?.let {
+            lytEditSourceIssue.setEditedFieldValueOnUiThread(it)
+        }
+
+        windowData.editedLength?.let {
+            lytEditSourceLength.setEditedFieldValueOnUiThread(it)
+        }
+
+        windowData.editedPublishingDateString?.let {
+            lytEditSourcePublishingDate.setEditedFieldValueOnUiThread(it)
+        }
+
+        windowData.editedUrl?.let {
+            lytEditSourceUrl.setEditedFieldValueOnUiThread(it)
+        }
+
+        windowData.editedFiles?.let {
+//            lytEditAttachedFiles.setFiles(it.toMutableList()) // TODO: this are not necessarily the original files
+        }
     }
 
 

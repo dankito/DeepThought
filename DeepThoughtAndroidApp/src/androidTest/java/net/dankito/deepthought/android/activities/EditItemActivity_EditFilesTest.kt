@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import net.dankito.deepthought.android.DeepThoughtActivityTestRule
 import net.dankito.deepthought.android.DeepThoughtAndroidTestBase
 import net.dankito.deepthought.android.R
-import net.dankito.deepthought.android.activities.arguments.EditItemActivityParameters
 import net.dankito.deepthought.android.adapter.ListRecyclerSwipeAdapter
 import net.dankito.deepthought.android.adapter.viewholder.FileLinkViewHolder
 import net.dankito.deepthought.android.di.TestComponent
@@ -20,6 +19,7 @@ import net.dankito.deepthought.android.util.screenshot.TakeScreenshotOnErrorTest
 import net.dankito.deepthought.android.views.EditEntityFilesField
 import net.dankito.deepthought.model.FileLink
 import net.dankito.deepthought.model.Item
+import net.dankito.deepthought.ui.windowdata.EditItemWindowData
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Rule
@@ -69,7 +69,7 @@ class EditItemActivity_EditFilesTest : DeepThoughtAndroidTestBase() {
 
         testItem.addAttachedFile(persistedFile1)
 
-        testRule.setActivityParameter(parameterHolder, EditItemActivityParameters(testItem))
+        testRule.setActivityParameter(parameterHolder, EditItemWindowData(testItem))
     }
 
 
