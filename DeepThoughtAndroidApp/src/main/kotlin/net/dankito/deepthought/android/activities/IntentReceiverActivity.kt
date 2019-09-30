@@ -7,6 +7,7 @@ import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.ExtractArticleHandler
 import net.dankito.deepthought.android.service.IntentHandler
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.service.search.ISearchEngine
 import net.dankito.utils.web.UrlUtil
 import javax.inject.Inject
 
@@ -29,6 +30,9 @@ class IntentReceiverActivity : Activity() {
 
     @Inject
     protected lateinit var extractArticleHandler: ExtractArticleHandler
+
+    @Inject
+    protected lateinit var searchEngine: ISearchEngine
 
 
     init {
@@ -61,7 +65,7 @@ class IntentReceiverActivity : Activity() {
             return
         }
 
-        IntentHandler(extractArticleHandler, router, urlUtil).handle(intent)
+        IntentHandler(extractArticleHandler, searchEngine, router, urlUtil).handle(intent)
     }
 
 }
