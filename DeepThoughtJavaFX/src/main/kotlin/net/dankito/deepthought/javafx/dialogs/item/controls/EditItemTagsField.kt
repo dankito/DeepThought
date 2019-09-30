@@ -70,7 +70,7 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView 
 
 
     fun getMergedTags(): Collection<Tag> {
-        return presenter.getMergedTags(editedCollection, autoCompleteResult)
+        return presenter.getMergedTags(editedCollectionField, autoCompleteResult)
     }
 
     override fun updateEditedCollectionPreviewOnUiThread() {
@@ -115,8 +115,8 @@ class EditItemTagsField : EditEntityCollectionField<Tag>(), ITagsOnItemListView 
     }
 
     private fun removeTagFromCurrentTagsOnItem(tag: Tag) {
-        if(editedCollection.contains(tag)) {
-            editedCollection.remove(tag)
+        if(editedCollectionField.contains(tag)) {
+            editedCollectionField.remove(tag)
         }
 
         runLater {

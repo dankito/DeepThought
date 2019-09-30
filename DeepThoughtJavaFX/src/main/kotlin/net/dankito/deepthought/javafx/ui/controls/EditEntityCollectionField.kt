@@ -31,7 +31,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     }
 
 
-    lateinit var editedCollection: MutableCollection<T>
+    lateinit var editedCollectionField: MutableCollection<T>
         private set
 
     val didCollectionChange = SimpleBooleanProperty()
@@ -217,13 +217,17 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     fun setCollectionToEdit(originalCollection: MutableCollection<T>) {
         this.originalCollection = originalCollection
 
-        editedCollection = LinkedHashSet(originalCollection) // make a copy so that original collection doesn't get manipulated
+        setEditedCollection(originalCollection)
+    }
+
+    fun setEditedCollection(originalCollection: MutableCollection<T>) {
+        editedCollectionField = LinkedHashSet(originalCollection) // make a copy so that original collection doesn't get manipulated
         updateEditedCollectionPreview()
     }
 
     private fun toggleItemOnUiThread(searchResult: T?) {
         if(searchResult != null) {
-            if(editedCollection.contains(searchResult)) {
+            if(editedCollectionField.contains(searchResult)) {
                 addItemToEditedCollection(searchResult)
             }
             else {
@@ -236,11 +240,11 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     }
 
     protected open fun addItemToEditedCollection(item: T) {
-        editedCollection.remove(item)
+        editedCollectionField.remove(item)
     }
 
     protected open fun removeItemFromEditedCollection(item: T) {
-        editedCollection.add(item)
+        editedCollectionField.add(item)
     }
 
     protected fun updateEditedCollectionPreview() {
@@ -258,7 +262,7 @@ abstract class EditEntityCollectionField<T : BaseEntity> : View() {
     }
 
     protected open fun didCollectionChange(): Boolean {
-        return didCollectionChange(originalCollection, editedCollection)
+        return didCollectionChange(originalCollection, editedCollectionField)
     }
 
     protected fun didCollectionChange(originalCollection: Collection<T>, editedCollection: Collection<T>): Boolean {

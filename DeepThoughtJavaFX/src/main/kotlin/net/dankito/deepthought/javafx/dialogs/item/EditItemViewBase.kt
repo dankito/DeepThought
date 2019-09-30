@@ -23,7 +23,6 @@ import net.dankito.deepthought.model.extensions.summaryPlainText
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.deepthought.ui.presenter.EditItemPresenter
 import net.dankito.deepthought.ui.windowdata.EditItemWindowDataBase
-import net.dankito.service.data.DeleteEntityService
 import net.dankito.service.data.ReadLaterArticleService
 import net.dankito.utils.javafx.ui.extensions.ensureOnlyUsesSpaceIfVisible
 import net.dankito.utils.ui.IClipboardService
@@ -74,9 +73,6 @@ abstract class EditItemViewBase : DialogFragment() {
 
     @Inject
     protected lateinit var clipboardService: IClipboardService
-
-    @Inject
-    protected lateinit var deleteEntityService: DeleteEntityService
 
     @Inject
     protected lateinit var router: IRouter
@@ -299,7 +295,7 @@ abstract class EditItemViewBase : DialogFragment() {
         }
 
         editItemWindowData.editedTags?.let {
-            editTagsField.setCollectionToEdit(it.toMutableList())
+            editTagsField.setEditedCollection(it.toMutableList())
         }
 
         editItemWindowData.editedSourceTitle?.let {
