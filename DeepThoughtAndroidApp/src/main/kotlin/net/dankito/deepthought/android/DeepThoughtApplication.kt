@@ -6,17 +6,16 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.support.multidex.MultiDexApplication
-import com.squareup.leakcanary.LeakCanary
 import net.dankito.deepthought.android.androidservice.DeepThoughtBackgroundAndroidService
 import net.dankito.deepthought.android.androidservice.DeepThoughtBackgroundAndroidServiceBinder
 import net.dankito.deepthought.android.appstart.AndroidAppInitializer
 import net.dankito.deepthought.android.di.ActivitiesModule
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.di.DaggerAppComponent
-import net.dankito.utils.android.ui.activities.AppLifeCycleListener
 import net.dankito.deepthought.di.BaseComponent
 import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.di.CommonModule
+import net.dankito.utils.android.ui.activities.AppLifeCycleListener
 import javax.inject.Inject
 
 
@@ -35,12 +34,12 @@ open class DeepThoughtApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        if(LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return
-        }
-        LeakCanary.install(this)
+//        if(LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return
+//        }
+//        LeakCanary.install(this)
 
 
         val component = setupDependencyInjection()
