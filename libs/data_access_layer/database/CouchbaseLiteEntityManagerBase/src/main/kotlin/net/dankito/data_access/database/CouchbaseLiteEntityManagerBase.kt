@@ -88,8 +88,8 @@ abstract class CouchbaseLiteEntityManagerBase(protected var context: Context, pr
         for (entityConfig in result.entities) {
             val entityDao = createDaoForEntity(entityConfig)
 
-            daoCache.addDao(entityConfig.entityClass, entityDao)
-            mapEntityClassesToDaos.put(entityConfig.entityClass, entityDao)
+            daoCache.addDao(entityConfig.getEntityClass(), entityDao)
+            mapEntityClassesToDaos.put(entityConfig.getEntityClass(), entityDao)
         }
     }
 
