@@ -3,6 +3,7 @@ package net.dankito.deepthought.android.service
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.ui.IRouter
+import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.dialogs.IDialogService
 import javax.inject.Inject
 
@@ -14,6 +15,9 @@ class ExtractArticleHandler {
 
     @Inject
     protected lateinit var dialogService: IDialogService
+
+    @Inject
+    protected lateinit var localization: Localization
 
     @Inject
     protected lateinit var router: IRouter
@@ -39,7 +43,7 @@ class ExtractArticleHandler {
     }
 
     private fun showCouldNotExtractItemErrorMessage(error: Exception, articleUrl: String) {
-        dialogService.showErrorMessage(dialogService.getLocalization().getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
+        dialogService.showErrorMessage(localization.getLocalizedString("alert.message.could.not.extract.item.from.url", articleUrl), exception = error)
     }
 
 }

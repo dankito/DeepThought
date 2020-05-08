@@ -1,16 +1,28 @@
 package net.dankito.deepthought.ui.presenter
 
+import net.dankito.deepthought.di.CommonComponent
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.ui.IRouter
 import net.dankito.service.data.DeleteEntityService
 import net.dankito.utils.IThreadPool
+import net.dankito.utils.localization.Localization
 import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.dankito.utils.ui.dialogs.IDialogService
+import javax.inject.Inject
 
 
 abstract class ItemsListPresenterBase(protected val deleteEntityService: DeleteEntityService, protected val dialogService: IDialogService,
                                       protected val clipboardService: IClipboardService, protected val router: IRouter, protected val threadPool: IThreadPool) {
+
+
+    @Inject
+    protected lateinit var localization: Localization
+
+
+    init {
+        CommonComponent.component.inject(this)
+    }
 
 
     fun showItem(item: Item) {
@@ -29,7 +41,7 @@ abstract class ItemsListPresenterBase(protected val deleteEntityService: DeleteE
 
 
     fun confirmDeleteItemsAsync(items: List<Item>) {
-        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.items", items.size)) { selectedButton ->
+        dialogService.showConfirmationDialog(localization.getLocalizedString("alert.message.really.delete.items", items.size)) { selectedButton ->
             if(selectedButton == ConfirmationDialogButton.Confirm) {
                 deleteItemsAsync(items)
             }
@@ -45,7 +57,7 @@ abstract class ItemsListPresenterBase(protected val deleteEntityService: DeleteE
     }
 
     fun confirmDeleteItemAsync(item: Item) {
-        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.item")) { selectedButton ->
+        dialogService.showConfirmationDialog(localization.getLocalizedString("alert.message.really.delete.item")) { selectedButton ->
             if(selectedButton == ConfirmationDialogButton.Confirm) {
                 deleteItemAsync(item)
             }

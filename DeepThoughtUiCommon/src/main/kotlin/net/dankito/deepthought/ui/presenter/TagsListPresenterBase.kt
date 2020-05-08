@@ -128,7 +128,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
 
 
     fun confirmDeleteTagsAsync(tags: List<Tag>) {
-        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.tags", tags.size)) { selectedButton ->
+        dialogService.showConfirmationDialog(localization.getLocalizedString("alert.message.really.delete.tags", tags.size)) { selectedButton ->
             if(selectedButton == ConfirmationDialogButton.Confirm) {
                 deleteTagsAsync(tags)
             }
@@ -144,7 +144,7 @@ abstract class TagsListPresenterBase(protected val tagsListView: ITagsListView, 
     }
 
     fun confirmDeleteTagAsync(tag: Tag, userChoiceListener: ((Boolean) -> Unit)? = null) {
-        dialogService.showConfirmationDialog(dialogService.getLocalization().getLocalizedString("alert.message.really.delete.tag", tag.name)) { selectedButton ->
+        dialogService.showConfirmationDialog(localization.getLocalizedString("alert.message.really.delete.tag", tag.name)) { selectedButton ->
             if(selectedButton == ConfirmationDialogButton.Confirm) {
                 deleteTagAsync(tag)
             }

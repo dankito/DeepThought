@@ -17,11 +17,17 @@ interface CommonComponent : BaseComponent {
     }
 
 
+    fun inject(itemsListPresenterBase: ItemsListPresenterBase)
+
     fun inject(itemsListPresenter: ItemsListPresenter)
 
     fun inject(tagsListPresenter: TagsListPresenter)
 
+    fun inject(sourcePresenterBase: SourcePresenterBase)
+
     fun inject(sourcesListPresenter: SourcesListPresenter)
+
+    fun inject(seriesPresenterBase: SeriesPresenterBase)
 
     fun inject(seriesListPresenter: SeriesListPresenter)
 

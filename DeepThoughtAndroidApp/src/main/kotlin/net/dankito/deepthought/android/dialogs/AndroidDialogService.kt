@@ -9,17 +9,12 @@ import android.widget.Toast
 import net.dankito.deepthought.android.R
 import net.dankito.deepthought.android.service.CurrentActivityTracker
 import net.dankito.utils.android.extensions.showKeyboardDelayed
-import net.dankito.utils.localization.Localization
-import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.ui.dialogs.ConfirmationDialogButton
 import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
+import net.dankito.utils.ui.dialogs.IDialogService
 
 
-class AndroidDialogService(private val currentActivityTracker: CurrentActivityTracker, private val localizationProperty: Localization) : IDialogService {
-
-    override fun getLocalization(): Localization {
-        return localizationProperty
-    }
+class AndroidDialogService(private val currentActivityTracker: CurrentActivityTracker) : IDialogService {
 
 
     override fun showLittleInfoMessage(infoMessage: CharSequence) {
