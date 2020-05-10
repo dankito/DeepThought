@@ -110,12 +110,25 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
     private fun extractSzArticleSource(articleElement: Element, url: String): Source? {
         articleElement.select("header.sz-article__header").first()?.let { headerElement ->
+            val publishingDate = extractPublishingDate(headerElement)
+
             headerElement.select(".sz-article-header__title").firstOrNull()?.text()?.trim()?.let { title ->
                 val overline = headerElement.select(".sz-article-header__overline").firstOrNull()?.text()?.trim() ?: ""
 
-                val publishingDate = extractPublishingDate(headerElement)
-
                 return Source(title, url, publishingDate, subTitle = overline)
+            }
+
+            val headerSpans = headerElement.select("span").filterNot { it.text().trim() == ":" }
+            if (headerSpans.isNotEmpty()) {
+                var title = headerSpans.first().text().trim()
+                var subTitle = ""
+
+                if (headerSpans.size > 1) {
+                    subTitle = title
+                    title = headerSpans[1].text().trim()
+                }
+
+                return Source(title, url, publishingDate, subTitle = subTitle)
             }
         }
 
@@ -168,19 +181,23 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         val content = StringBuilder(articleBody.html())
 
-        siteContent.select(".sz-article__intro").firstOrNull()?.let { articleIntro ->
+        siteContent.selectFirst(".sz-article__intro")?.let { articleIntro ->
             content.insert(0, articleIntro.outerHtml())
         }
 
-        siteContent.select(".sz-article__top-asset picture").firstOrNull()?.let { topAsset ->
+        siteContent.selectFirst(".sz-article__top-asset picture")?.let { topAsset ->
             content.insert(0, topAsset.outerHtml())
         }
 
-        siteContent.select(".topenrichment").first()?.let { topEnrichment ->
+        siteContent.selectFirst(".topenrichment")?.let { topEnrichment ->
             topEnrichment.select("iframe").first()?.let { topEnrichmentIFrame ->
                 loadLazyLoadingElement(topEnrichmentIFrame)
                 content.insert(0,  topEnrichment.outerHtml())
             }
+        }
+
+        siteContent.selectFirst(".sz-article__header")?.let { articleHeader ->
+            content.insert(0, articleHeader.outerHtml())
         }
 
         getArticleInfo(siteContent)?.let { articleInfo ->
