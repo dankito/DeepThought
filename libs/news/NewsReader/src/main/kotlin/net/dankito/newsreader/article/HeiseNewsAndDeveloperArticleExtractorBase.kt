@@ -16,7 +16,8 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
     companion object {
         private val ContentFilterSelector = ".widget-werbung, .akwa-ad-container, .akwa-ad-container--native, .hinweis_anzeige" +
-                "a-paternoster, a-ad, [name=Teads], .a-teaser-header__heading, .article-footer__content, [name=meldung.newsticker.bottom.zurstartseite], .a-pvgs"
+                "a-paternoster, a-ad, [name=Teads], .a-teaser-header__heading, .article-footer__content, [name=meldung.newsticker.bottom.zurstartseite], .a-pvgs, " +
+                "a.comment-button"
 
         private val DateTimeFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         private val MultiPageMobileArticleDateTimeFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -156,7 +157,8 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     protected fun cleanContentElement(contentElement: Element) {
         contentElement.select("h1, time, span.author, a.comments, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content, " +
-                ".akwa-ad-container, .akwa-ad-container--native, a-ad, .pvgs, .a-pvgs, .a-pvg").remove()
+                ".akwa-ad-container, .akwa-ad-container--native, a-ad, .pvgs, .a-pvgs, .a-pvg, " +
+                "a.comment-button").remove()
 
         removeEmptyParagraphs(contentElement, Arrays.asList("video"))
 
