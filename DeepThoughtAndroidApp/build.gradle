@@ -127,24 +127,24 @@ buildscript {
 
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
-    compile project(':DeepThoughtUiCommon')
-    compile project(':AndroidCouchbaseLiteEntityManager')
-    compile project(':AndroidUdpDevicesDiscoverer')
-    compile project(':AndroidPdfImporter')
+    implementation project(':DeepThoughtUiCommon')
+    implementation project(':AndroidCouchbaseLiteEntityManager')
+    implementation project(':AndroidUdpDevicesDiscoverer')
+    implementation project(':AndroidPdfImporter')
 
-    compile "com.squareup.picasso:picasso:$picassoVersion"
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
 
-    compile "com.github.clans:fab:$clansFloatingActionButtonVersion"
-    compile "com.daimajia.swipelayout:library:$swipeLayoutVersion"
-    compile "com.google.android:flexbox:$flexboxVersion"
+    implementation "com.github.clans:fab:$clansFloatingActionButtonVersion"
+    implementation "com.daimajia.swipelayout:library:$swipeLayoutVersion"
+    implementation "com.google.android:flexbox:$flexboxVersion"
 
-    compile "net.dankito.utils:android-utils:$androidUtilsVersion"
+    implementation "net.dankito.utils:android-utils:$androidUtilsVersion"
 
-    compile "net.dankito.richtexteditor:richtexteditor-android:$richTextEditorVersion", {
+    implementation "net.dankito.richtexteditor:richtexteditor-android:$richTextEditorVersion", {
         exclude group: 'net.dankito.utils', module: 'java-utils'
         exclude group: 'net.dankito.utils', module: 'android-utils'
         exclude group: 'net.dankito.filechooserdialog', module: 'filechooserdialog-android'
@@ -153,7 +153,7 @@ dependencies {
         exclude group: 'com.fasterxml.jackson.module', module: 'jackson-module-kotlin'
     }
 
-    compile "net.dankito.filechooserdialog:filechooserdialog-android:$fileChooserVersion", {
+    implementation "net.dankito.filechooserdialog:filechooserdialog-android:$fileChooserVersion", {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'design'
@@ -161,34 +161,28 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
 
-    compile "org.slf4j:slf4j-android:$slf4jVersion"
+    implementation "org.slf4j:slf4j-android:$slf4jVersion"
 
-    compile "com.android.support:multidex:$multiDexVersion"
+    implementation "com.android.support:multidex:$multiDexVersion"
 
-    compile "com.android.support:appcompat-v7:$androidAppCompatVersion"
-    compile "com.android.support:cardview-v7:$androidAppCompatVersion"
-    compile "com.android.support:design:$androidDesignVersion"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation "com.android.support:appcompat-v7:$androidAppCompatVersion"
+    implementation "com.android.support:cardview-v7:$androidAppCompatVersion"
+    implementation "com.android.support:design:$androidDesignVersion"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
-    betaCompile "testfairy:testfairy-android-sdk:$testFairyVersion@aar"
-//    betaCompile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-//        transitive = true
-//    }
+    extendedImplementation project(':ArticleSummaryExtractors') // not published to Play Store
 
-    extendedCompile project(':ArticleSummaryExtractors') // not published to Play Store
-
-    testCompile "junit:junit:$junitVersion"
+    testImplementation "junit:junit:$junitVersion"
 
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
-//    kapt project(':JPAAnnotationProcessor')
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    androidTestCompile("com.android.support.test.espresso:espresso-contrib:2.2.2") {
+    androidTestImplementation("com.android.support.test.espresso:espresso-contrib:2.2.2") {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'design'
         exclude group: 'com.android.support', module: 'support-v4'
@@ -197,13 +191,13 @@ dependencies {
     }
 
 
-    androidTestCompile 'com.squareup.spoon:spoon-client:1.7.1'
-    androidTestCompile('com.jraska:falcon-spoon-compat:1.0.4') {
+    androidTestImplementation 'com.squareup.spoon:spoon-client:1.7.1'
+    androidTestImplementation('com.jraska:falcon-spoon-compat:1.0.4') {
         exclude group: 'com.squareup.spoon', module: 'spoon-client'
     }
 
     // you need to install fastlane first (install Ruby Package Manager gem): sudo gem install fastlane
-    androidTestCompile('tools.fastlane:screengrab:1.0.2') {
+    androidTestImplementation('tools.fastlane:screengrab:1.0.2') {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
 
