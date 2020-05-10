@@ -159,6 +159,12 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
                 ".akwa-ad-container, .akwa-ad-container--native, a-ad, .pvgs, .a-pvgs, .a-pvg").remove()
 
         removeEmptyParagraphs(contentElement, Arrays.asList("video"))
+
+        contentElement.select("a-collapse").forEach { collapseAnchor ->
+            if (collapseAnchor.text().contains("heise online daily Newsletter", true)) { // remove Newsletter paragraphs
+                collapseAnchor.remove()
+            }
+        }
     }
 
     private fun extractMobileArticleSource(article: Element, url: String): Source {
@@ -206,8 +212,14 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
     protected open fun shouldFilterElement(element: Element): Boolean {
-        return element.select(ContentFilterSelector).isNotEmpty() ||
-                containsOnlyComment(element)
+        return element.select(ContentFilterSelector).isNotEmpty()
+                || containsOnlyComment(element)
+                || isNewsletterBox(element)
+    }
+
+    protected open fun isNewsletterBox(element: Element): Boolean {
+        return element.selectFirst("a-collapse") != null
+                && element.text().contains("heise online daily Newsletter", true)
     }
 
     protected open fun containsOnlyComment(element: Element) : Boolean {

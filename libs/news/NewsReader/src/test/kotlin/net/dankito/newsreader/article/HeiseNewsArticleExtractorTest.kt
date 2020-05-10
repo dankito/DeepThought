@@ -77,4 +77,13 @@ class HeiseNewsArticleExtractorTest : ArticleExtractorTestBase() {
                 45000)
     }
 
+    @Test
+    fun removeNewsletterAndWhatsAppSections() {
+        getAndTestArticle("https://www.heise.de/newsticker/meldung/Oesterreich-Sensible-Daten-von-rund-einer-Million-Buerger-jahrelang-offen-im-Netz-4717831.html",
+                "Sensible Daten von rund einer Million Bürger jahrelang offen im Netz",
+                "Bürgerrechtler und die Liberalen beklagen den \"größten Datenskandal\" der Alpenrepublik, da die Regierung bei einem Online-Register komplett geschludert habe.",
+                "https://heise.cloudimg.io/width/200/q50.png-lossy-50.webp-lossy-50.foil1/_www-heise-de_/imgs/18/2/8/9/2/0/3/4/shutterstock_464324279-e4eec5d07f5ac5ad.jpeg",
+                45000)
+    }
+
 }
