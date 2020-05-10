@@ -96,20 +96,6 @@ android {
         preDexLibraries = true
     }
 
-    testOptions {
-        unitTests.all {
-            // All the usual Gradle options.
-            jvmArgs '-XX:MaxPermSize=256m'
-
-            setIgnoreFailures(true)
-
-            jacoco {
-                includeNoLocationClasses = true
-//                destinationFile = jacocoOutputFile
-            }
-        }
-    }
-
     lintOptions {
         // set to true to turn off analysis progress reporting by lint
         quiet true
@@ -222,45 +208,4 @@ dependencies {
     }
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
-}
-
-
-//check.dependsOn 'checkstyle', 'findbugs', 'pmd'
-
-sonarqube {
-    properties {
-        property "sonar.java.binaries", "${buildDir}/intermediates/classes/debug"
-    }
-}
-
-
-def instrumentationFileName
-
-task createTestReports(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
-    group = "Reporting"
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    def fileFilter = ['**/R.class',
-                      '**/R$*.class',
-                      '**/BuildConfig.*',
-                      '**/*$ViewInjector*.*',
-                      '**/*$ViewBinder*.*',
-                      '**/*$MembersInjector*.*',
-                      '**/Manifest*.*',
-                      '**/*Test*.*',
-                      'android/**/*.*']
-    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories = files([mainSrc])
-    classDirectories = files([debugTree])
-
-    executionData = files(jacocoOutputFile)
-    def files = fileTree("${buildDir}/outputs/code-coverage/connected/").filter { it.isFile() }.files.name
-    instrumentationFileName = "${buildDir}/outputs/code-coverage/connected/" + files[0];
-    println('instrumentationFileName = ' + instrumentationFileName);
 }
