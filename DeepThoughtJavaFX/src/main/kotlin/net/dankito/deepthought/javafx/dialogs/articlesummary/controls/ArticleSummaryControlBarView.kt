@@ -10,12 +10,12 @@ import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import net.dankito.deepthought.javafx.res.icons.Icons
 import net.dankito.utils.javafx.ui.controls.searchtextfield
-import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.deepthought.model.ArticleSummaryExtractorConfig
 import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummary
 import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.utils.AsyncResult
+import net.dankito.utils.javafx.ui.extensions.ensureOnlyUsesSpaceIfVisible
 import tornadofx.*
 import java.text.DateFormat
 import java.util.*
@@ -234,7 +234,7 @@ class ArticleSummaryControlBarView(private val presenter: ArticleSummaryPresente
                 maxWidth = IconButtonsWidth
 
                 visibleProperty().bind(canLoadMoreItems)
-                FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+                ensureOnlyUsesSpaceIfVisible()
 
                 contentDisplay = ContentDisplay.GRAPHIC_ONLY
                 graphic = ImageView(Icons.LoadNextItemsIconPath)

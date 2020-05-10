@@ -14,9 +14,9 @@ import javafx.scene.paint.Color
 import javafx.scene.text.TextAlignment
 import net.dankito.deepthought.javafx.res.Colors
 import net.dankito.deepthought.javafx.service.clipboard.JavaFXClipboardWatcher
-import net.dankito.utils.javafx.util.FXUtils
 import net.dankito.utils.clipboard.ClipboardContentOption
 import net.dankito.utils.clipboard.OptionsForClipboardContent
+import net.dankito.utils.javafx.ui.extensions.ensureOnlyUsesSpaceIfVisible
 import tornadofx.*
 
 
@@ -49,7 +49,7 @@ class ClipboardContentPopup(clipboardWatcher: JavaFXClipboardWatcher) : View() {
     override val root = vbox {
         visibleProperty().bind(isPopupVisible)
         disableProperty().bind(isPopupEnabled.not())
-        FXUtils.ensureNodeOnlyUsesSpaceIfVisible(this)
+        ensureOnlyUsesSpaceIfVisible()
 
         background = Background(BackgroundFill(Colors.ClipboardContentPopupBackgroundColor, CornerRadii(8.0), Insets.EMPTY))
 
