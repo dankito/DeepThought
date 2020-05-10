@@ -182,6 +182,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun removeThemenspezialAndSzEspresso() {
+        getAndTestArticle("https://www.sueddeutsche.de/politik/corona-news-deutschland-aktuell-1.4828033",
+                "Ansteckungsrate steigt zweiten Tag über 1",
+                "Die Reproduktionszahl liegt dem RKI zufolge nun bei 1,13. Im Innenministerium gibt es Ärger, ein Mitarbeiter hat eine vermeintliche \"Analyse\" verschickt.",
+                "https://www.sueddeutsche.de/image/sz.1.4835276/1200x675?v=1583505388",
+                2000, subTitle = "Coronavirus in Deutschland")
+    }
+
+    @Test
     fun extractMultiPageArticle() {
         getAndTestArticle("http://www.sueddeutsche.de/medien/im-visier-der-nachbarn-al-jazeera-gefuerchtete-stimme-der-massen-1.3558089",
                 "Al Jazeera - gefürchtete Stimme der Massen",
