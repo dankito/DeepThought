@@ -27,8 +27,8 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix = ".beta"
-            resValue "string", "app_name", "DeepThought Beta"
+            applicationIdSuffix = ".develop"
+            resValue "string", "app_name", "DeepThought Develop"
 
             testCoverageEnabled = true
         }
