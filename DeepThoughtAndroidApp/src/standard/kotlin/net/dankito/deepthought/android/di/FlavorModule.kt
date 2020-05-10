@@ -2,8 +2,6 @@ package net.dankito.deepthought.android.di
 
 import dagger.Module
 import dagger.Provides
-import net.dankito.deepthought.android.service.reporting.ICrashReporter
-import net.dankito.deepthought.android.service.reporting.NoOpCrashReporter
 import net.dankito.deepthought.news.article.ArticleExtractorManager
 import net.dankito.deepthought.news.summary.config.ArticleSummaryExtractorConfigManager
 import net.dankito.newsreader.summary.IImplementedArticleSummaryExtractorsManager
@@ -22,12 +20,6 @@ class FlavorModule {
         return ArticleExtractorManager(seriesService, searchEngine, configManager)
     }
 
-
-    @Provides
-    @Singleton
-    fun provideCrashReporter() : ICrashReporter {
-        return NoOpCrashReporter()
-    }
 
     @Provides
     @Singleton

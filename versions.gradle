@@ -93,8 +93,6 @@ ext {
 
     leakCanaryVersion = '1.6.3'
 
-    testFairyVersion = '1.6'
-
 
     // JavaFX
 

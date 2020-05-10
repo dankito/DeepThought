@@ -14,5 +14,3 @@ build/
 
 /data/
 **/*.log
-
-keys.gradle

@@ -5,12 +5,6 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-// Put Fabric plugin after Android plugin
-//apply plugin: 'io.fabric'
-apply plugin: 'testfairy'
-
-apply from: '../keys.gradle'
-
 
 android {
     compileSdkVersion androidCompileSdkVersion
@@ -37,10 +31,6 @@ android {
             resValue "string", "app_name", "DeepThought Beta"
 
             testCoverageEnabled = true
-
-            ext.enableCrashlytics = false
-            // Only use this flag on builds you don't proguard or upload to beta-by-crashlytics
-            ext.alwaysUpdateBuildId = false
         }
         release {
             minifyEnabled false
@@ -52,8 +42,6 @@ android {
 
     productFlavors {
         standard {
-            ext.enableCrashlytics = false
-
             dimension = "default"
         }
         beta {
@@ -65,8 +53,6 @@ android {
         extended {
             applicationIdSuffix = ".extended"
             resValue "string", "app_name", "DeepThought Extended"
-
-            ext.enableCrashlytics = false
 
             dimension = "default"
         }
@@ -103,10 +89,6 @@ android {
         abortOnError false
         // if true, only report errors
         ignoreWarnings false
-    }
-
-    testfairyConfig {
-        apiKey testfairyApiKey
     }
 
     packagingOptions {

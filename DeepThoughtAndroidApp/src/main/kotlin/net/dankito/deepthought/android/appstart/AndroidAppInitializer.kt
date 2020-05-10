@@ -7,7 +7,6 @@ import android.net.wifi.WifiManager
 import net.dankito.deepthought.android.di.AppComponent
 import net.dankito.deepthought.android.service.clipboard.AndroidClipboardWatcher
 import net.dankito.deepthought.android.service.network.NetworkConnectivityChangeBroadcastReceiver
-import net.dankito.deepthought.android.service.reporting.ICrashReporter
 import net.dankito.deepthought.service.data.DataManager
 import net.dankito.service.search.ISearchEngine
 import javax.inject.Inject
@@ -34,20 +33,11 @@ class AndroidAppInitializer {
     @Inject
     protected lateinit var clipboardWatcher: AndroidClipboardWatcher
 
-    @Inject
-    protected lateinit var crashReporter: ICrashReporter
-
 
     fun initializeApp() {
         AppComponent.component.inject(this)
 
-        initializeCrashReporter()
-
         initializeNetworkConnectivityChangeBroadcastReceiver()
-    }
-
-    private fun initializeCrashReporter() {
-        crashReporter.init(context, dataManager)
     }
 
 

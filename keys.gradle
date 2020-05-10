@@ -1,7 +1,0 @@
-ext {
-
-    // set your keys here
-
-    testfairyApiKey = ''
-
-}
