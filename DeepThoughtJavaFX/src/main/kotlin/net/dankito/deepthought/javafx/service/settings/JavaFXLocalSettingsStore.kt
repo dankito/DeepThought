@@ -71,7 +71,7 @@ class JavaFXLocalSettingsStore(private val platformConfiguration: IPlatformConfi
     }
 
     private fun getPropertiesFile(): File {
-        return File(platformConfiguration.getApplicationFolder(), DeepThoughtPropertiesFileName)
+        return File(platformConfiguration.getDefaultDataFolder(), DeepThoughtPropertiesFileName)
     }
 
     private fun tryToCreateSettingsFile(): Properties? {
