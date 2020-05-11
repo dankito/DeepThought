@@ -29,8 +29,6 @@ android {
         debug {
             applicationIdSuffix = ".develop"
             resValue "string", "app_name", "DeepThought Develop"
-
-            testCoverageEnabled = true
         }
         release {
             minifyEnabled false
