@@ -32,6 +32,7 @@ import net.dankito.service.data.event.EntityChangedNotifier
 import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
+import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.javafx.ui.dialogs.JavaFXDialogServiceWithSendingBugReports
 import net.dankito.utils.localization.Localization
@@ -58,8 +59,8 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
 
     @Provides
     @Singleton
-    fun provideLocalSettingsStore() : ILocalSettingsStore {
-        return JavaFXLocalSettingsStore()
+    fun provideLocalSettingsStore(platformConfiguration: IPlatformConfiguration) : ILocalSettingsStore {
+        return JavaFXLocalSettingsStore(platformConfiguration)
     }
 
     @Provides

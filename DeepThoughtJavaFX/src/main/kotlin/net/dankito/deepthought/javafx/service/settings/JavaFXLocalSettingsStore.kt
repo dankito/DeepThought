@@ -1,12 +1,13 @@
 package net.dankito.deepthought.javafx.service.settings
 
+import net.dankito.utils.IPlatformConfiguration
 import net.dankito.utils.settings.LocalSettingsStoreBase
 import org.slf4j.LoggerFactory
 import java.io.*
 import java.util.*
 
 
-class JavaFXLocalSettingsStore : LocalSettingsStoreBase() {
+class JavaFXLocalSettingsStore(private val platformConfiguration: IPlatformConfiguration) : LocalSettingsStoreBase() {
 
     companion object {
         val DeepThoughtPropertiesFileName = "DeepThoughtFx.properties"
@@ -26,10 +27,12 @@ class JavaFXLocalSettingsStore : LocalSettingsStoreBase() {
 
 
     private fun loadDeepThoughtProperties(): Properties? {
+        val propertiesFile = getPropertiesFile()
+
         try {
             val deepThoughtProperties = Properties()
 
-            deepThoughtProperties.load(InputStreamReader(FileInputStream(DeepThoughtPropertiesFileName), "UTF-8"))
+            deepThoughtProperties.load(InputStreamReader(FileInputStream(propertiesFile), "UTF-8"))
             doesPropertiesFileExist = true
 
             return deepThoughtProperties
@@ -39,7 +42,7 @@ class JavaFXLocalSettingsStore : LocalSettingsStoreBase() {
                 return tryToCreateSettingsFile()
             }
             else {
-                log.warn("Could not load data folder from " + DeepThoughtPropertiesFileName, e)
+                log.warn("Could not load data folder from $propertiesFile", e)
             }
         }
 
@@ -52,17 +55,23 @@ class JavaFXLocalSettingsStore : LocalSettingsStoreBase() {
     }
 
     private fun saveDeepThoughtProperties(deepThoughtProperties: Properties?): Boolean {
+        val propertiesFile = getPropertiesFile()
+
         try {
             if(deepThoughtProperties != null) {
-                deepThoughtProperties.store(OutputStreamWriter(FileOutputStream(DeepThoughtPropertiesFileName), "UTF-8"), null)
+                deepThoughtProperties.store(OutputStreamWriter(FileOutputStream(propertiesFile), "UTF-8"), null)
                 return true
             }
         }
         catch(ex: Exception) {
-            log.error("Could not save DeepThoughtProperties to " + DeepThoughtPropertiesFileName, ex)
+            log.error("Could not save DeepThoughtProperties to $propertiesFile", ex)
         }
 
         return false
+    }
+
+    private fun getPropertiesFile(): File {
+        return File(platformConfiguration.getApplicationFolder(), DeepThoughtPropertiesFileName)
     }
 
     private fun tryToCreateSettingsFile(): Properties? {

@@ -22,6 +22,7 @@ import javax.inject.Singleton
 @Module
 class BaseModule {
 
+
     @Provides
     @Singleton
     fun provideEventBus() : IEventBus {
