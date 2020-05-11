@@ -112,12 +112,15 @@ class DeleteEntityService(private val itemService: ItemService, private val tagS
             itemService.update(item)
         }
 
-        ArrayList(source.attachedFiles).filterNotNull().filter { it.id != null }.forEach { file ->
+        val attachedFiles = ArrayList(source.attachedFiles).filterNotNull().filter { it.id != null }
+        attachedFiles.forEach { file ->
             source.removeAttachedFile(file)
             sourceService.entityManager.updateEntity(file)
         }
 
         sourceService.delete(source)
+
+        mayDeleteFiles(attachedFiles)
     }
 
 

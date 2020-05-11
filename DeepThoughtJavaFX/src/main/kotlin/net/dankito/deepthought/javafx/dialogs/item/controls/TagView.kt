@@ -9,7 +9,7 @@ import javafx.scene.layout.Region
 import javafx.scene.paint.Color
 import javafx.scene.text.Font
 import javafx.scene.text.TextAlignment
-import net.dankito.utils.javafx.util.FXUtils
+import net.dankito.utils.javafx.ui.extensions.setBackgroundToColor
 import tornadofx.*
 
 
@@ -34,7 +34,7 @@ class TagView(itemText: String, showRemoveButton: Boolean = false, private var i
                 textAlignment = TextAlignment.CENTER
                 font = Font.font(13.0)
                 textFill = Color.valueOf("#9a9a9a")
-                FXUtils.setBackgroundToColor(this, Color.TRANSPARENT)
+                setBackgroundToColor(Color.TRANSPARENT)
 
                 action { itemRemovedListener?.invoke() }
 
@@ -52,7 +52,7 @@ class TagView(itemText: String, showRemoveButton: Boolean = false, private var i
             textAlignment = TextAlignment.CENTER
             font = Font.font(13.0)
             textFill = Color.valueOf("#9a9a9a")
-            FXUtils.setBackgroundToColor(this, Color.TRANSPARENT)
+            setBackgroundToColor(Color.TRANSPARENT)
         }
 
         tag = this@TagView // so that we can get TagView instance when iterating over collectionPreviewPane's children (= this.root)
