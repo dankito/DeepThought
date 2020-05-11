@@ -12,41 +12,25 @@ import net.dankito.deepthought.javafx.di.JavaFXInstanceProvider
 import net.dankito.deepthought.javafx.di.JavaFXModule
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindow
 import net.dankito.deepthought.javafx.dialogs.mainwindow.MainWindowController
-import net.dankito.utils.localization.Localization
-import tornadofx.*
-import java.util.*
+import net.dankito.utils.javafx.ui.Utf8App
 import javax.inject.Inject
 
 
-open class DeepThoughtJavaFXApplication : App(MainWindow::class) {
+open class DeepThoughtJavaFXApplication : Utf8App("Messages", MainWindow::class) {
 
     @Inject
     protected lateinit var appInitializer: JavaFXAppInitializer
-
-    @Inject
-    protected lateinit var localization: Localization
 
 
     private val mainWindowController: MainWindowController by inject()
 
 
-    override fun start(stage: Stage) {
-        setupDI(stage)
+    override fun beforeStart(primaryStage: Stage) {
+        super.beforeStart(primaryStage)
 
-        setupMessagesResources() // has to be done before creating / injecting first instances as some of them already rely on Messages (e.g. CalculatedTags)
-
-        stage.setOnCloseRequest { Platform.exit() } // stop application as otherwise all other windows would stay open
+        setupDI(primaryStage)
 
         appInitializer.initializeApp()
-
-        super.start(stage)
-    }
-
-
-    private fun setupMessagesResources() {
-        ResourceBundle.clearCache() // at this point default ResourceBundles are already created and cached. In order that ResourceBundle created below takes effect cache has to be clearedbefore
-
-        FX.messages = localization.messagesResourceBundle
     }
 
     private fun setupDI(primaryStage: Stage) {
@@ -63,13 +47,6 @@ open class DeepThoughtJavaFXApplication : App(MainWindow::class) {
 
     protected open fun createFlavorInstanceProvider(): JavaFXInstanceProvider {
         return JavaFXInstanceProvider()
-    }
-
-
-    @Throws(Exception::class)
-    override fun stop() {
-        super.stop()
-        System.exit(0) // otherwise Window would be closed but application still running in background
     }
 
 }
