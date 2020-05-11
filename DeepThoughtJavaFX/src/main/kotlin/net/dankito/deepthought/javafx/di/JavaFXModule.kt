@@ -33,7 +33,7 @@ import net.dankito.service.eventbus.IEventBus
 import net.dankito.service.search.ISearchEngine
 import net.dankito.service.synchronization.initialsync.InitialSyncManager
 import net.dankito.utils.IThreadPool
-import net.dankito.utils.javafx.ui.dialogs.JavaFXDialogService
+import net.dankito.utils.javafx.ui.dialogs.JavaFXDialogServiceWithSendingBugReports
 import net.dankito.utils.localization.Localization
 import net.dankito.utils.network.INetworkConnectivityManager
 import net.dankito.utils.network.NetworkHelper
@@ -103,7 +103,7 @@ class JavaFXModule(private val primaryStage: Stage, private val flavorInstancePr
     @Provides
     @Singleton
     fun provideDialogService(localization: Localization) : IDialogService {
-        return JavaFXDialogService(localization, true, "deepthought@dankito.net", "Bug in DeepThought")
+        return JavaFXDialogServiceWithSendingBugReports(localization, "deepthought@dankito.net", "Bug in DeepThought")
     }
 
 
