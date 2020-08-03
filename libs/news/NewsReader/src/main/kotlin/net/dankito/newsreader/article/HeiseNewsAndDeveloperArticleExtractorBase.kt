@@ -16,7 +16,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
     companion object {
         private val ContentFilterSelector = ".widget-werbung, .akwa-ad-container, .akwa-ad-container--native, .hinweis_anzeige" +
-                "a-paternoster, a-ad, [name=Teads], .a-teaser-header__heading, .article-footer__content, [name=meldung.newsticker.bottom.zurstartseite], .a-pvgs, " +
+                "a-paternoster, a-ad, [name=Teads], .a-teaser-header__heading, a-collapse, .article-footer__content, [name=meldung.newsticker.bottom.zurstartseite], .a-pvgs, " + // TODO: really remove all a-collapse ?
                 "a.comment-button"
 
         private val DateTimeFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
