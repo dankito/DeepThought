@@ -65,7 +65,7 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
                 item.title = overlineTitle.text().trim() + " - " + item.title
             }
 
-            if (teaserElement.selectFirst(".sz-teaser-label-plus") != null) {
+            if (isSzPlusArticle(teaserElement)) {
                 item.title = "SZ+ " + item.title
             }
 
@@ -77,6 +77,11 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
         }
 
         return null
+    }
+
+    private fun isSzPlusArticle(teaserElement: Element): Boolean {
+        return teaserElement.selectFirst(".sz-teaser-label-plus") != null
+                || teaserElement.selectFirst("span.visually-hidden")?.text() == "SZ Plus"
     }
 
 
