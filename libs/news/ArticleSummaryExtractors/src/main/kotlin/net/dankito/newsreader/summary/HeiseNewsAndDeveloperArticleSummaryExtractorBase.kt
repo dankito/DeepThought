@@ -73,8 +73,8 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
 
         extractKicker(articleElement, article)
 
-        articleElement.select(".a-article-teaser__image-container img").first()?.let {
-            article.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
+        extractPreviewImageUrl(articleElement, url)?.let { previewImageUrl ->
+            article.previewImageUrl = previewImageUrl
         }
 
         articleElement.select(".a-article-teaser__synopsis").first()?.let { article.summary = it.text() }
@@ -82,6 +82,20 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
         checkForHeisePlusArticle(article, articleElement)
 
         return article
+    }
+
+    private fun extractPreviewImageUrl(articleElement: Element, url: String): String? {
+        articleElement.select(".a-article-teaser__image-container").first()?.let { imageContainer ->
+            imageContainer.selectFirst("a-img")?.let {
+                return makeLinkAbsolute(it.attr("src"), url)
+            }
+
+            imageContainer.selectFirst("img")?.let {
+                return makeLinkAbsolute(it.attr("src"), url)
+            }
+        }
+
+        return null
     }
 
     private fun extractKicker(articleElement: Element, article: ArticleSummaryItem) {
