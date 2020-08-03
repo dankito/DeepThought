@@ -87,6 +87,8 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
     // even newer version
     protected fun parseArticleMeldungArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleMeldungElement: Element, url: String, title: String) {
+        mapAImages(articleMeldungElement, url)
+
         var contentHtml = extractArticleMeldungContent(articleMeldungElement, url)
 
         val previewImageElement = articleMeldungElement.select(".article-image").firstOrNull()
@@ -154,6 +156,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         extractionResult.setExtractedContent(Item(content), source)
     }
 
+
     protected fun cleanContentElement(contentElement: Element) {
         contentElement.select("h1, time, span.author, a.comments, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content, " +
@@ -168,6 +171,23 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
             }
         }
     }
+
+    private fun mapAImages(articleElement: Element, siteUrl: String) {
+        articleElement.select("a-img").forEach { aImageElement ->
+            aImageElement.tagName("img")
+
+            aImageElement.removeAttr("style")
+            aImageElement.removeAttr("height")
+            aImageElement.removeAttr("width")
+
+            aImageElement.attr("src")?.let { source ->
+                aImageElement.attr("src", makeLinkAbsolute(source, siteUrl))
+            }
+
+            aImageElement.parent().select("div.legacy-img").remove()
+        }
+    }
+
 
     private fun extractMobileArticleSource(article: Element, url: String): Source {
         val title = article.select("h1").first()?.text()?.trim() ?: ""
