@@ -207,13 +207,13 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
     protected open fun extractContent(articleElement: Element, url: String, contentSelector: String): String {
-        return articleElement.select(contentSelector).first()?.children()?.filter { element ->
-            shouldFilterElement(element) == false
+        return articleElement.select(contentSelector).first()?.children()?.filterNot { element ->
+            shouldRemoveElement(element)
         }?.joinToString(separator = "") { getContentElementHtml(it, url) }
         ?: ""
     }
 
-    protected open fun shouldFilterElement(element: Element): Boolean {
+    protected open fun shouldRemoveElement(element: Element): Boolean {
         return element.select(ContentFilterSelector).isNotEmpty()
                 || containsOnlyComment(element)
                 || isNewsletterBox(element)
