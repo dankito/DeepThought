@@ -84,6 +84,12 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         document.body().select("article.video-article").first()?.let { articleElement ->
             extractVideoArticle(extractionResult, articleElement, url)
+            return
+        }
+
+        // new structure July 2020
+        document.body().select("#article-app-container article").first()?.let { articleElement ->
+            extractAppContainerArticle(extractionResult, articleElement, url)
         }
     }
 
@@ -96,7 +102,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         articleElement.select(".sz-article__body").first()?.let { articleBody ->
             var content = loadLazyLoadingElementsAndGetContent(articleElement, articleBody)
 
-            val source = extractSzArticleSource(articleElement, siteUrl)
+            val source = extractSzArticleSource(articleElement, "header.sz-article__header", siteUrl)
 
             extractTopEnrichment(articleElement, source, siteUrl)?.let { topEnrichment ->
                 content = "<div>" + topEnrichment.outerHtml() + "</div>" + content
@@ -108,11 +114,11 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
     }
 
-    private fun extractSzArticleSource(articleElement: Element, url: String): Source? {
-        articleElement.select("header.sz-article__header").first()?.let { headerElement ->
+    private fun extractSzArticleSource(articleElement: Element, headerSelector: String, url: String): Source? {
+        articleElement.selectFirst(headerSelector)?.let { headerElement ->
             val publishingDate = extractPublishingDate(headerElement)
 
-            headerElement.select(".sz-article-header__title").firstOrNull()?.text()?.trim()?.let { title ->
+            headerElement.selectFirst(".sz-article-header__title")?.text()?.trim()?.let { title ->
                 val overline = headerElement.select(".sz-article-header__overline").firstOrNull()?.text()?.trim() ?: ""
 
                 return Source(title, url, publishingDate, subTitle = overline)
@@ -465,11 +471,45 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
+    private fun extractAppContainerArticle(extractionResult: ItemExtractionResult, articleElement: Element, siteUrl: String) {
+
+        articleElement.select("aside, style").remove()
+
+        articleElement.selectFirst("[itemprop='articleBody']")?.let { articleBody ->
+            articleBody.select("div").remove()
+
+            val content = articleBody.children().joinToString("\n") { it.outerHtml() }
+
+            val source = extractSzArticleSource(articleElement, "header", siteUrl)
+
+            var summary: String? = null
+
+            for (child in articleElement.children()) {
+                if (child.tagName() == "div") {
+                    if (source != null && source.previewImageUrl == null) {
+                        child.selectFirst("img")?.let { previewImage ->
+                            source.previewImageUrl = previewImage.attr("src")
+                        }
+                    }
+
+                    if (summary == null && child.childNodeSize() == 1 && child.child(0).tagName() == "p") {
+                        summary = child.child(0).text()
+
+                        break
+                    }
+                }
+            }
+
+            extractionResult.setExtractedContent(Item(content, summary ?: ""), source)
+        }
+    }
+
+
     private fun extractSource(articleElement: Element, url: String): Source? {
-        articleElement.select(".header").first()?.let { headerElement ->
-            headerElement.select("h2, h1").first()?.let { heading -> // don't know why, but sometimes (on mobile sites?) they're using h1
+        articleElement.selectFirst(".header")?.let { headerElement ->
+            headerElement.selectFirst("h2, h1")?.let { heading -> // don't know why, but sometimes (on mobile sites?) they're using h1
                 var subTitle = ""
-                heading.select("strong").first()?.let {
+                heading.selectFirst("strong")?.let {
                     subTitle = it.text()
                     it.remove() // remove element so that it's not as well part of title
                 }

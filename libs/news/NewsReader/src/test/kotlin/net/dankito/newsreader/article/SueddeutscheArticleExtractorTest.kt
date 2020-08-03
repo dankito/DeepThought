@@ -21,6 +21,15 @@ class SueddeutscheArticleExtractorTest : ArticleExtractorTestBase() {
     }
 
     @Test
+    fun ensureNewArticleStructureJuly2020() {
+        getAndTestArticle("https://www.sueddeutsche.de/panorama/israel-jerusalem-opferfest-patrone-junge-1.4987733",
+                "\"Schläfriger\" Junge mit Patrone im Kopf",
+                "Ärzte in Jerusalem entdecken überraschend eine Kugel im Kopf eines Neunjährigen. Dem Jungen geht es nach der OP gut, doch es bleibt ein Rätsel, woher das Geschoss stammt.",
+                "https://www.sueddeutsche.de/image/sz.1.4882874/1408x792?v=1596456794&format=webp",
+                2500, subTitle = "Israel")
+    }
+
+    @Test
     fun extractArticleWithInlineImageGallery() {
         getAndTestArticle("http://www.sueddeutsche.de/leben/kommune-revolution-am-bettrand-1.3544828",
                 "Revolution am Bettrand",
