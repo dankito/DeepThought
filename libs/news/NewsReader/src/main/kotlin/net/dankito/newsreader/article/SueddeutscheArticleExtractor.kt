@@ -478,11 +478,9 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         articleElement.selectFirst("[itemprop='articleBody']")?.let { articleBody ->
             articleBody.select("div").remove()
 
-            val content = articleBody.children().joinToString("\n") { it.outerHtml() }
+            var content = articleBody.children().joinToString("\n") { it.outerHtml() }
 
             val source = extractSzArticleSource(articleElement, "header", siteUrl)
-
-            var summary: String? = null
 
             for (child in articleElement.children()) {
                 if (child.tagName() == "div") {
@@ -492,15 +490,15 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
                         }
                     }
 
-                    if (summary == null && child.childNodeSize() == 1 && child.child(0).tagName() == "p") {
-                        summary = child.child(0).text()
+                    if (child.childNodeSize() == 1 && child.child(0).tagName() == "p") {
+                        content = child.child(0).outerHtml() + content
 
                         break
                     }
                 }
             }
 
-            extractionResult.setExtractedContent(Item(content, summary ?: ""), source)
+            extractionResult.setExtractedContent(Item(content), source)
         }
     }
 
