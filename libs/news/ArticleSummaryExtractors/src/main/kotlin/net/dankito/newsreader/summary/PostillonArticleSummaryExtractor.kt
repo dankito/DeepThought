@@ -15,7 +15,7 @@ class PostillonArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
     }
 
     override fun getUrl(): String {
-        return "https://www.der-postillon.com"
+        return "https://www.der-postillon.com/?m=1"
     }
 
 
@@ -28,9 +28,12 @@ class PostillonArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
     }
 
     private fun determineHasMore(summary: ArticleSummary, url: String, document: Document) {
-        document.body().select("#Blog1_blog-pager-older-link").first()?.let {
-            summary.nextItemsUrl = makeLinkAbsolute(it.attr("href"), url)
-            summary.canLoadMoreItems = summary.nextItemsUrl != null
+        document.body().selectFirst("#blog-pager a.load-more")?.let {
+            val nextItemsUrl = makeLinkAbsolute(it.attr("data-load"), url)
+            if (nextItemsUrl.isNullOrBlank() == false) {
+                summary.canLoadMoreItems = true
+                summary.nextItemsUrl = nextItemsUrl
+            }
         }
 
     }
@@ -48,24 +51,18 @@ class PostillonArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
     }
 
     private fun extractPosts(url: String, document: Document): Collection<ArticleSummaryItem> {
-        val postElements = document.select(".post")
-
-        return postElements.filterNotNull().map { parsePostArticle(it, url) }.filterNotNull()
+        return document.select("article")
+            .mapNotNull { parsePostArticle(it, url) }
     }
 
     private fun parsePostArticle(postElement: Element, url: String): ArticleSummaryItem? {
-        postElement.select(".post-title > a").first()?.let { titleAnchor ->
-            val article = ArticleSummaryItem(makeLinkAbsolute(titleAnchor.attr("href"), url), titleAnchor.text(), PostillonArticleExtractor::class.java)
+        postElement.selectFirst(".entry-title > a")?.let { titleAnchor ->
+            val summary = postElement.selectFirst(".excerpt")?.text()
+                ?.replace(" +++ +++ ", " +++\n+++ ") // for Newsticker items: place each ticker on a new line
+                ?: ""
+            val previewImageUrl = postElement.selectFirst("[data-image]")?.attr("data-image")
 
-            postElement.select(".post-body").first()?.let { contentElement ->
-                contentElement.select(".more-link").remove() // remove "mehr ..."
-
-                article.summary = contentElement.text().replace(" +++ +++ ", " +++\n+++ ") // for Newsticker items: place each ticker on a new line
-
-                contentElement.select("img").first()?.let { article.previewImageUrl = it.attr("src") }
-            }
-
-            return article
+            return ArticleSummaryItem(makeLinkAbsolute(titleAnchor.attr("href"), url), titleAnchor.text(), PostillonArticleExtractor::class.java, summary, previewImageUrl)
         }
 
         return null
