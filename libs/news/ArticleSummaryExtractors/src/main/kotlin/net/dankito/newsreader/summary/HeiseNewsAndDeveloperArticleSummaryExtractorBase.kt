@@ -6,7 +6,6 @@ import net.dankito.newsreader.model.ArticleSummaryItem
 import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
 
 
 abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebClient) : ArticleSummaryExtractorBase(webClient), IArticleSummaryExtractor {
@@ -23,27 +22,21 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     }
 
     private fun determineHasMore(summary: ArticleSummary, url: String, document: Document) {
-        var weitereMeldungenElements = document.body().select("li.a-pagination__item--next > a.a-pagination__link")
+        val nextPageUrl = document.body().select("[data-component=\"PaginationPager\"]")
+            .firstOrNull { it.text() == "Nächste" }
+            ?.selectFirst("a")
+            ?.attr("href")
 
-        if(weitereMeldungenElements.size == 0) { // then check old version
-            weitereMeldungenElements = document.body().select(".itemlist-nav a") // frontpage
-
-            if(weitereMeldungenElements.size == 0) { // starting with page 2 the 'Weitere Meldungen' link changes
-                weitereMeldungenElements = document.body().select("a.seite_weiter")
-            }
+        if (nextPageUrl != null) {
+            summary.canLoadMoreItems = true
+            summary.nextItemsUrl = makeLinkAbsolute(nextPageUrl, url)
         }
-        else if (weitereMeldungenElements.first().attr("href").contains("/newsticker/archiv/")) {
-            weitereMeldungenElements = Elements(0) // next page would be archive -> no more articles to load
-        }
-
-        summary.canLoadMoreItems = weitereMeldungenElements.size == 1
-        summary.nextItemsUrl = weitereMeldungenElements.first()?.let { makeLinkAbsolute(it.attr("href"), url) }
     }
 
     private fun extractArticles(url: String, document: Document): List<ArticleSummaryItem> {
         val articles = mutableListOf<ArticleSummaryItem>()
 
-        articles.addAll(extractNewHeiseArticles(url, document))
+        articles.addAll(extractHeiseNewsArticles(url, document))
         // TODO: remove as soon as current Heise Developer homepage is also outdated
         articles.addAll(extractTopArticles(url, document))
         articles.addAll(extractIndexItems(url, document)) // now Heise News only
@@ -52,44 +45,52 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
         return articles
     }
 
-    private fun extractNewHeiseArticles(url: String, document: Document): Collection<ArticleSummaryItem> {
-        return document.select(".a-article-teaser > a")
-                .filter { containsAdForIX(it) == false }
-                .map { parseHeiseNewsArticle(it, url) }.filterNotNull()
-    }
-
-    private fun containsAdForIX(element: Element?): Boolean {
-        return element?.select(".news-source-logo--ix")?.isNotEmpty() == true
+    private fun extractHeiseNewsArticles(url: String, document: Document): Collection<ArticleSummaryItem> {
+        return document.select("article[data-component='TeaserContainer']")
+                .mapNotNull { parseHeiseNewsArticle(it, url) }
     }
 
     private fun parseHeiseNewsArticle(articleElement: Element, url: String): ArticleSummaryItem? {
-        val articleUrl = makeLinkAbsolute(articleElement.attr("href"), url)
+        val title = extractTitle(articleElement)
+        if (title.isNullOrBlank()) {
+            return null
+        }
+
+        val relativeArticleUrl = articleElement.selectFirst("a")?.attr("href")
+        if (relativeArticleUrl.isNullOrBlank()) {
+            return null
+        }
+
+        val articleUrl = makeLinkAbsolute(relativeArticleUrl, url)
         if (articleUrl.contains("//www.heise-events.de/", true) || articleUrl.contains("//shop.heise.de/", true) ||
                 articleUrl.contains("//spiele.heise.de/", true)) { // filter out ads for events, shop offers and games
             return null
         }
 
-        val article = ArticleSummaryItem(articleUrl, articleElement.attr("title"), getArticleExtractorClass(articleUrl))
+        val summary = articleElement.selectFirst("[data-component=\"TeaserSynopsis\"]")?.text()
+        val previewImageUrl = getPreviewImageUrl(articleElement, url)
 
-        extractKicker(articleElement, article)
-
-        articleElement.select(".a-article-teaser__image-container img").first()?.let {
-            article.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
-        }
-
-        articleElement.select(".a-article-teaser__synopsis").first()?.let { article.summary = it.text() }
+        val article = ArticleSummaryItem(articleUrl, title, getArticleExtractorClass(articleUrl), summary ?: "", previewImageUrl)
 
         checkForHeisePlusArticle(article, articleElement)
 
         return article
     }
 
-    private fun extractKicker(articleElement: Element, article: ArticleSummaryItem) {
-        articleElement.select(".a-article-teaser__kicker").first()?.let {
-            if (it.text().isNullOrEmpty() == false) {
-                article.title = it.text() + " - " + article.title
+    private fun extractTitle(articleElement: Element): String? {
+        articleElement.selectFirst("header")?.let { header ->
+            val headline = header.selectFirst("[data-component=\"TeaserHeadline\"]")?.text()
+            if (headline.isNullOrBlank() == false) {
+                header.selectFirst("[data-component=\"TeaserKicker\"]")?.let { kicker ->
+                    return kicker.text() + " - " + headline
+                }
+                return headline
             }
+
+            return header.text()
         }
+
+        return null
     }
 
     private fun extractTopArticles(url: String, document: Document): Collection<ArticleSummaryItem> {
@@ -98,17 +99,13 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
         return topArticleElements.filterNotNull().map { parseTopArticle(it, url) }.filterNotNull()
     }
 
-    private fun parseTopArticle(contentUrlElement: Element, url: String): ArticleSummaryItem? {
+    private fun parseTopArticle(contentUrlElement: Element, url: String): ArticleSummaryItem {
         val articleUrl = makeLinkAbsolute(contentUrlElement.attr("href"), url)
-        val article = ArticleSummaryItem(articleUrl, contentUrlElement.attr("title"), getArticleExtractorClass(articleUrl))
+        val summary = contentUrlElement.selectFirst("p")?.text() ?: ""
+        val previewImageUrl = getPreviewImageUrl(contentUrlElement, url)
+        val article = ArticleSummaryItem(articleUrl, contentUrlElement.attr("title"), getArticleExtractorClass(articleUrl), summary, previewImageUrl)
 
         extractDachzeile(contentUrlElement, article)
-
-        contentUrlElement.select(".img_clip img").first()?.let {
-            article.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
-        }
-
-        contentUrlElement.select("p").first()?.let { article.summary = it.text() }
 
         return article
     }
@@ -151,7 +148,7 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
     }
 
     private fun isHeisePlusArticle(articleElement: Element): Boolean {
-        return articleElement.selectFirst("footer svg.heiseplus-logo, footer .a-article-meta__item--heiseplus") != null
+        return articleElement.selectFirst("footer svg[width=\"78\"][height=\"24\"][role=\"img\"]") != null
     }
 
 
@@ -165,16 +162,20 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
             val articleUrl = makeLinkAbsolute(articleElement.attr("href"), url)
             val title = articleElement.select("header")?.first()?.text() ?: ""
 
-            var previewImageUrl = articleElement.select("figure img").first()?.attr("src")
-            if(previewImageUrl != null) {
-                previewImageUrl = makeLinkAbsolute(previewImageUrl, url)
-            }
+            val previewImageUrl = getPreviewImageUrl(articleElement, url)
 
 
             return ArticleSummaryItem(articleUrl, title, getArticleExtractorClass(articleUrl), summary, previewImageUrl)
         }
 
         return null
+    }
+
+    private fun getPreviewImageUrl(teaserElement: Element, siteUrl: String): String? {
+        return teaserElement.select("a-img, a-img img")
+            .map { it.attr("src") }
+            .firstOrNull { it.isNullOrBlank() == false && it.startsWith("data:image/svg+xml,") == false }
+            ?.let { makeLinkAbsolute(it, siteUrl) }
     }
 
 }

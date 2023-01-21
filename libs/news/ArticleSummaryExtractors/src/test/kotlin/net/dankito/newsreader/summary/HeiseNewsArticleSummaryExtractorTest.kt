@@ -22,7 +22,7 @@ class HeiseNewsArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
     override fun testCanLoadMoreItems(summary: ArticleSummary) {
         assertThat(summary.canLoadMoreItems, `is`(true))
         assertThat(summary.nextItemsUrl, startsWith("https://www.heise.de/"))
-        assertThat(summary.nextItemsUrl, containsString("/seite-"))
+        assertThat(summary.nextItemsUrl, containsString(".html?p="))
     }
 
 

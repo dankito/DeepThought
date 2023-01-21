@@ -65,17 +65,10 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
 
     private fun mapTopTeaserElementToArticleSummaryItem(siteUrl: String, topTeaserElement: Element): ArticleSummaryItem? {
         topTeaserElement.select("h2").first()?.let { titleAnchor ->
-            val item = ArticleSummaryItem(makeLinkAbsolute(topTeaserElement.attr("href"), siteUrl), titleAnchor.text().trim(), getArticleExtractor())
+            val summary = topTeaserElement.selectFirst("p")?.text()?.trim() ?: ""
+            val previewImageUrl = getPreviewImageUrl(topTeaserElement, siteUrl)
 
-            topTeaserElement.select("p").first()?.let { summaryElement ->
-                item.summary = summaryElement.text().trim()
-            }
-
-            topTeaserElement.select("img").first()?.let { previewImageElement ->
-                item.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), siteUrl)
-            }
-
-            return item
+            return ArticleSummaryItem(makeLinkAbsolute(topTeaserElement.attr("href"), siteUrl), titleAnchor.text().trim(), getArticleExtractor(), summary, previewImageUrl)
         }
 
         return null
@@ -90,18 +83,10 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
     private fun mapArticleElementToArticleSummaryItem(siteUrl: String, articleElement: Element): ArticleSummaryItem? {
         articleElement.select(".tp_title").first()?.let { titleAnchor ->
             val url = extractUrl(articleElement, siteUrl)
+            val summary = articleElement.selectFirst("p")?.text()?.trim() ?: ""
+            val previewImageUrl = getPreviewImageUrl(titleAnchor, siteUrl)
 
-            val item = ArticleSummaryItem(url, titleAnchor.text().trim(), getArticleExtractor())
-
-            articleElement.select("p").first()?.let { summaryElement ->
-                item.summary = summaryElement.text().trim()
-            }
-
-            articleElement.select("figure img").first()?.let { previewImageElement ->
-                item.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), siteUrl)
-            }
-
-            return item
+            return ArticleSummaryItem(url, titleAnchor.text().trim(), getArticleExtractor(), summary, previewImageUrl)
         }
 
         return null
@@ -151,6 +136,13 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
         }
 
         return null
+    }
+
+    private fun getPreviewImageUrl(teaserElement: Element, siteUrl: String): String? {
+        return teaserElement.select("a-img, a-img img")
+            .map { it.attr("src") }
+            .firstOrNull { it.isNullOrBlank() == false && it.startsWith("data:image/svg+xml,") == false }
+            ?.let { makeLinkAbsolute(it, siteUrl) }
     }
 
 
