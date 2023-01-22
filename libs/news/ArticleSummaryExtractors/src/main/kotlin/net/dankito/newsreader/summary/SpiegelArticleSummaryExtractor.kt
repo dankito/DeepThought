@@ -21,115 +21,92 @@ class SpiegelArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtr
 
 
     override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean): ArticleSummary {
-        val articles = mutableListOf<ArticleSummaryItem>()
-
-        extractTeasers(url, document, articles)
-        extractResortTeasers(url, document, articles)
+        val articles = mutableListOf<ArticleSummaryItem>().apply {
+            addAll(extractTeasers(url, document))
+        }
 
         return ArticleSummary(articles)
     }
 
 
-    private fun extractTeasers(siteUrl: String, document: Document, articles: MutableList<ArticleSummaryItem>) {
-        document.select("div.teaser").forEach {
-            extractArticlesFromTeaserElement(siteUrl, it, articles)
+    private fun extractTeasers(siteUrl: String, document: Document): List<ArticleSummaryItem> {
+        return document.body().select("article").mapNotNull { articleElement ->
+            extractItemFromArticleElement(siteUrl, articleElement)
         }
     }
 
-    private fun extractArticlesFromTeaserElement(siteUrl: String, teaser: Element, articles: MutableList<ArticleSummaryItem>) {
-        teaser.select("p.article-intro").first()?.let { intro ->
-            intro.select(".more-link").remove()
-            val summary = intro.text().trim()
-
-            teaser.select(".article-title a").first()?.let { titleAnchor ->
-                val articleUrl = getArticleUrlFromTitleAnchor(titleAnchor, siteUrl)
-                val title = extractTitle(titleAnchor)
-                val previewImageUrl = extractPreviewImageUrl(teaser, siteUrl)
-
-                articles.add(ArticleSummaryItem(articleUrl, title, getExtractorClass(articleUrl), summary, previewImageUrl))
-            }
+    private fun extractItemFromArticleElement(siteUrl: String, articleElement: Element): ArticleSummaryItem? {
+        val articleUrl = articleElement.selectFirst("a")?.attr("href")
+        if (articleUrl.isNullOrBlank()) {
+            return null
         }
 
-        teaser.select("ul.article-list").first()?.let { articleList ->
-            extractTeaserArticleList(siteUrl, articleList, articles)
+        var title = extractTitle(articleElement)
+        if (title.isNullOrBlank()) {
+            return null
         }
-    }
-
-    private fun extractTeaserArticleList(siteUrl: String, articleList: Element, articles: MutableList<ArticleSummaryItem>) {
-        articleList.select("li a").forEach { article ->
-            val articleUrl = getArticleUrlFromTitleAnchor(article, siteUrl)
-            articles.add(ArticleSummaryItem(articleUrl, extractTitle(article), getExtractorClass(articleUrl)))
-        }
-    }
-
-
-    private fun extractResortTeasers(siteUrl: String, document: Document, articles: MutableList<ArticleSummaryItem>) {
-        document.select(".module-box div.ressort-teaser-box-top, .module-box ul.article-list").forEach { resortTeaser ->
-            if("ul" == resortTeaser.tagName()) {
-                extractTeaserArticleList(siteUrl, resortTeaser, articles)
-            }
-            else {
-                extractResortTeaserBox(siteUrl, resortTeaser, articles)
-            }
-        }
-    }
-
-    private fun extractResortTeaserBox(siteUrl: String, teaserBox: Element, articles: MutableList<ArticleSummaryItem>) {
-        teaserBox.select(".article-title a").first()?.let { titleAnchor ->
-            val articleUrl = getArticleUrlFromTitleAnchor(titleAnchor, siteUrl)
-            val title = extractTitle(titleAnchor)
-            val previewImageUrl = extractPreviewImageUrl(teaserBox, siteUrl)
-            val summary = teaserBox.select("p").first()?.text()?.trim() ?: ""
-
-            articles.add((ArticleSummaryItem(articleUrl, title, getExtractorClass(articleUrl), summary, previewImageUrl)))
-        }
-    }
-
-
-    private fun getArticleUrlFromTitleAnchor(titleAnchor: Element, siteUrl: String): String {
-        val articleUrl = makeLinkAbsolute(titleAnchor.attr("href"), siteUrl)
-        return articleUrl
-    }
-
-    private fun extractTitle(titleAnchor: Element): String {
-        var title = titleAnchor.select(".headline, .asset-headline").first()?.text()?.trim() ?: ""
-
-        titleAnchor.select(".headline-intro, .asset-headline-intro").first()?.let {
-            title = it.text().trim() + " - " + title
+        getSpecialArticleType(articleElement)?.let { specialType ->
+            title = "$specialType $title"
         }
 
-        getSpecialArticleType(titleAnchor)?.let { articleType ->
-            title = "[$articleType] " + title
-        }
+        val summary = articleElement.selectFirst("span.leading-loose")?.let { leadingElement ->
+            leadingElement.select("[data-icon-auxiliary=\"Text\"]").remove()
+            leadingElement.text().trim()
+        } ?: ""
+        val previewImageUrl = (articleElement.selectFirst("figure img.absolute")
+            ?: articleElement.selectFirst("figure img.rounded")
+                )?.attr("src")
 
-        return title
+        return ArticleSummaryItem(articleUrl, title!!, getExtractorClass(articleUrl), summary, previewImageUrl)
     }
 
-    private fun getSpecialArticleType(titleAnchor: Element): String? {
-        titleAnchor.select(".spiegelplus").first()?.let { return "SpiegelPlus" }
-
-        titleAnchor.select(".spiegeldaily").first()?.let { return "Daily" }
-
-        titleAnchor.select(".bento").first()?.let { return "Bento" }
-
-        return null
+    private fun extractTitle(articleElement: Element): String? {
+        return extractTitleForTeaserWithImage(articleElement)
+            ?: extractTitleForTeaserWithoutImageAndSummary(articleElement)
     }
 
-    private fun extractPreviewImageUrl(teaser: Element, siteUrl: String): String? {
-        teaser.select(".article-image-box img").first()?.let { previewImage ->
-            var source = previewImage.attr("data-original")
-            if(source.isBlank()) {
-                source = previewImage.attr("src")
+    private fun extractTitleForTeaserWithImage(articleElement: Element): String? {
+        return articleElement.selectFirst("header h2 a")?.let { headerElement ->
+            var title = headerElement.attr("title")
+            val kickerElement = headerElement.selectFirst("span.leading-tight")
+                ?: headerElement.selectFirst("span.text-primary-base")
+            if (title.isNullOrBlank() && kickerElement == null) {
+                title = headerElement.text()
             }
 
-            if(source.isNotBlank()) {
-                return makeLinkAbsolute(source, siteUrl)
+            if (title == null) {
+                return null
             }
-        }
 
-        teaser.select(".image-buttons-panel img").first()?.let { videoPreviewImage ->
-            return makeLinkAbsolute(videoPreviewImage.attr("src"), siteUrl)
+            if (kickerElement != null) {
+                val kicker = kickerElement.text().trim()
+                if (kicker.isNullOrBlank() == false) {
+                    title = "$kicker: $title"
+                }
+            }
+
+            title
         }
+    }
+
+    private fun extractTitleForTeaserWithoutImageAndSummary(articleElement: Element): String? {
+        return articleElement.selectFirst("h2 > a")?.let { headerElement ->
+            val title = headerElement.attr("title")
+            if (title.isNullOrBlank() == false) {
+                val kicker = headerElement.selectFirst("span.text-primary-base")?.text()
+                if (kicker.isNullOrBlank() == false) {
+                    return "$kicker: $title"
+                } else title
+            } else null
+        }
+    }
+
+    private fun getSpecialArticleType(articleElement: Element): String? {
+        articleElement.selectFirst("[data-flag-name=\"Spplus-paid\"]")?.let { return "Spiegel+" }
+
+        articleElement.select(".spiegeldaily").first()?.let { return "Daily" }
+
+        articleElement.select(".bento").first()?.let { return "Bento" }
 
         return null
     }
