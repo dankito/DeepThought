@@ -30,6 +30,13 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
+        if (needsLoginToViewFullArticle(url, document)) {
+            handleNeedsLoginToViewFullArticle(url, document, extractionResult)
+            if (extractionResult.couldExtractContent) {
+                return
+            }
+        }
+
         document.body().select("article").first()?.let { article ->
             getReadAllOnOnePageUrl(article, url)?.let { allOnOnePageUrl ->
                 extractArticle(allOnOnePageUrl)?.let {
@@ -253,6 +260,10 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         return null
     }
 
+
+    override fun needsLoginToViewFullArticle(url: String, document: Document): Boolean {
+        return document.body().selectFirst("article header svg.a-article-header__heiseplus-svg") != null
+    }
 
     override fun login(credentials: ICredentials): LoginResult? {
         authenticator.login(credentials)?.let { loginCookie ->
