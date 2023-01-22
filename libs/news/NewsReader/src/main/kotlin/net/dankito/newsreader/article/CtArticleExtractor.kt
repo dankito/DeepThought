@@ -3,11 +3,10 @@ package net.dankito.newsreader.article
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.newsreader.article.authentication.HeiseAuthenticator
 import net.dankito.newsreader.model.LoginResult
 import net.dankito.utils.credentials.ICredentials
-import net.dankito.utils.credentials.UsernamePasswordCredentials
 import net.dankito.utils.web.client.IWebClient
-import net.dankito.utils.web.client.RequestParameters
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
@@ -30,6 +29,8 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
         private val log = LoggerFactory.getLogger(CtArticleExtractor::class.java)
     }
 
+
+    private val authenticator = HeiseAuthenticator(webClient)
 
     private var triedToResolveMultiPageArticle = false
 
@@ -326,19 +327,8 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
     override fun login(credentials: ICredentials): LoginResult? {
-        if (credentials is UsernamePasswordCredentials) {
-            val loginHeaders = mapOf(
-                    "Content-Type" to "application/x-www-form-urlencoded"
-            )
-            val loginResponse = webClient.post(RequestParameters("https://www.heise.de/sso/login/login",
-                    "username=${credentials.username}&password=${credentials.password}&permanent=1&ajax=1",
-                    headers = loginHeaders))
-
-            if (loginResponse.isSuccessful) {
-                loginResponse.getCookie("ssohls")?.let { loginCookie ->
-                    return setLoginResult(listOf(loginCookie))
-                }
-            }
+        authenticator.login(credentials)?.let { loginCookie ->
+            return setLoginResult(listOf(loginCookie))
         }
 
         return super.login(credentials)

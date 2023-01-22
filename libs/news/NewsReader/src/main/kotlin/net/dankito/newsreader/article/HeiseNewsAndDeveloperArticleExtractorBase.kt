@@ -3,6 +3,9 @@ package net.dankito.newsreader.article
 import net.dankito.deepthought.model.Item
 import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
+import net.dankito.newsreader.article.authentication.HeiseAuthenticator
+import net.dankito.newsreader.model.LoginResult
+import net.dankito.utils.credentials.ICredentials
 import net.dankito.utils.web.client.IWebClient
 import org.jsoup.nodes.Comment
 import org.jsoup.nodes.Document
@@ -22,6 +25,8 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         private val DateTimeFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         private val MultiPageMobileArticleDateTimeFormat = SimpleDateFormat("yyyy-MM-dd")
     }
+
+    private val authenticator = HeiseAuthenticator(webClient)
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
@@ -246,6 +251,15 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         }
 
         return null
+    }
+
+
+    override fun login(credentials: ICredentials): LoginResult? {
+        authenticator.login(credentials)?.let { loginCookie ->
+            return setLoginResult(listOf(loginCookie))
+        }
+
+        return super.login(credentials)
     }
 
 }
