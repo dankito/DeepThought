@@ -43,14 +43,14 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
     private fun extractTeasers(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document) {
         articles.addAll(
                 document.body().select("a.sz-teaser")
-                        .map { mapTeaserElementToArticleSummaryItem(it, siteUrl) }.filterNotNull()
+                        .mapNotNull { mapTeaserElementToArticleSummaryItem(it, siteUrl) }
         )
     }
 
     private fun mapTeaserElementToArticleSummaryItem(teaserElement: Element, siteUrl: String): ArticleSummaryItem? {
         teaserElement.selectFirst(".sz-teaser__title")?.let { titleElement ->
             val articleUrl = makeLinkAbsolute(teaserElement.attr("href"), siteUrl)
-            val item = ArticleSummaryItem(articleUrl, titleElement.text(), getArticleExtractorClass(articleUrl))
+            val item = ArticleSummaryItem(articleUrl, extractTitle(teaserElement, titleElement), getArticleExtractorClass(articleUrl))
 
             teaserElement.selectFirst("img.sz-teaser__image--mobile, img.sz-teaser__image--desktop, img")?.let {
                 item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl)
@@ -61,22 +61,35 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
                 item.summary = summaryElement.text()
             }
 
-            teaserElement.selectFirst(".sz-teaser__overline-title")?.let { overlineTitle ->
-                item.title = overlineTitle.text().trim() + " - " + item.title
-            }
-
-            if (teaserElement.selectFirst(".sz-teaser-label-plus") != null) {
-                item.title = "SZ+ " + item.title
-            }
-
-            if (teaserElement.selectFirst(".sz-teaser-label-image--video") != null) {
-                item.title = "Video - " + item.title
-            }
-
             return item
         }
 
         return null
+    }
+
+    private fun extractTitle(teaserElement: Element, titleElement: Element): String {
+        var title = titleElement.text()
+
+        teaserElement.selectFirst(".sz-teaser__overline-title")?.let { overlineTitle ->
+            title = overlineTitle.text().trim() + " - " + title
+        }
+
+        if (teaserElement.selectFirst(".sz-teaser-label-image--video") != null) {
+            title = "Video - $title"
+        }
+
+        if (isSzPlusArticle(teaserElement)) {
+            title = "SZ+ $title"
+        }
+
+        return title
+    }
+
+    private fun isSzPlusArticle(teaserElement: Element): Boolean {
+        return teaserElement.selectFirst(".sz-teaser__overline-label > svg")?.let { svgElement ->
+            svgElement.text() == "SZ Plus"
+        }
+            ?: false
     }
 
 
