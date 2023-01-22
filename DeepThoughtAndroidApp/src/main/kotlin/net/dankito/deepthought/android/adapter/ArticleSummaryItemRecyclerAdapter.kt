@@ -45,10 +45,12 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
         val imageSize = viewHolder.itemView.context.resources
                 .getDimensionPixelSize(R.dimen.list_item_read_later_article_preview_image_size)
 
-        Picasso.with(viewHolder.itemView.context)
+        if (item.previewImageUrl.isNullOrBlank() == false) {
+            Picasso.with(viewHolder.itemView.context)
                 .load(item.previewImageUrl)
                 .resize(imageSize, 0)
                 .into(viewHolder.imgPreviewImage)
+        }
     }
 
     override fun setupSwipeView(viewHolder: ArticleSummaryItemViewHolder, item: ArticleSummaryItem) {
