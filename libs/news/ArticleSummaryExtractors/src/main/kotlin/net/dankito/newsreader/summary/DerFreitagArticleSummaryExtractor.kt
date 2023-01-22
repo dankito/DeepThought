@@ -61,7 +61,7 @@ class DerFreitagArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryE
             val bookTitle = bookElement.selectFirst(".c-advertorial-info__title")?.text()
             if (articleUrl.isNullOrBlank() == false && author.isNullOrBlank() == false && bookTitle.isNullOrBlank() == false) {
                 val summary = bookElement.selectFirst(".c-advertorial-info__description")?.text()?.trim() ?: ""
-                val previewImageUrl = bookElement.selectFirst("img")?.attr("href")
+                val previewImageUrl = bookElement.selectFirst("img")?.attr("src")
 
                 ArticleSummaryItem(articleUrl, "$author - $bookTitle", getExtractorClassForUrl(articleUrl), summary, previewImageUrl)
             } else null
