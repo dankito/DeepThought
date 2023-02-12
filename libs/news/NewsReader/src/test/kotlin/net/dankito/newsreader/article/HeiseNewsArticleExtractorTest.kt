@@ -86,4 +86,12 @@ class HeiseNewsArticleExtractorTest : ArticleExtractorTestBase() {
                 4500)
     }
 
+    @Test
+    fun extractImagesCorrectly() {
+        getAndTestArticle("https://www.heise.de/hintergrund/Was-Sie-beachten-sollten-bevor-Sie-eine-Perso-Kopie-weitergeben-7464155.html",
+            title = "Was Sie beachten sollten, bevor Sie eine Perso-Kopie weitergeben",
+            summary = ""
+        )
+    }
+
 }

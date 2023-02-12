@@ -37,7 +37,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
             }
         }
 
-        document.body().select("article").first()?.let { article ->
+        (document.body().selectFirst("article.article-layout") ?: document.body().selectFirst("article"))?.let { article ->
             getReadAllOnOnePageUrl(article, url)?.let { allOnOnePageUrl ->
                 extractArticle(allOnOnePageUrl)?.let {
                     if(it.couldExtractContent) {
@@ -48,7 +48,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
             }
 
             article.select("header").first()?.let { header ->
-                header.select(".article__heading, .article-header__heading, .a-article-header__title").first()?.text()?.let { title ->
+                header.selectFirst(".article__heading, .article-header__heading, .a-article-header__title").text()?.let { title ->
                     parseArticle(extractionResult, header, article, url, title.trim())
                     return
                 }
@@ -105,7 +105,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         val summaryElement = articleMeldungElement.select(".article-content__lead, .article-header__lead, .a-article-header__lead").firstOrNull()
 
         if(previewImageElement != null || summaryElement != null) {
-            previewImageElement?.let { unwrapImagesFromNoscriptElements(it) }
+            previewImageElement?.let { extractImages(it) }
 
             contentHtml = "<div>" + (previewImageElement?.outerHtml() ?: "") + (summaryElement?.outerHtml() ?: "") + contentHtml + "</div>"
         }
@@ -133,7 +133,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         cleanContentElement(articleContentElement)
 
         makeLinksAbsolute(articleContentElement, url)
-        unwrapImagesFromNoscriptElements(articleContentElement)
+        extractImages(articleContentElement)
 
         extractionResult.setExtractedContent(Item(articleContentElement.outerHtml()), source)
     }
@@ -170,7 +170,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         contentElement.select("h1, time, span.author, a.comments, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content, " +
                 ".akwa-ad-container, .akwa-ad-container--native, a-ad, .pvgs, .a-pvgs, .a-pvg, " +
-                "a.comment-button").remove()
+                "a.comment-button, figure.branding").remove()
 
         removeEmptyParagraphs(contentElement, Arrays.asList("video"))
 
@@ -241,7 +241,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
     protected open fun getContentElementHtml(element: Element, url: String) : String {
-        unwrapImagesFromNoscriptElements(element)
+        extractImages(element)
         makeLinksAbsolute(element, url)
 
         if(element.hasClass("gallery") && element.hasClass("compact") && element.hasAttr("data-data-url")) {
@@ -249,6 +249,26 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         }
 
         return element.outerHtml()
+    }
+
+    private fun extractImages(element: Element) {
+        element.select("img").forEach { img ->
+            // remove placeholders
+            if (img.attr("src").startsWith("data:image/svg+xml,")) {
+                if (img.parent().nodeName() == "a-img") {
+                    img.parent().remove()
+                } else {
+                    img.remove()
+                }
+            }
+            //
+            else {
+                img.removeAttr("height")
+                img.attr("width", "100%")
+            }
+        }
+
+        unwrapImagesFromNoscriptElements(element)
     }
 
 

@@ -170,14 +170,14 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
      * Remove <noscript> elements which impede that <img>s get loaded
      */
     protected fun unwrapImagesFromNoscriptElements(element: Element) {
-        unwrapNoscriptElements(element, Arrays.asList("img"))
+        unwrapNoscriptElements(element, "img")
     }
 
     /**
      * Unwraps all <noscript> elements that contain an element with a tag from tagNamesToUnwrap.
      * Unwrap means that the <noscript> element gets removed and its child elements get inserted at the same place (index) in its former parent.
      */
-    protected fun unwrapNoscriptElements(element: Element, tagNamesToUnwrap: Collection<String>) {
+    protected fun unwrapNoscriptElements(element: Element, vararg tagNamesToUnwrap: String) {
         val tagNamesSelector = tagNamesToUnwrap.joinToString(",")
 
         element.select("noscript").forEach { noscript ->
