@@ -170,7 +170,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         contentElement.select("h1, time, span.author, a.comments, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content, " +
                 ".akwa-ad-container, .akwa-ad-container--native, a-ad, .pvgs, .a-pvgs, .a-pvg, " +
-                "a.comment-button, figure.branding").remove()
+                "a.comment-button, figure.branding, [data-component='RecommendationBox']").remove()
 
         removeEmptyParagraphs(contentElement, Arrays.asList("video"))
 
@@ -219,9 +219,10 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
     }
 
     protected open fun extractContent(articleElement: Element, url: String, contentSelector: String): String {
-        return articleElement.select(contentSelector).first()?.children()?.filter { element ->
-            shouldFilterElement(element) == false
-        }?.joinToString(separator = "") { getContentElementHtml(it, url) }
+        return articleElement.selectFirst(contentSelector)
+            ?.apply { cleanContentElement(this) }
+            ?.children()?.filter { element -> shouldFilterElement(element) == false }
+            ?.joinToString(separator = "") { getContentElementHtml(it, url) }
         ?: ""
     }
 
