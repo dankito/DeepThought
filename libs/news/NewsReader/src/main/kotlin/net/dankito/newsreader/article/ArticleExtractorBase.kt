@@ -155,11 +155,12 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     }
 
 
-    protected fun removeEmptyParagraphs(contentElement: Element, classNamesToPreserve: Collection<String> = ArrayList()) {
+    protected fun removeEmptyParagraphs(contentElement: Element, vararg classNamesToPreserve: String) {
         val preserveRegex = classNamesToPreserve.joinToString("|").toRegex(RegexOption.IGNORE_CASE)
 
-        ArrayList(contentElement.select("p, div").toList()).forEach {
-            if(it.html().getPlainTextForHtml().isNullOrBlank() && preserveRegex.containsMatchIn(it.className()) == false) {
+        contentElement.select("p, div").forEach {
+            val elementHtml = it.html()
+            if (elementHtml.contains("<img") == false && elementHtml.getPlainTextForHtml().isBlank() && preserveRegex.containsMatchIn(it.className()) == false) {
                 it.remove()
             }
         }

@@ -172,7 +172,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
                 ".akwa-ad-container, .akwa-ad-container--native, a-ad, .pvgs, .a-pvgs, .a-pvg, " +
                 "a.comment-button, figure.branding, [data-component='RecommendationBox']").remove()
 
-        removeEmptyParagraphs(contentElement, Arrays.asList("video"))
+        removeEmptyParagraphs(contentElement, "video")
 
         contentElement.select("a-collapse").forEach { collapseAnchor ->
             if (collapseAnchor.text().contains("heise online daily Newsletter", true)) { // remove Newsletter paragraphs
