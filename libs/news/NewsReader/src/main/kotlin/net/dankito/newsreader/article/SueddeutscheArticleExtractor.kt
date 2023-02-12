@@ -67,6 +67,11 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
         triedToResolveMultiPageArticle = false
 
+        document.body().select("#sueddeutsche article").firstOrNull()?.let { articleElement ->
+            extractSzArticleContainer(extractionResult, articleElement, url)
+            return
+        }
+
         document.body().select("article.sz-article").first()?.let { articleElement ->
             extractSzArticle(extractionResult, articleElement, url)
             return
@@ -92,11 +97,33 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
 
+    private fun extractSzArticleContainer(extractionResult: ItemExtractionResult, articleElement: Element, siteUrl: String) {
+        articleElement.select("aside, style").remove()
+
+        articleElement.select("[itemprop='articleBody']").firstOrNull()?.let { articleBody ->
+            var content = loadLazyLoadingElementsAndGetContent(articleElement, articleBody)
+
+            val previewImage = articleElement.selectFirst("article > [data-manual='image']")?.also { extractImages(it) }
+            val teaser = articleElement.selectFirst("[data-manual='teaserText']")
+
+            content = (previewImage?.outerHtml() ?: "") + (teaser?.let { "<b>${it.outerHtml()}</b>" } ?: "") + content
+
+            val source = extractSzArticleSource(articleElement, "header", siteUrl)
+            if (source != null && source.previewImageUrl == null && teaser != null) {
+                teaser.selectFirst("img")?.let { previewImage ->
+                    source.previewImageUrl = previewImage.attr("src")
+                }
+            }
+
+            extractionResult.setExtractedContent(Item(content), source)
+        }
+    }
+
     private fun extractSzArticle(extractionResult: ItemExtractionResult, articleElement: Element, siteUrl: String) {
         articleElement.select(".sz-article__body").first()?.let { articleBody ->
             var content = loadLazyLoadingElementsAndGetContent(articleElement, articleBody)
 
-            val source = extractSzArticleSource(articleElement, siteUrl)
+            val source = extractSzArticleSource(articleElement, "header.sz-article__header", siteUrl)
 
             extractTopEnrichment(articleElement, source, siteUrl)?.let { topEnrichment ->
                 content = "<div>" + topEnrichment.outerHtml() + "</div>" + content
@@ -108,11 +135,11 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
     }
 
-    private fun extractSzArticleSource(articleElement: Element, url: String): Source? {
-        articleElement.select("header.sz-article__header").first()?.let { headerElement ->
+    private fun extractSzArticleSource(articleElement: Element, headerSelector: String, url: String): Source? {
+        articleElement.selectFirst(headerSelector)?.let { headerElement ->
             val publishingDate = extractPublishingDate(headerElement)
 
-            headerElement.select(".sz-article-header__title").firstOrNull()?.text()?.trim()?.let { title ->
+            headerElement.selectFirst(".sz-article-header__title")?.text()?.trim()?.let { title ->
                 val overline = headerElement.select(".sz-article-header__overline").firstOrNull()?.text()?.trim() ?: ""
 
                 return Source(title, url, publishingDate, subTitle = overline)
@@ -171,6 +198,7 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
     }
 
     private fun loadLazyLoadingElementsAndGetContent(siteContent: Element, articleBody: Element): String {
+        extractImages(articleBody)
         extractInlineGalleries(articleBody)
         extractInlineCarousels(articleBody)
         insertHtmlFromEmbedJs(siteContent)
@@ -205,6 +233,32 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
         }
 
         return content.toString()
+    }
+
+    private fun extractImages(element: Element) {
+        element.select("figure").forEach { figure ->
+            // remove teasers
+            if (figure.selectFirst("a.sz-teaser") != null) {
+                figure.remove()
+                return@forEach
+            }
+
+            figure.select("img").forEach { img ->
+                // remove placeholder image
+                if (img.attr("src").startsWith("data:image/gif;base64,")) {
+                    img.remove()
+                }
+            }
+
+            unwrapImagesFromNoscriptElements(figure)
+
+            // remove buttons to show images fullscreen
+            figure.select("button").forEach { button ->
+                if (button.text().contains("Detailansicht öffnen")) {
+                    button.remove()
+                }
+            }
+        }
     }
 
     private fun cleanArticleBody(articleBody: Element) {
@@ -466,10 +520,10 @@ class SueddeutscheArticleExtractor(webClient: IWebClient) : ArticleExtractorBase
 
 
     private fun extractSource(articleElement: Element, url: String): Source? {
-        articleElement.select(".header").first()?.let { headerElement ->
-            headerElement.select("h2, h1").first()?.let { heading -> // don't know why, but sometimes (on mobile sites?) they're using h1
+        articleElement.selectFirst(".header")?.let { headerElement ->
+            headerElement.selectFirst("h2, h1")?.let { heading -> // don't know why, but sometimes (on mobile sites?) they're using h1
                 var subTitle = ""
-                heading.select("strong").first()?.let {
+                heading.selectFirst("strong")?.let {
                     subTitle = it.text()
                     it.remove() // remove element so that it's not as well part of title
                 }
