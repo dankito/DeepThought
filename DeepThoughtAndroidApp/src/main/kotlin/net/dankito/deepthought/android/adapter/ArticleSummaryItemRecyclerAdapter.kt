@@ -45,7 +45,9 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
         val imageSize = viewHolder.itemView.context.resources
                 .getDimensionPixelSize(R.dimen.list_item_read_later_article_preview_image_size)
 
-        if (item.previewImageUrl.isNullOrBlank() == false) {
+        if (item.previewImageUrl.isNullOrBlank()) {
+            viewHolder.imgPreviewImage.setImageDrawable(null) // clear image
+        } else {
             Picasso.with(viewHolder.itemView.context)
                 .load(item.previewImageUrl)
                 .resize(imageSize, 0)
