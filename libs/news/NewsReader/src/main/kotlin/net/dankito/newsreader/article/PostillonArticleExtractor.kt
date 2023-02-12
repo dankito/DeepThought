@@ -16,7 +16,7 @@ import java.util.*
 class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient) {
 
     companion object {
-        private val PostillionDateFormat = SimpleDateFormat("EEEE, dd. MMMMM yyyy", Locale.GERMAN)
+        private val PostillionDateFormat = SimpleDateFormat("d.M.yy", Locale.GERMAN)
 
         private val log = LoggerFactory.getLogger(PostillonArticleExtractor::class.java)
     }
@@ -32,9 +32,9 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
-        document.body().select(".post").first()?.let { postElement ->
-            postElement.select(".post-title")?.let { titleElement ->
-                postElement.select(".post-body").first()?.let { bodyElement ->
+        document.body().selectFirst(".post, .blog-post")?.let { postElement ->
+            postElement.selectFirst(".post-title, .entry-title")?.let { titleElement ->
+                postElement.selectFirst(".post-body")?.let { bodyElement ->
                     val item = Item(extractContent(bodyElement))
 
                     val source = Source(titleElement.text(), url, extractPublishingDate(postElement))
@@ -76,15 +76,18 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
     private fun extractSonntagsfrageHtml(sonntagsFrageElement: Element): String {
-        sonntagsFrageElement.select("noscript a").first()?.let {
-            val pollDaddyLink = it.attr("href")
+        sonntagsFrageElement.selectFirst("noscript a")?.let { noscriptElement ->
+            val pollDaddyLink = noscriptElement.attr("href")
 
             val iframe = Element("iframe")
             iframe.attr("src", pollDaddyLink)
             iframe.attr("height", "600")
             iframe.attr("width", "100%")
 
-            it.parentNode().replaceWith(iframe)
+            noscriptElement.parentNode().replaceWith(iframe)
+
+            // remove script element that loads PollDaddy JS
+            sonntagsFrageElement.select("script").remove()
 
             return sonntagsFrageElement.html()
         }
@@ -97,7 +100,7 @@ class PostillonArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(we
     }
 
     private fun extractPublishingDate(postElement: Element): Date? {
-        postElement.select(".date-header span").first()?.let {
+        postElement.selectFirst(".entry-time time")?.let {
             try {
                 return PostillionDateFormat.parse(it.text())
             } catch (e: Exception) {
