@@ -11,13 +11,10 @@ import java.util.concurrent.TimeUnit
 
 abstract class ArticleExtractorTestBase {
 
-    protected val underTest: IArticleExtractor
-
-    init {
-        underTest = createArticleExtractor(OkHttpWebClient())
-    }
-
     abstract fun createArticleExtractor(webClient: IWebClient): IArticleExtractor
+
+
+    protected val underTest: IArticleExtractor = createArticleExtractor(createWebClient())
 
 
     protected open fun getAndTestArticle(url: String, title: String, summary: String?, previewImageUrl: String? = null, minContentLength: Int? = null,
@@ -71,5 +68,7 @@ abstract class ArticleExtractorTestBase {
             }
         }
     }
+
+    protected open fun createWebClient() = OkHttpWebClient()
 
 }
