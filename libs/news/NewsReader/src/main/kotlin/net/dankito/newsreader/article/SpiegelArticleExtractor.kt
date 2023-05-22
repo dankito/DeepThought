@@ -6,6 +6,8 @@ import net.dankito.deepthought.model.Source
 import net.dankito.deepthought.model.util.ItemExtractionResult
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import org.jsoup.nodes.Node
+import org.jsoup.nodes.TextNode
 import org.slf4j.LoggerFactory
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -30,58 +32,70 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
-        document.body().select("#content-main").first()?.let { contentElement ->
-            val source = extractSource(url, contentElement)
+        document.body().selectFirst("article")?.let { articleElement ->
+            val source = extractSource(url, articleElement)
 
-            val content = extractContent(contentElement, url)
+            val content = extractContent(articleElement, url)
 
             extractionResult.setExtractedContent(Item(content), source)
         }
     }
 
-    private fun extractContent(contentElement: Element, articleUrl: String): String {
-        var content = contentElement.select(".article-intro").first()?.outerHtml() ?: ""
+    private fun extractContent(articleElement: Element, articleUrl: String): String {
+        val articleBodyElement = articleElement.selectFirst("[data-area='body']")
 
-        contentElement.select("#js-article-column").first()?.let { articleColumn ->
-            cleanArticleColumn(articleColumn)
+        // remove ads and empty nodes
+        articleBodyElement.childNodes()
+            .filter { shouldRemoveNode(it) }
+            .forEach { it.remove() }
 
-            makeLinksAbsolute(articleColumn, articleUrl)
-            content += articleColumn.outerHtml()
+        articleElement.selectFirst("[data-area='top_element>image']")?.let { previewImage ->
+            articleBodyElement.prependChild(previewImage)
         }
 
-        return content
+        articleElement.selectFirst(".leading-loose")?.let { summary ->
+            articleBodyElement.prependChild(summary)
+        }
+
+        articleBodyElement.children().forEach {  // still needed?
+            makeLinksAbsolute(it, articleUrl)
+        }
+
+        return articleBodyElement.outerHtml()
     }
 
-    private fun cleanArticleColumn(articleColumn: Element) {
-        try {
-            articleColumn.select(".article-function-social-media, .article-function-box, .branded_channel_teaser, #branded_channel_teaser," +
-                    "br.clearfix, .adition, .teads-inread, .magazin-box-inner, .noskimwords, .nointellitxt, .noIntelliTxt, .noSmartTag, .noSmartLink, style").remove()
+    private fun shouldRemoveNode(node: Node) =
+        if (node is TextNode) {
+            node.isBlank // empty text nodes
+        } else if (node is Element) {
+            node.text().isNullOrBlank() // elements that contain ads
+//                    || node.selectFirst("[data-area='related_articles']") != null // remove "Mehr zum Thema" sections
+        } else {
+            false
+        }
 
-            articleColumn.select("div div.innen").first()?.parent()?.remove()
+    private fun extractSource(articleUrl: String, articleElement: Element): Source? {
+        articleElement.selectFirst("header")?.let { headerElement ->
+            val articleAriaLabel = articleElement.attr("aria-label")
 
-            articleColumn.select("p").forEach { paragraph ->
-                if(paragraph.text().isBlank()) {
-                    paragraph.remove()
-                }
+            val titleAndSubtitleParts = if (articleAriaLabel != null) {
+                articleAriaLabel.split(':')
+            } else {
+                headerElement.select("h2 > span").map { it.text() }
+            }
+                .map { it.trim() }
+
+            val (title, subtitle) = if (titleAndSubtitleParts.size > 1) {
+                titleAndSubtitleParts[1] to titleAndSubtitleParts[0]
+            } else {
+                titleAndSubtitleParts[0] to null
             }
 
-            articleColumn.select(".asset-box").forEach { assetBox ->
-                if(assetBox.select(".asset-title").first()?.text()?.contains("anzeige", true) == true) {
-                    assetBox.remove()
-                }
-            }
-        } catch(e: Exception) { log.error("Could not cleanArticleColumn", e) }
-    }
+            val previewImageUrl = articleElement.selectFirst("[data-area='top_element>image'] img")?.attr("src")
 
-    private fun extractSource(articleUrl: String, contentElement: Element): Source? {
-        contentElement.select("h2.article-title").first()?.let { headerElement ->
-            val title = headerElement.select(".headline").first()?.text() ?: ""
-            val subtitle = headerElement.select(".headline-intro").first()?.text() ?: ""
-            val previewImageUrl = contentElement.select("#js-article-top-wide-asset img").first()?.attr("src")
+            val source = Source(title, articleUrl, previewImageUrl = previewImageUrl, subTitle = subtitle ?: "")
 
-            val source = Source(title, articleUrl, previewImageUrl = previewImageUrl, subTitle = subtitle)
-
-            contentElement.select(".article-function-date time").first()?.let { timeElement ->
+            articleElement.selectFirst("time")?.let { timeElement ->
                 source.publishingDate = parseSpiegelTimeFormat(timeElement.attr("datetime"))
             }
 
