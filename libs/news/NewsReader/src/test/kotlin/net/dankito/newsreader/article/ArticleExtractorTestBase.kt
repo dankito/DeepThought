@@ -5,7 +5,9 @@ import net.dankito.utils.web.client.IWebClient
 import net.dankito.utils.web.client.OkHttpWebClient
 import org.hamcrest.CoreMatchers.*
 import org.hamcrest.Matchers.greaterThan
+import org.jsoup.Jsoup
 import org.junit.Assert.assertThat
+import java.io.File
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -18,12 +20,25 @@ abstract class ArticleExtractorTestBase {
 
 
     protected open fun getAndTestArticle(url: String, title: String, summary: String?, previewImageUrl: String? = null, minContentLength: Int? = null,
-                                         canPublishingDateBeNull: Boolean = false, subTitle: String? = null): ItemExtractionResult? {
-        val article = getArticle(url)
+                                         canPublishingDateBeNull: Boolean = false, subTitle: String? = null, fromDownloadedFile: String? = null): ItemExtractionResult? {
+        val article = getArticle(url, fromDownloadedFile)
 
         testArticle(article, url, title, summary, previewImageUrl, minContentLength, canPublishingDateBeNull, subTitle)
 
         return article
+    }
+
+    private fun getArticle(url: String, fromDownloadedFile: String?): ItemExtractionResult? {
+        if (fromDownloadedFile != null) {
+            val savedFile = getSavedFilePath(fromDownloadedFile)
+            if (savedFile.exists()) {
+                (underTest as? ArticleExtractorBase)?.let {
+                    return underTest.extractArticle(url, Jsoup.parse(savedFile.readText()))
+                }
+            }
+        }
+
+        return getArticle(url)
     }
 
     protected open fun getArticle(url: String) : ItemExtractionResult? {
@@ -67,6 +82,28 @@ abstract class ArticleExtractorTestBase {
                 subTitle?.let { assertThat(source.subTitle, `is`(subTitle)) }
             }
         }
+    }
+
+    protected open fun downloadAndSaveArticleTo(destinationFile: String, url: String) {
+        val file = getSavedFilePath(destinationFile)
+
+        val webClient = createWebClient()
+
+        val response = webClient.get(url)
+        if (response.isSuccessful) {
+            file.writeText(response.body!!)
+        }
+    }
+
+    private fun getSavedFilePath(filename: String): File {
+        var file = File(File("Downloaded", underTest.getName() ?: "Unknown_Extractor"), filename)
+        if (file.extension != "html" && file.extension != "htm") {
+            file = File(file.parentFile, filename + ".html")
+        }
+
+        file.parentFile.mkdirs()
+
+        return file
     }
 
     protected open fun createWebClient() = OkHttpWebClient()

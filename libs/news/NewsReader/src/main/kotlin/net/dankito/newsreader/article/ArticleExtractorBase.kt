@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory
 import java.text.DateFormat
 import java.util.*
 import java.util.regex.Pattern
-import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
 
@@ -84,17 +83,19 @@ abstract class ArticleExtractorBase(webClient: IWebClient) : ExtractorBase(webCl
     }
 
     protected open fun extractArticle(url: String): ItemExtractionResult? {
-        requestUrl(url).let { document ->
-            val contentHtml = document.outerHtml()
-            val extractionResult = ItemExtractionResult(Item(contentHtml), Source(url, url, null))
-            parseMetaData(extractionResult, document)
+        return extractArticle(url, requestUrl(url))
+    }
 
-            parseHtmlToArticle(extractionResult, document, url)
+    internal open fun extractArticle(url: String, document: Document): ItemExtractionResult {
+        val contentHtml = document.outerHtml()
+        val extractionResult = ItemExtractionResult(Item(contentHtml), Source(url, url, null))
+        parseMetaData(extractionResult, document)
 
-            // TODO: if extraction didn't work try default ArticleExtraction if not done already
+        parseHtmlToArticle(extractionResult, document, url)
 
-            return extractionResult
-        }
+        // TODO: if extraction didn't work try default ArticleExtraction if not done already
+
+        return extractionResult
     }
 
     protected open fun extractArticleWithPost(extractionResult: ItemExtractionResult, url: String, body: String? = null, contentType: String? = null) {
