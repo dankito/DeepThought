@@ -57,6 +57,8 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
             articleBodyElement.prependChild(summary)
         }
 
+        unwrapImagesFromNoscriptElementsAndRemoveTheirPictureElements(articleBodyElement)
+
         articleBodyElement.children().forEach {  // still needed?
             makeLinksAbsolute(it, articleUrl)
         }
@@ -73,6 +75,18 @@ class SpiegelArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webC
         } else {
             false
         }
+
+    private fun unwrapImagesFromNoscriptElementsAndRemoveTheirPictureElements(element: Element) {
+        element.select("noscript > img").forEach { img ->
+            img.parent().unwrap() // unwrap img from noscript element
+
+            img.siblingElements() // remove sibling picture element that is only a placeholder
+                .filter { it.tagName() == "picture" }
+                .forEach { it.remove() }
+        }
+
+        element.select("figure button").remove()
+    }
 
     private fun extractSource(articleUrl: String, articleElement: Element): Source? {
         articleElement.selectFirst("header")?.let { headerElement ->
