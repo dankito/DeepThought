@@ -20,8 +20,13 @@ abstract class ArticleExtractorTestBase {
 
 
     protected open fun getAndTestArticle(url: String, title: String, summary: String?, previewImageUrl: String? = null, minContentLength: Int? = null,
-                                         canPublishingDateBeNull: Boolean = false, subTitle: String? = null, fromDownloadedFile: String? = null): ItemExtractionResult? {
+                                         canPublishingDateBeNull: Boolean = false, subTitle: String? = null, fromDownloadedFile: String? = null, 
+                                         saveResultToFile: String? = null): ItemExtractionResult? {
         val article = getArticle(url, fromDownloadedFile)
+
+        if (saveResultToFile != null && article?.item != null) {
+            getResultDestinationFile(saveResultToFile).writeText(article.item.content)
+        }
 
         testArticle(article, url, title, summary, previewImageUrl, minContentLength, canPublishingDateBeNull, subTitle)
 
@@ -95,13 +100,31 @@ abstract class ArticleExtractorTestBase {
         }
     }
 
-    private fun getSavedFilePath(filename: String): File {
-        var file = File(File("Downloaded", underTest.getName() ?: "Unknown_Extractor"), filename)
-        if (file.extension != "html" && file.extension != "htm") {
-            file = File(file.parentFile, filename + ".html")
+    protected open fun getSavedFilePath(filename: String): File {
+        val file = File(getSavedFilesFolder(), filename)
+
+        return ensureFileHasHtmlFileExtension(file)
+    }
+
+    protected open fun getResultDestinationFile(filename: String): File {
+        var file = File(getSavedFilesFolder(), filename)
+
+        if (file.nameWithoutExtension.endsWith("_Result") == false) {
+            file = File(file.parentFile, file.nameWithoutExtension + "_Result")
         }
 
-        file.parentFile.mkdirs()
+        return ensureFileHasHtmlFileExtension(file)
+    }
+
+    protected open fun getSavedFilesFolder() =
+        File("Downloaded", underTest.getName() ?: "Unknown_Extractor").apply { 
+            this.mkdirs()
+        }
+
+    protected open fun ensureFileHasHtmlFileExtension(file: File): File {
+        if (file.extension != "html" && file.extension != "htm") {
+            return File(file.parentFile, file.nameWithoutExtension + ".html")
+        }
 
         return file
     }
