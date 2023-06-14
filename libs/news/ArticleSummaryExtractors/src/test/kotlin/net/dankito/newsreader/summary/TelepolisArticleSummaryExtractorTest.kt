@@ -19,7 +19,7 @@ class TelepolisArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
 
     override fun testCanLoadMoreItems(summary: ArticleSummary) {
         assertThat(summary.canLoadMoreItems, `is`(true))
-        assertThat(summary.nextItemsUrl, startsWith("https://www.telepolis.de/seite="))
+        assertThat(summary.nextItemsUrl, startsWith("https://www.telepolis.de/seite-"))
     }
 
 }

@@ -21,7 +21,7 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
     }
 
     override fun getUrl(): String {
-        return "https://www.heise.de/tp/"
+        return "https://www.telepolis.de/"
     }
 
     override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean): ArticleSummary {
@@ -127,7 +127,7 @@ class TelepolisArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryEx
         }
 
     private fun getPreviewImageUrl(teaserElement: Element, siteUrl: String): String? =
-        teaserElement.select("a-img, a-img img")
+        teaserElement.select("img")
             .map { it.attr("src") }
             .firstOrNull { it.isNullOrBlank() == false && it.startsWith("data:image/svg+xml,") == false }
             ?.let { makeLinkAbsolute(it, siteUrl) }
