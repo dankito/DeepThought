@@ -32,92 +32,75 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
     }
 
 
-    private fun loadArticlesFromHomePage(url: String, document: Document): List<ArticleSummaryItem> = mutableListOf<ArticleSummaryItem>().apply {
-        addAll(extractTeasers(url, document))
-        addAll(extractTileTeasers(url, document))
-    }
+    private fun loadArticlesFromHomePage(url: String, document: Document): List<ArticleSummaryItem> =
+        extractTeasers(url, document)
 
     private fun extractTeasers(siteUrl: String, document: Document): List<ArticleSummaryItem> =
-        document.body().select("a.sz-teaser")
-            .mapNotNull { mapTeaserElementToArticleSummaryItem(it, siteUrl) }
+        document.body().select("article")
+            .mapNotNull { mapArticleTeaserToArticleSummaryItem(it, siteUrl) }
 
-    private fun mapTeaserElementToArticleSummaryItem(teaserElement: Element, siteUrl: String): ArticleSummaryItem? {
-        teaserElement.selectFirst(".sz-teaser__title")?.let { titleElement ->
-            val articleUrl = makeLinkAbsolute(teaserElement.attr("href"), siteUrl)
-            val item = ArticleSummaryItem(articleUrl, extractTitle(teaserElement, titleElement), getArticleExtractorClass(articleUrl))
-
-            teaserElement.selectFirst("img.sz-teaser__image--mobile, img.sz-teaser__image--desktop, img")?.let {
-                item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl)
+    private fun mapArticleTeaserToArticleSummaryItem(articleElement: Element, siteUrl: String): ArticleSummaryItem? =
+        articleElement.selectFirst("a")?.let { articleLinkElement ->
+            val dataHydrationElement = articleElement.parents().firstOrNull { it.hasAttr("data-hydration-component-name") }
+            if (ignoreTeaser(dataHydrationElement)) {
+                return null
             }
 
-            teaserElement.selectFirst(".sz-teaser__summary")?.let { summaryElement ->
-                summaryElement.select(".author, .more").remove()
-                item.summary = summaryElement.text()
+            articleElement.selectFirst("h3")?.let { titleElement ->
+                extractTitle(titleElement, dataHydrationElement)?.let { title ->
+                    val articleUrl = makeLinkAbsolute(articleLinkElement.attr("href"), siteUrl)
+                    val summary = articleElement.selectFirst("[data-manual='teaser-text']")?.text()?.trim() ?: ""
+                    val previewImageUrl = articleElement.selectFirst("img[data-manual='teaser-image']")?.attr("src")?.let { makeLinkAbsolute(it, siteUrl) } // TODO: are there also smaller images?
+                    val item = ArticleSummaryItem(articleUrl, title, getArticleExtractorClass(articleUrl), summary, previewImageUrl)
+
+                    articleElement.selectFirst(".sz-teaser__summary")?.let { summaryElement ->
+                        summaryElement.select(".author, .more").remove()
+                        item.summary = summaryElement.text()
+                    }
+
+                    item
+                }
+            }
+        }
+
+    private fun ignoreTeaser(dataHydrationElement: Element?): Boolean =
+        // ignore Podcasts
+        dataHydrationElement?.select("h2")?.any { it.text().contains("podcast", true) } == true
+
+    private fun extractTitle(titleElement: Element, dataHydrationElement: Element?): String? =
+        titleElement.selectFirst("[data-manual='teaser-title']")?.let { teaserTitle ->
+            var title = teaserTitle.text()
+
+            titleElement.selectFirst("[data-manual='teaser-overline']")?.let { overline ->
+                title = "${overline.text().trim()}: $title"
             }
 
-            return item
+            val spans = titleElement.select("span")
+
+            if (spans.any { it.text().trim() == "Video" }) {
+                title = "Video - $title"
+            }
+            if (spans.any { it.text().trim() == "Live" }) {
+                title = "Live $title"
+            }
+
+            val isSzPlusArticle = isSzPlusArticle(titleElement, dataHydrationElement)
+            if (isSzPlusArticle) {
+                title = "SZ+ $title"
+            }
+
+            title
         }
 
-        return null
-    }
-
-    private fun extractTitle(teaserElement: Element, titleElement: Element): String {
-        var title = titleElement.text()
-
-        teaserElement.selectFirst(".sz-teaser__overline-title")?.let { overlineTitle ->
-            title = overlineTitle.text().trim() + " - " + title
-        }
-
-        if (teaserElement.selectFirst(".sz-teaser-label-image--video") != null) {
-            title = "Video - $title"
-        }
-
-        if (isSzPlusArticle(teaserElement)) {
-            title = "SZ+ $title"
-        }
-
-        return title
-    }
-
-    private fun isSzPlusArticle(teaserElement: Element): Boolean {
-        return teaserElement.selectFirst(".sz-teaser__overline-label > svg")?.let { svgElement ->
-            svgElement.text() == "SZ Plus"
-        }
-            ?: false
-    }
-
-
-    private fun extractTileTeasers(siteUrl: String, document: Document): List<ArticleSummaryItem> =
-        document.body().selectFirst(".escapism-content")?.let { tileTeasers ->
-            tileTeasers.select(".tile-teaser-content")
-                .mapNotNull { mapTileTeaserToArticleSummaryItem(it, siteUrl) }
-        }
-            ?: emptyList()
-
-    private fun mapTileTeaserToArticleSummaryItem(contentElement: Element, siteUrl: String): ArticleSummaryItem? {
-        contentElement.selectFirst("a")?.let { titleAnchor ->
-            var title = titleAnchor.selectFirst(".tile-teaser-title")?.text() ?: ""
-            titleAnchor.selectFirst(".tile-teaser-overline")?.let { title = it.text() + " - " + title }
-
-            val articleUrl = makeLinkAbsolute(titleAnchor.attr("href"), siteUrl)
-            val item = ArticleSummaryItem(articleUrl, title, getArticleExtractorClass(articleUrl))
-
-            titleAnchor.selectFirst("img")?.let { item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
-
-            contentElement.selectFirst(".tile-teaser-text")?.let { item.summary = it.text() }
-
-            return item
-        }
-
-        return null
-    }
+    private fun isSzPlusArticle(titleElement: Element, dataHydrationElement: Element?) =
+        titleElement.selectFirst("svg")?.text()?.contains("SZ Plus") == true ||
+                dataHydrationElement?.attr("data-hydration-component-name") == "SZPlusGroup"
 
 
     private fun getArticleExtractorClass(articleUrl: String): Class<out ArticleExtractorBase> {
-        if(articleUrl.contains("://sz-magazin.sueddeutsche.de/")) {
+        if (articleUrl.contains("://sz-magazin.sueddeutsche.de/")) {
             return SueddeutscheMagazinArticleExtractor::class.java
-        }
-        else if(articleUrl.contains("://www.jetzt.de/") || articleUrl.contains("://jetzt.sueddeutsche.de/")) {
+        } else if (articleUrl.contains("://www.jetzt.de/") || articleUrl.contains("://jetzt.sueddeutsche.de/")) {
             return SueddeutscheJetztArticleExtractor::class.java
         }
 
@@ -128,22 +111,27 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
     private fun loadArticlesForSubSections(url: String, document: Document): List<ArticleSummaryItem> = mutableListOf<ArticleSummaryItem>().apply {
         addAll(loadArticlesForSubSection(url, document, "politik"))
 
-        addAll(loadArticlesForSubSection(url, document, "wirtschaft"))
-
-        addAll(loadArticlesForSubSection(url, document, "münchen"))
-
         addAll(loadArticlesForSubSection(url, document, "kultur"))
 
-        addAll(loadArticlesForSubSection(url, document, "wissen_gesundheit"))
+        addAll(loadArticlesForSubSection(url, document, "wirtschaft"))
+
+        addAll(loadArticlesForSubSection(url, document, "muenchen"))
+
+        addAll(loadArticlesForSubSection(url, document, "bayern"))
+
+        addAll(loadArticlesForSubSection(url, document, "leben"))
+
+        addAll(loadArticlesForSubSection(url, document, "wissen"))
+
+        addAll(loadArticlesForSubSection(url, document, "gesundheit"))
     }
 
-    private fun loadArticlesForSubSection(siteUrl: String, document: Document, subSectionName: String): List<ArticleSummaryItem> =
-        document.body().selectFirst("li[data-name='$subSectionName'].nav-department a")?.let { politicsNavigationElement ->
-            val sectionUrl = politicsNavigationElement.attr("href")
+    private fun loadArticlesForSubSection(siteUrl: String, document: Document, subSectionName: String): List<ArticleSummaryItem> {
+        val sectionUrl = "https://www.sueddeutsche.de/$subSectionName"
 
-            val subSectionDoc = requestUrl(sectionUrl)
-            extractTeasers(siteUrl, subSectionDoc)
-        }
-            ?: emptyList()
+        val subSectionDoc = requestUrl(sectionUrl)
+
+        return extractTeasers(siteUrl, subSectionDoc)
+    }
 
 }

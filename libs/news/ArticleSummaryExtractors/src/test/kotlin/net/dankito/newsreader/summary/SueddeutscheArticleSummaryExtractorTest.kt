@@ -20,20 +20,22 @@ class SueddeutscheArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase(
 
 
     override fun testCanLoadMoreItems(summary: ArticleSummary) {
-        if(summary.articles.size < 100) { // loaded articles from home page
-            Assert.assertThat(summary.canLoadMoreItems, CoreMatchers.`is`(true))
+        if(summary.articles.size < 200) { // loaded articles from home page
+            assertThat(summary.canLoadMoreItems, `is`(true))
         }
         else { // did load more items
-            Assert.assertThat(summary.canLoadMoreItems, CoreMatchers.`is`(false))
+            assertThat(summary.canLoadMoreItems, `is`(false))
         }
 
-        Assert.assertThat(summary.nextItemsUrl?.contains("://www.sueddeutsche.de"), CoreMatchers.`is`(true))
+        assertThat(summary.nextItemsUrl?.contains("://www.sueddeutsche.de"), `is`(true))
     }
 
 
     override fun getArticleUrlScheme(): ArticleUrlScheme {
         return ArticleUrlScheme.HttpAndHttpsMixed
     }
+
+    override fun areEmptyArticleSummariesAllowed() = true
 
 
 
