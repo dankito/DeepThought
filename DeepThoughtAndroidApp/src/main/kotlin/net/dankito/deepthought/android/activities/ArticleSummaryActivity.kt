@@ -42,6 +42,8 @@ class ArticleSummaryActivity : BaseActivity() {
         const val EXTRACTOR_URL_INTENT_EXTRA_NAME = "EXTRACTOR_URL"
         const val LAST_LOADED_SUMMARY_INTENT_EXTRA_NAME = "LAST_LOADED_SUMMARY"
 
+        const val SHOW_ARTICLE_PREVIEW_IMAGES_PREFERENCE_KEY = "SHOW_ARTICLE_PREVIEW_IMAGES"
+
         private val log = LoggerFactory.getLogger(ArticleSummaryActivity::class.java)
     }
 
@@ -162,6 +164,7 @@ class ArticleSummaryActivity : BaseActivity() {
         rcyArticleSummaryItems.leaveFullscreenModeListener = { recyclerViewLeftFullscreenMode() }
 
         rcyArticleSummaryItems.adapter = adapter
+        adapter.showArticlePreviewImages = getBooleanPreferenceValue(SHOW_ARTICLE_PREVIEW_IMAGES_PREFERENCE_KEY, true)
         adapter.itemClickListener = { item -> articleClicked(item) }
         adapter.actionItemClickListener = { mode, actionItem, selectedItems -> actionItemSelected(mode, actionItem, selectedItems) }
         adapter.actionModeBarVisibilityListener = { actionModeBarVisibilityChanged(it) }

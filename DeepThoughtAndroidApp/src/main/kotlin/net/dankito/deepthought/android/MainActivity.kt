@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_floating_action_button_main.*
+import net.dankito.deepthought.android.activities.ArticleSummaryActivity
 import net.dankito.deepthought.android.activities.BaseActivity
 import net.dankito.deepthought.android.activities.ReadLaterArticlesListViewActivity
 import net.dankito.deepthought.android.activities.SourcesListViewActivity
@@ -217,11 +218,18 @@ class MainActivity : BaseActivity() {
         val mnUseDarkTheme = menu.findItem(R.id.mnUseDarkTheme)
         mnUseDarkTheme.isChecked = getSelectedTheme() == AppThemes.Dark
 
+        val mnShowArticlePreviewImages = menu.findItem(R.id.mnShowArticlePreviewImages)
+        mnShowArticlePreviewImages.isChecked = getBooleanPreferenceValue(ArticleSummaryActivity.SHOW_ARTICLE_PREVIEW_IMAGES_PREFERENCE_KEY, true)
+
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.mnShowArticlePreviewImages -> {
+                writeBooleanPreferenceValue(ArticleSummaryActivity.SHOW_ARTICLE_PREVIEW_IMAGES_PREFERENCE_KEY, !!! item.isChecked)
+                return true
+            }
             // inverted logic here: if MenuItem is not check an gets click then dark theme should get activated (= afterwards MenuItem is checked)
             R.id.mnUseDarkTheme -> {
                 changeTheme(!!! item.isChecked)

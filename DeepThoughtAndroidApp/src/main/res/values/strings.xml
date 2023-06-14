@@ -54,6 +54,7 @@
     <string name="search_hint_sources">Source title, date, series, issue, …</string>
     <string name="search_hint_read_later_articles">Title, summary, date, series</string>
 
+    <string name="activity_main_menu_show_article_preview_images">Show article preview images</string>
     <string name="activity_main_menu_use_dark_theme">Dark theme (experimental)</string>
     <string name="activity_main_menu_rebuild_search_index">Rebuild search index</string>
 

@@ -69,6 +69,7 @@
     <string name="search_hint_sources">Quellentitel, Datum, Reihe, Ausgabe, …</string>
     <string name="search_hint_read_later_articles">Titel, Text, Datum, Reihe</string>
 
+    <string name="activity_main_menu_show_article_preview_images">Artikelvorschaubilder anzeigen</string>
     <string name="activity_main_menu_use_dark_theme">Nachtmodus (experimentell)</string>
     <string name="activity_main_menu_rebuild_search_index">Suchindex neu erstellen</string>
 

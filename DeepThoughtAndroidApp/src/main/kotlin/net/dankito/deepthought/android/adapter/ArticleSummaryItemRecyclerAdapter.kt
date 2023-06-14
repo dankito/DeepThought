@@ -12,7 +12,11 @@ import net.dankito.deepthought.ui.presenter.ArticleSummaryPresenter
 import net.dankito.newsreader.model.ArticleSummaryItem
 
 
-class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val presenter: ArticleSummaryPresenter):
+class ArticleSummaryItemRecyclerAdapter(
+    activity: AppCompatActivity,
+    private val presenter: ArticleSummaryPresenter,
+    var showArticlePreviewImages: Boolean = true
+):
         MultiSelectListRecyclerSwipeAdapter<ArticleSummaryItem, ArticleSummaryItemViewHolder>() {
 
     init {
@@ -45,7 +49,7 @@ class ArticleSummaryItemRecyclerAdapter(activity: AppCompatActivity, private val
         val imageSize = viewHolder.itemView.context.resources
                 .getDimensionPixelSize(R.dimen.list_item_read_later_article_preview_image_size)
 
-        if (item.previewImageUrl.isNullOrBlank()) {
+        if (showArticlePreviewImages == false || item.previewImageUrl.isNullOrBlank()) {
             viewHolder.imgPreviewImage.setImageDrawable(null) // clear image
         } else {
             Picasso.with(viewHolder.itemView.context)

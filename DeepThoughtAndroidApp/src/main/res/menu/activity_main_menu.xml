@@ -7,6 +7,14 @@
 
 
     <item
+        android:id="@+id/mnShowArticlePreviewImages"
+        android:title="@string/activity_main_menu_show_article_preview_images"
+        app:showAsAction="never"
+        android:checkable="true"
+        android:orderInCategory="9000"
+        />
+
+    <item
         android:id="@+id/mnUseDarkTheme"
         android:title="@string/activity_main_menu_use_dark_theme"
         app:showAsAction="never"
