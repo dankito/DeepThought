@@ -22,30 +22,24 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
     }
 
     override fun parseHtmlToArticleSummary(url: String, document: Document, forLoadingMoreItems: Boolean): ArticleSummary {
-        val articles = mutableListOf<ArticleSummaryItem>()
-
-        if(forLoadingMoreItems == false) {
-            loadArticlesFromHomePage(articles, url, document)
-        }
-        else {
-            loadArticlesForSubSections(articles, url, document)
+        val articles = if (forLoadingMoreItems == false) {
+            loadArticlesFromHomePage(url, document)
+        } else {
+            loadArticlesForSubSections(url, document)
         }
 
         return ArticleSummary(articles, canLoadMoreItems = !forLoadingMoreItems, nextItemsUrl = url)
     }
 
 
-    private fun loadArticlesFromHomePage(articles: MutableList<ArticleSummaryItem>, url: String, document: Document) {
-        extractTeasers(articles, url, document)
-        extractTileTeasers(articles, url, document)
+    private fun loadArticlesFromHomePage(url: String, document: Document): List<ArticleSummaryItem> = mutableListOf<ArticleSummaryItem>().apply {
+        addAll(extractTeasers(url, document))
+        addAll(extractTileTeasers(url, document))
     }
 
-    private fun extractTeasers(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document) {
-        articles.addAll(
-                document.body().select("a.sz-teaser")
-                        .mapNotNull { mapTeaserElementToArticleSummaryItem(it, siteUrl) }
-        )
-    }
+    private fun extractTeasers(siteUrl: String, document: Document): List<ArticleSummaryItem> =
+        document.body().select("a.sz-teaser")
+            .mapNotNull { mapTeaserElementToArticleSummaryItem(it, siteUrl) }
 
     private fun mapTeaserElementToArticleSummaryItem(teaserElement: Element, siteUrl: String): ArticleSummaryItem? {
         teaserElement.selectFirst(".sz-teaser__title")?.let { titleElement ->
@@ -93,23 +87,24 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
     }
 
 
-    private fun extractTileTeasers(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document) {
-        document.body().select(".escapism-content").first()?.let { tileTeasers ->
-            articles.addAll(tileTeasers.select(".tile-teaser-content").map { mapTileTeaserToArticleSummaryItem(it, siteUrl) }.filterNotNull())
+    private fun extractTileTeasers(siteUrl: String, document: Document): List<ArticleSummaryItem> =
+        document.body().selectFirst(".escapism-content")?.let { tileTeasers ->
+            tileTeasers.select(".tile-teaser-content")
+                .mapNotNull { mapTileTeaserToArticleSummaryItem(it, siteUrl) }
         }
-    }
+            ?: emptyList()
 
     private fun mapTileTeaserToArticleSummaryItem(contentElement: Element, siteUrl: String): ArticleSummaryItem? {
-        contentElement.select("a").first()?.let { titleAnchor ->
-            var title = titleAnchor.select(".tile-teaser-title").first()?.text() ?: ""
-            titleAnchor.select(".tile-teaser-overline").first()?.let { title = it.text() + " - " + title }
+        contentElement.selectFirst("a")?.let { titleAnchor ->
+            var title = titleAnchor.selectFirst(".tile-teaser-title")?.text() ?: ""
+            titleAnchor.selectFirst(".tile-teaser-overline")?.let { title = it.text() + " - " + title }
 
             val articleUrl = makeLinkAbsolute(titleAnchor.attr("href"), siteUrl)
             val item = ArticleSummaryItem(articleUrl, title, getArticleExtractorClass(articleUrl))
 
-            titleAnchor.select("img").first()?.let { item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
+            titleAnchor.selectFirst("img")?.let { item.previewImageUrl = getLazyLoadingOrNormalUrlAndMakeLinkAbsolute(it, "src", siteUrl) }
 
-            contentElement.select(".tile-teaser-text").first()?.let { item.summary = it.text() }
+            contentElement.selectFirst(".tile-teaser-text")?.let { item.summary = it.text() }
 
             return item
         }
@@ -130,25 +125,25 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
     }
 
 
-    private fun loadArticlesForSubSections(articles: MutableList<ArticleSummaryItem>, url: String, document: Document) {
-        loadArticlesForSubSection(articles, url, document, "politik")
+    private fun loadArticlesForSubSections(url: String, document: Document): List<ArticleSummaryItem> = mutableListOf<ArticleSummaryItem>().apply {
+        addAll(loadArticlesForSubSection(url, document, "politik"))
 
-        loadArticlesForSubSection(articles, url, document, "wirtschaft")
+        addAll(loadArticlesForSubSection(url, document, "wirtschaft"))
 
-        loadArticlesForSubSection(articles, url, document, "münchen")
+        addAll(loadArticlesForSubSection(url, document, "münchen"))
 
-        loadArticlesForSubSection(articles, url, document, "kultur")
+        addAll(loadArticlesForSubSection(url, document, "kultur"))
 
-        loadArticlesForSubSection(articles, url, document, "wissen_gesundheit")
+        addAll(loadArticlesForSubSection(url, document, "wissen_gesundheit"))
     }
 
-    private fun loadArticlesForSubSection(articles: MutableList<ArticleSummaryItem>, siteUrl: String, document: Document, subSectionName: String) {
-        document.body().select("li[data-name='$subSectionName'].nav-department a").first()?.let { politicsNavigationElement ->
+    private fun loadArticlesForSubSection(siteUrl: String, document: Document, subSectionName: String): List<ArticleSummaryItem> =
+        document.body().selectFirst("li[data-name='$subSectionName'].nav-department a")?.let { politicsNavigationElement ->
             val sectionUrl = politicsNavigationElement.attr("href")
 
             val subSectionDoc = requestUrl(sectionUrl)
-            extractTeasers(articles, siteUrl, subSectionDoc)
+            extractTeasers(siteUrl, subSectionDoc)
         }
-    }
+            ?: emptyList()
 
 }
