@@ -23,7 +23,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
 
     override fun parseHtmlToArticle(extractionResult: ItemExtractionResult, document: Document, url: String) {
-        document.body().select("article").first()?.let { articleElement ->
+        document.body().selectFirst("article")?.let { articleElement ->
             getReadAllOnOnePageUrl(articleElement, url)?.let { allOnOnePageUrl ->
                 extractArticle(allOnOnePageUrl)?.let {
                     if(it.couldExtractContent) {
@@ -33,22 +33,22 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
                 }
             }
 
-            if(articleElement.hasClass("printversion")) {
+            if (articleElement.hasClass("printversion")) {
                 parsePrintVersionToArticle(extractionResult, articleElement, url)
                 return
             }
 
-            articleElement.select("header").first()?.let { headerElement ->
-                headerElement.select(".article__heading").first()?.text()?.let { title ->
+            articleElement.selectFirst("header")?.let { headerElement ->
+                headerElement.selectFirst(".article__heading")?.text()?.let { title ->
                     parseArticle(extractionResult, headerElement, articleElement, url, title)
                 }
             }
         }
     }
 
-    private fun getReadAllOnOnePageUrl(article: Element, siteUrl: String): String? {
-        article.select(".pre-akwa-toc").first()?.let { tocElement -> // a multi page article
-            tocElement.select("li.pre-akwa-toc__item--onepage a.pre-akwa-toc__link").first()?.let { allOnOnePageAnchor ->
+    private fun getReadAllOnOnePageUrl(article: Element, siteUrl: String): String? =
+        article.selectFirst(".pre-akwa-toc")?.let { tocElement -> // a multi page article
+            tocElement.selectFirst("li.pre-akwa-toc__item--onepage a.pre-akwa-toc__link")?.let { allOnOnePageAnchor ->
                 return makeLinkAbsolute(allOnOnePageAnchor.attr("href"), siteUrl)
             }
 
@@ -57,9 +57,6 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
                 return makeLinkAbsolute(printAnchorElement.attr("href"), siteUrl)
             }
         }
-
-        return null
-    }
 
 
     override fun parseArticle(extractionResult: ItemExtractionResult, headerElement: Element, articleElement: Element, url: String, title: String) {
@@ -92,7 +89,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     private fun extractSource(headerElement: Element, articleElement: Element, url: String, title: String): Source? {
         val source = Source(title, url, extractPublishingDate(headerElement))
 
-        articleElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
+        articleElement.selectFirst(".aufmacherbild img")?.let { previewImageElement ->
             source.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
         }
 
@@ -114,7 +111,7 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
 
         transformElements(articleElement)
 
-        var contentElement = articleElement.select(".content").first()
+        var contentElement = articleElement.selectFirst(".content")
 
         if(contentElement == null) { // it seems the print version has no .content element anymore
             if(articleElement.select("header, .printversion__back-to-article, .printversion__logo").size >= 3) { // ok, articleElement is already the contentElement -> remove clutter
@@ -189,15 +186,15 @@ class TelepolisArticleExtractor(webClient: IWebClient) : HeiseNewsAndDeveloperAr
     }
 
     private fun extractSourceForPrintVersion(articleElement: Element, url: String): Source {
-        val title = articleElement.select("h1").first()?.text()?.trim() ?: ""
-        val publishingDate = articleElement.select(".publish-info").first()?.let { extractPublishingDate(it) }
+        val title = articleElement.selectFirst("h1")?.text()?.trim() ?: ""
+        val publishingDate = articleElement.selectFirst(".publish-info")?.let { extractPublishingDate(it) }
 
         val source = Source(title, url, publishingDate)
 
-        articleElement.select(".aufmacherbild img").first()?.let { previewImageElement ->
+        articleElement.selectFirst(".aufmacherbild img")?.let { previewImageElement ->
             source.previewImageUrl = makeLinkAbsolute(previewImageElement.attr("src"), url)
         }
-        articleElement.ownerDocument().head().select("meta[property=og:image]").first()?.attr("content")?.let {
+        articleElement.ownerDocument().head().selectFirst("meta[property=og:image]")?.attr("content")?.let {
             source.previewImageUrl = it
         }
 

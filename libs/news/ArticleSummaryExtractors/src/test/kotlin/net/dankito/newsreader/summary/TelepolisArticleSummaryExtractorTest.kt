@@ -1,9 +1,10 @@
 package net.dankito.newsreader.summary
 
-import net.dankito.utils.web.client.IWebClient
 import net.dankito.newsreader.model.ArticleSummary
-import org.hamcrest.CoreMatchers
-import org.junit.Assert
+import net.dankito.utils.web.client.IWebClient
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.startsWith
+import org.hamcrest.MatcherAssert.assertThat
 
 class TelepolisArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
 
@@ -17,8 +18,8 @@ class TelepolisArticleSummaryExtractorTest : ArticleSummaryExtractorTestBase() {
 
 
     override fun testCanLoadMoreItems(summary: ArticleSummary) {
-        Assert.assertThat(summary.canLoadMoreItems, CoreMatchers.`is`(true))
-        Assert.assertThat(summary.nextItemsUrl, CoreMatchers.startsWith("https://www.heise.de/tp/?seite="))
+        assertThat(summary.canLoadMoreItems, `is`(true))
+        assertThat(summary.nextItemsUrl, startsWith("https://www.telepolis.de/seite="))
     }
 
 }
