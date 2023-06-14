@@ -50,48 +50,46 @@ abstract class ArticleSummaryExtractorTestBase {
     protected fun testSummary(summary: ArticleSummary?) {
         assertThat(summary, notNullValue())
 
-        summary?.let { summary ->
+        summary?.let {
             assertThat(summary.articles.size, `is`(not(0)))
 
             testCanLoadMoreItems(summary)
 
-            for(article in summary.articles) {
+            for (article in summary.articles) {
                 testArticleSummaryItem(article)
             }
         }
     }
 
     private fun testArticleSummaryItem(article: ArticleSummaryItem) {
-        if(getArticleUrlScheme() == ArticleUrlScheme.HttpsOnly) {
+        if (getArticleUrlScheme() == ArticleUrlScheme.HttpsOnly) {
             assertThat("${article.url} is not starting with https", article.url, startsWith("https://"))
-        }
-        else if(getArticleUrlScheme() == ArticleUrlScheme.HttpOnly) {
+        } else if (getArticleUrlScheme() == ArticleUrlScheme.HttpOnly) {
             assertThat("${article.url} is not starting with http", article.url, startsWith("http://"))
-        }
-        else {
+        } else {
             assertThat(article.url, startsWith("http"))
             assertThat(article.url, containsString("://"))
         }
 
         assertThat(article.title.length, `is`(not(0)))
 
-        if(areEmptyArticleSummariesAllowed() == false) {
+        if (areEmptyArticleSummariesAllowed() == false) {
             assertThat("Summary of article $article should not be empty", article.summary.length, `is`(not(0)))
         }
     }
 
-    open protected fun getArticleUrlScheme() : ArticleUrlScheme {
+    protected open fun getArticleUrlScheme() : ArticleUrlScheme {
         return ArticleUrlScheme.HttpAndHttpsMixed
     }
 
-    open protected fun areEmptyArticleSummariesAllowed() : Boolean {
+    protected open fun areEmptyArticleSummariesAllowed() : Boolean {
         return false
     }
 
 
     protected open fun testCanLoadMoreItems(summary: ArticleSummary) {
-        Assert.assertThat(summary.canLoadMoreItems, CoreMatchers.`is`(false))
-        Assert.assertThat(summary.nextItemsUrl, nullValue())
+        assertThat(summary.canLoadMoreItems, `is`(false))
+        assertThat(summary.nextItemsUrl, nullValue())
     }
 
 }
