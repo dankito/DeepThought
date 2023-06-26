@@ -19,6 +19,9 @@ abstract class ExtractorBase(val webClient : IWebClient, protected val urlUtil: 
         protected val isoDateTimeFormatWithoutTimezone: DateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
 
         protected val detailedDateTimeFormat: DateFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z")
+
+        const val DesktopUserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"
+        const val MobileUserAgent = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36"
     }
 
 
@@ -50,7 +53,7 @@ abstract class ExtractorBase(val webClient : IWebClient, protected val urlUtil: 
     }
 
     protected open fun createParametersForUrl(url: String, body: String? = null): RequestParameters {
-        val parameters = RequestParameters(url, body, userAgent = RequestParameters.DefaultMobileUserAgent)
+        val parameters = RequestParameters(url, body, userAgent = MobileUserAgent)
 
         return parameters
     }
