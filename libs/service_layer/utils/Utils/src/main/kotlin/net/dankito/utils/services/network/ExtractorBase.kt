@@ -28,13 +28,11 @@ abstract class ExtractorBase(val webClient : IWebClient, protected val urlUtil: 
     protected fun requestUrl(url: String): Document {
         val parameters = createParametersForUrl(url)
 
-        webClient.get(parameters).let { response ->
-            if(response.isSuccessful) {
-                return Jsoup.parse(response.body, url)
-            }
-            else {
-                throw Exception(response.error)
-            }
+        val response = webClient.get(parameters)
+        if (response.isSuccessful) {
+            return Jsoup.parse(response.body, url)
+        } else {
+            throw Exception(response.error)
         }
     }
 
