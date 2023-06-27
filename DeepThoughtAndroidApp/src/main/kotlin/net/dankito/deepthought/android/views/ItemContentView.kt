@@ -4,6 +4,8 @@ import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -751,6 +753,7 @@ class ItemContentView @JvmOverloads constructor(
             when(selectedOption) {
                 OpenUrlOptionsView.OpenUrlOption.OpenInNewActivity -> showUrlInNewActivity(url)
                 OpenUrlOptionsView.OpenUrlOption.OpenWithOtherApp -> openUrlWithOtherApp(url)
+                OpenUrlOptionsView.OpenUrlOption.CopyUrlToClipboard -> copyUrlToClipboard(url)
             }
         }
     }
@@ -765,6 +768,15 @@ class ItemContentView @JvmOverloads constructor(
             intent.data = Uri.parse(url)
             context.startActivity(intent)
         } catch(e: Exception) { log.error("Could not open url $url with other app", e) }
+    }
+
+    private fun copyUrlToClipboard(url: String) {
+        try {
+            val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboardManager.primaryClip = ClipData.newPlainText("Link URL", url)
+        } catch (e: Exception) {
+            log.error("Could not copy url '$url' to clipboard", e)
+        }
     }
 
 

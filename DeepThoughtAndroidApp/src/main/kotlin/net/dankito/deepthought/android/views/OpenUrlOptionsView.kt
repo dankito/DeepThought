@@ -21,7 +21,8 @@ class OpenUrlOptionsView {
 
     enum class OpenUrlOption {
         OpenInNewActivity,
-        OpenWithOtherApp
+        OpenWithOtherApp,
+        CopyUrlToClipboard
     }
 
 
@@ -35,6 +36,7 @@ class OpenUrlOptionsView {
     init {
         optionItemsStringResourceIds.put(OpenUrlOption.OpenInNewActivity, R.string.menu_open_url_open_in_new_activity)
         optionItemsStringResourceIds.put(OpenUrlOption.OpenWithOtherApp, R.string.menu_open_url_with_other_app)
+        optionItemsStringResourceIds.put(OpenUrlOption.CopyUrlToClipboard, R.string.menu_open_url_copy_url_to_clipboard)
     }
 
 

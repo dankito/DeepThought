@@ -187,6 +187,7 @@
 
     <string name="menu_open_url_open_in_new_activity">Open in DeepThought</string>
     <string name="menu_open_url_with_other_app">Open with an app</string>
+    <string name="menu_open_url_copy_url_to_clipboard">Copy URL to clipboard</string>
 
     <string name="activity_edit_source_title">Source</string>
     <string name="activity_edit_source_use_existing_label">Select existing source:</string>
