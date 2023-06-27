@@ -39,6 +39,7 @@ import net.dankito.utils.android.ui.view.ToolbarUtil
 import net.dankito.utils.IThreadPool
 import net.dankito.utils.android.extensions.HtmlExtensions
 import net.dankito.utils.android.permissions.IPermissionsService
+import net.dankito.utils.ui.IClipboardService
 import net.dankito.utils.ui.dialogs.IDialogService
 import net.dankito.utils.ui.dialogs.ConfirmationDialogConfig
 import net.dankito.utils.web.UrlUtil
@@ -78,6 +79,9 @@ class ItemContentView @JvmOverloads constructor(
 
     @Inject
     protected lateinit var dialogService: IDialogService
+
+    @Inject
+    protected lateinit var clipboardService: IClipboardService
 
     @Inject
     protected lateinit var uiStatePersister: UiStatePersister
@@ -764,9 +768,8 @@ class ItemContentView @JvmOverloads constructor(
 
     private fun openUrlWithOtherApp(url: String) {
         try {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(url)
-            context.startActivity(intent)
+            // even though name suggests something different but copyUrlToClipboard() opens share menu
+            clipboardService.copyUrlToClipboard(url)
         } catch(e: Exception) { log.error("Could not open url $url with other app", e) }
     }
 
