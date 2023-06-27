@@ -48,7 +48,7 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
             }
 
             article.select("header").first()?.let { header ->
-                header.selectFirst(".article__heading, .article-header__heading, .a-article-header__title").text()?.let { title ->
+                header.selectFirst(".article__heading, .article-header__heading, .a-article-header__title")?.text()?.let { title ->
                     parseArticle(extractionResult, header, article, url, title.trim())
                     return
                 }
