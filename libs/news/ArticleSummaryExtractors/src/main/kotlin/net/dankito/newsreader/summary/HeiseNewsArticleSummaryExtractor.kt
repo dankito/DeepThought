@@ -18,6 +18,9 @@ class HeiseNewsArticleSummaryExtractor(webClient: IWebClient) : HeiseNewsAndDeve
         if(url.startsWith("https://www.heise.de/developer/meldung/")) {
             return HeiseDeveloperArticleExtractor::class.java
         }
+        else if(url.startsWith("https://www.heise.de/tp/")) {
+            return TelepolisArticleExtractor::class.java
+        }
         else if(url.contains(".heise.de/ct/artikel/")) {
             return CtArticleExtractor::class.java
         }
