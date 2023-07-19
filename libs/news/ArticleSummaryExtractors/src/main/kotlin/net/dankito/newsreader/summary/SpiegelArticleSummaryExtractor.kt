@@ -16,7 +16,7 @@ class SpiegelArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtr
     }
 
     override fun getUrl(): String {
-        return "http://www.spiegel.de"
+        return "https://www.spiegel.de"
     }
 
 
