@@ -85,7 +85,7 @@
                 android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="3"
+                android:maxLines="4"
                 android:ellipsize="end"
                 style="@style/Header1Style"
                 android:textSize="@dimen/header_1_larger_text_size"
