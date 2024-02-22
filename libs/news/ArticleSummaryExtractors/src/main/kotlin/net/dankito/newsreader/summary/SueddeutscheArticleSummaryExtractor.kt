@@ -98,7 +98,9 @@ class SueddeutscheArticleSummaryExtractor(webClient: IWebClient) : ArticleSummar
 
     private fun isSzPlusArticle(titleElement: Element, dataHydrationElement: Element?) =
         titleElement.selectFirst("svg")?.text()?.contains("SZ Plus") == true ||
-                dataHydrationElement?.attr("data-hydration-component-name") == "SZPlusGroup"
+                dataHydrationElement?.attr("data-hydration-component-name")?.let { componentName ->
+                    componentName == "SZPlusGroup" || componentName == "SZPlusGroupContent"
+                } ?: false
 
     private fun getPreviewImageUrl(articleElement: Element, siteUrl: String): String? =
         articleElement.selectFirst("img[data-manual='teaser-image']")?.let { imgElement ->
