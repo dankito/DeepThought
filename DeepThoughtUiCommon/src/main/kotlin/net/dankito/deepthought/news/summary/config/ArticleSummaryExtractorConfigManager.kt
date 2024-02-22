@@ -75,10 +75,10 @@ class ArticleSummaryExtractorConfigManager(private val extractorManager: IImplem
         configurations.clear()
         favorites.clear()
 
-        summaryExtractorConfigs.forEach { config ->
+        summaryExtractorConfigs.filter { it.url.isNotBlank() }.forEach { config ->
             addConfig(config)
 
-            if(config.iconUrl == null) {
+            if(config.iconUrl == null && config.url.isNullOrBlank() == false) {
                 loadIconAsync(config)
             }
 
