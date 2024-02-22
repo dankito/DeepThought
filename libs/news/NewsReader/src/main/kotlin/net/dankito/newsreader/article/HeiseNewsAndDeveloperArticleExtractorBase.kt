@@ -22,6 +22,12 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
                 "a-paternoster, a-ad, [name=Teads], .a-teaser-header__heading, .article-footer__content, [name=meldung.newsticker.bottom.zurstartseite], .a-pvgs, " +
                 "a.comment-button"
 
+        private val HeisePlusClassNames = listOf(
+            "a-article-header__heiseplus-svg",
+            "a-article-header__plus-svg",
+            "heise-plus-symbol"
+        )
+
         private val DateTimeFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
         private val MultiPageMobileArticleDateTimeFormat = SimpleDateFormat("yyyy-MM-dd")
     }
@@ -283,7 +289,9 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
 
 
     override fun needsLoginToViewFullArticle(url: String, document: Document): Boolean {
-        return document.body().selectFirst("article header svg.a-article-header__heiseplus-svg") != null
+        val headerSvg = document.body().selectFirst("article header svg")
+
+        return headerSvg != null && HeisePlusClassNames.any { headerSvg.hasClass(it) }
     }
 
     override fun login(credentials: ICredentials): LoginResult? {
