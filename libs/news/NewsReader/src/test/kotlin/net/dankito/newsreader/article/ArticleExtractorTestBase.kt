@@ -19,7 +19,7 @@ abstract class ArticleExtractorTestBase {
     protected val underTest: IArticleExtractor = createArticleExtractor(createWebClient())
 
 
-    protected open fun getAndTestArticle(url: String, title: String, summary: String?, previewImageUrl: String? = null, minContentLength: Int? = null,
+    protected open fun getAndTestArticle(url: String, title: String, summary: String? = null, previewImageUrl: String? = null, minContentLength: Int? = null,
                                          canPublishingDateBeNull: Boolean = false, subTitle: String? = null, fromDownloadedFile: String? = null, 
                                          saveResultToFile: String? = null): ItemExtractionResult? {
         val article = getArticle(url, fromDownloadedFile)
