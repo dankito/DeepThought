@@ -102,7 +102,7 @@ class SpiegelArticleSummaryExtractor(webClient: IWebClient) : ArticleSummaryExtr
     }
 
     private fun getSpecialArticleType(articleElement: Element): String? {
-        articleElement.selectFirst("[data-flag-name=\"Spplus-paid\"]")?.let { return "Spiegel+" }
+        articleElement.selectFirst("[data-flag-name=\"Spplus-paid\"], [data-flag-name='plus-paid']")?.let { return "Spiegel+" }
 
         articleElement.select(".spiegeldaily").first()?.let { return "Daily" }
 
