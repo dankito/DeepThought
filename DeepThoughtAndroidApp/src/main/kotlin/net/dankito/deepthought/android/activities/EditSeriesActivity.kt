@@ -98,7 +98,7 @@ class EditSeriesActivity : BaseActivity() {
         showParameters(getParameters() as? EditSeriesActivityParameters)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         outState?.let {
@@ -108,12 +108,10 @@ class EditSeriesActivity : BaseActivity() {
         }
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        savedInstanceState?.let {
-            savedInstanceState.getString(SERIES_ID_BUNDLE_EXTRA_NAME)?.let { seriesId -> showSeries(seriesId) }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        savedInstanceState.getString(SERIES_ID_BUNDLE_EXTRA_NAME)?.let { seriesId -> showSeries(seriesId) }
 
-            savedInstanceState.getBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME)?.let { didSeriesChange -> updateDidSeriesChangeOnUiThread(didSeriesChange) }
-        }
+        savedInstanceState.getBoolean(DID_SERIES_CHANGE_BUNDLE_EXTRA_NAME)?.let { didSeriesChange -> updateDidSeriesChangeOnUiThread(didSeriesChange) }
 
         super.onRestoreInstanceState(savedInstanceState) // important: Call super method after restoring series so that all EditEntityFields with their modified values don't get overwritten by original series' values
     }

@@ -219,6 +219,8 @@ class FileSyncService(private val connectedDevicesService: IConnectedDevicesServ
             SynchronizeFileResult.Prohibited,
             SynchronizeFileResult.ErrorOccurred
                 -> status.devicesUnlikelyToGetFileFrom.add(connectedDevice)
+
+            else -> { }
         }
     }
 

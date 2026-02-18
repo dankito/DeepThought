@@ -503,13 +503,13 @@ class ItemContentView @JvmOverloads constructor(
         animatorSet.playTogether(fieldsPreviewYAnimator, editContentViewYAnimator)
 
         animatorSet.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) { }
+            override fun onAnimationStart(animation: Animator) { }
 
-            override fun onAnimationRepeat(animation: Animator?) { }
+            override fun onAnimationRepeat(animation: Animator) { }
 
-            override fun onAnimationCancel(animation: Animator?) { }
+            override fun onAnimationCancel(animation: Animator) { }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 itemFieldsPreview.visibility = View.GONE // hide itemFieldsPreview so that editor uses all available space
             }
 
@@ -524,6 +524,7 @@ class ItemContentView @JvmOverloads constructor(
                 OnSwipeTouchListener.SwipeDirection.Right -> {
                     mayShowItemInformationFullscreenGesturesHelpOnUIThread { fullscreenGestureListener?.invoke(swipeDirection) }
                 }
+                else -> { }
             }
         }
     }
@@ -776,7 +777,7 @@ class ItemContentView @JvmOverloads constructor(
     private fun copyUrlToClipboard(url: String) {
         try {
             val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboardManager.primaryClip = ClipData.newPlainText("Link URL", url)
+            clipboardManager.setPrimaryClip(ClipData.newPlainText("Link URL", url))
         } catch (e: Exception) {
             log.error("Could not copy url '$url' to clipboard", e)
         }

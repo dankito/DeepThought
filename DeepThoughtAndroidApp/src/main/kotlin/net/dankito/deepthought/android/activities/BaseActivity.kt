@@ -109,13 +109,11 @@ open class BaseActivity : ThemeableActivity() {
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState?.let {
-            outState.putString(WaitingForResultForIdBundleExtraName, null)
-            waitingForResultWithId?.let { outState.putString(WaitingForResultForIdBundleExtraName, it) }
-        }
+        outState.putString(WaitingForResultForIdBundleExtraName, null)
+        waitingForResultWithId?.let { outState.putString(WaitingForResultForIdBundleExtraName, it) }
     }
 
 

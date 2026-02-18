@@ -1,11 +1,12 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 apply from: '../../../../versions.gradle'
 
 
 android {
+    namespace "net.dankito.deepthought.importexport.pdf"
+
     compileSdkVersion androidCompileSdkVersion
     buildToolsVersion androidBuildToolsVersion
 
@@ -33,15 +34,15 @@ android {
 }
 
 dependencies {
-    compile project(':PdfImporterBase')
+    api project(':PdfImporterBase')
 
-    compile "com.tom_roush:pdfbox-android:$pdfBoxAndroidVersion"
+    implementation "com.tom-roush:pdfbox-android:$pdfBoxAndroidVersion"
 
-    compile "com.android.support:appcompat-v7:$androidAppCompatVersion"
+    implementation "com.android.support:appcompat-v7:$androidAppCompatVersion"
 
-    testCompile "junit:junit:$junitVersion"
+    testImplementation "junit:junit:$junitVersion"
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 

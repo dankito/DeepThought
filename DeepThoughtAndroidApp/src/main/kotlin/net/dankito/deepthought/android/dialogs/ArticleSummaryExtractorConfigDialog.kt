@@ -81,7 +81,7 @@ class ArticleSummaryExtractorConfigDialog {
         val dialog = builder.create()
         dialog.show()
 
-        dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) // so that keyboard doesn't cover OK and Cancel buttons
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE) // so that keyboard doesn't cover OK and Cancel buttons
 
         input = dialog.edtxtAskExtractorName
         lstIcons = dialog.lstIcons
@@ -101,7 +101,7 @@ class ArticleSummaryExtractorConfigDialog {
 
         input.setOnFocusChangeListener { _, hasFocus ->
             if(hasFocus) {
-                dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+                dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
             }
         }
     }

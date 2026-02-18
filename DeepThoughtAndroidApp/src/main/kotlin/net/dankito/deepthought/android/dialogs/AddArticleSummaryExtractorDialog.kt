@@ -83,7 +83,7 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
             view.edtxtFeedOrWebsiteUrl.setOnEditorActionListener { _, actionId, keyEvent -> handleEditFeedOrWebsiteUrlAction(actionId, keyEvent) }
             view.edtxtFeedOrWebsiteUrl.setOnFocusChangeListener { _, hasFocus ->
                 if(hasFocus) {
-                    dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+                    dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
                 }
             }
         }
@@ -132,13 +132,13 @@ class AddArticleSummaryExtractorDialog : DialogFragment() {
     private fun couldBeArticleUrl(enteredFeedOrWebsiteUrl: String): Boolean {
         try {
             val uri = Uri.parse(enteredFeedOrWebsiteUrl)
-            val removedSchemeAndHost = uri.toString().replace(uri.scheme, "").replace("//", "").replace(uri.host, "").replace("www.", "")
+            val removedSchemeAndHost = uri.toString().replace(uri.scheme!!, "").replace("//", "").replace(uri.host!!, "").replace("www.", "")
 
             if(uri.path == null) {
                 return false
             }
             else {
-                return uri.query != null || uri.fragment != null || removedSchemeAndHost.length > 15 || uri.path.count { it == '/' } > 1
+                return uri.query != null || uri.fragment != null || removedSchemeAndHost.length > 15 || (uri.path != null && uri.path!!.count { it == '/' } > 1)
             }
         } catch(ignored: Exception) { }
 

@@ -1,9 +1,6 @@
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 
 sourceSets {
     main.java.srcDirs += [ 'src/main/kotlin', 'build/generated/source/kapt/main' ]
@@ -12,29 +9,31 @@ sourceSets {
 
 
 dependencies {
-    compile project(':DeepThoughtBaseLib')
-    compile project(':EntityManager')
-    compile project(':DataManager')
-    compile project(':LuceneSearchEngine')
+    api project(':DeepThoughtBaseLib')
+    api project(':EntityManager')
+    api project(':DataManager')
+    api project(':LuceneSearchEngine')
 
-    compile project(':CouchbaseLiteEntityManagerBase') // to instantiate CouchbaseLiteSyncManager
-    compile project(':CouchbaseLiteSyncManager')
+    api project(':CouchbaseLiteEntityManagerBase') // to instantiate CouchbaseLiteSyncManager
+    api project(':CouchbaseLiteSyncManager')
 
-    compile project(':NewsReader')
-    compile project(':FeedAddressExtractor')
-    compile project(':RomeFeedReader')
-    compile project(':FaviconExtractor')
+    api project(':NewsReader')
+    api project(':FeedAddressExtractor')
+    implementation project(':RomeFeedReader')
+    api project(':FaviconExtractor')
 
-    compile project(':JacksonJsonSerializer')
-    compile project(':DevicesDiscoverer')
+    implementation project(':JacksonJsonSerializer')
+    api project(':DevicesDiscoverer')
 
-    compile project(':Utils')
+    api project(':Utils')
 
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    api "com.google.dagger:dagger:$daggerVersion"
+    api 'javax.annotation:jsr250-api:1.0'
 
 
-    testCompile ("junit:junit:$junitVersion", {
+    testImplementation ("junit:junit:$junitVersion", {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
     })
-    testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
+    testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
 }

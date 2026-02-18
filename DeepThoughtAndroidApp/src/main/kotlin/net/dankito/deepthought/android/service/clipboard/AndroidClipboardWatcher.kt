@@ -76,15 +76,17 @@ class AndroidClipboardWatcher(dataManager: DataManager)  {
     }
 
     private fun checkIfClipboardContainsUrlOnUiThread(clipboardManager: ClipboardManager, currentActivity: Activity) {
-        val clipItem = clipboardManager.primaryClip.getItemAt(0)
+        clipboardManager.primaryClip?.let { clip ->
+            val clipItem = clip.getItemAt(0)
 
-        val clipboardContent = AndroidClipboardContent(clipItem, clipboardManager.primaryClipDescription, urlUtil)
+            val clipboardContent = AndroidClipboardContent(clipItem, clip.description, urlUtil)
 
-        if(clipboardContent.url != lastSnackbarShownForUrl) {
-            lastSnackbarShownForUrl = clipboardContent.url
+            if(clipboardContent.url != lastSnackbarShownForUrl) {
+                lastSnackbarShownForUrl = clipboardContent.url
 
-            optionsDetector.getOptionsAsync(clipboardContent) { options ->
-                showClipboardContentOptions(options, currentActivity)
+                optionsDetector.getOptionsAsync(clipboardContent) { options ->
+                    showClipboardContentOptions(options, currentActivity)
+                }
             }
         }
     }

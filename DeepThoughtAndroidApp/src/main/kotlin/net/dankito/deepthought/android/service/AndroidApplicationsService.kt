@@ -24,7 +24,7 @@ class AndroidApplicationsService(private val context: Context, private val fileM
 
                 context.startActivity(intent)
             } catch (e: Exception) {
-                showErrorMessage(R.string.files_presenter_error_message_no_app_installed_for_this_file_type, absoluteFile?.extension)
+                showErrorMessage(R.string.files_presenter_error_message_no_app_installed_for_this_file_type, absoluteFile.extension)
             }
         }
     }

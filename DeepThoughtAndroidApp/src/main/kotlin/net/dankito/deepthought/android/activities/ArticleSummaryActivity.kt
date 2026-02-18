@@ -136,7 +136,7 @@ class ArticleSummaryActivity : BaseActivity() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         outState?.let {
@@ -277,8 +277,8 @@ class ArticleSummaryActivity : BaseActivity() {
         searchView.setOnQueryTextListener(searchArticleSummaryItemsTextListener)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val id = item?.itemId
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
 
         if(id == R.id.mnReload) {
             extractArticlesSummary()

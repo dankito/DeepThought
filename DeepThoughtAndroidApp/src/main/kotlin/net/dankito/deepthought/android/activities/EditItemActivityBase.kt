@@ -198,7 +198,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
         setMenuSaveItemVisibleStateOnUIThread()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         outState?.let {
@@ -264,6 +264,7 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
             when(swipeDirection) {
                 OnSwipeTouchListener.SwipeDirection.Left ->  presenter.returnToPreviousView()
                 OnSwipeTouchListener.SwipeDirection.Right -> editTagsOnItem()
+                else -> { }
             }
         }
     }
@@ -489,13 +490,13 @@ abstract class EditItemActivityBase : BaseActivity(), IEditItemView {
 
         animatorSet.addListener(object : Animator.AnimatorListener {
 
-            override fun onAnimationStart(animation: Animator?) { }
+            override fun onAnimationStart(animation: Animator) { }
 
-            override fun onAnimationRepeat(animation: Animator?) { }
+            override fun onAnimationRepeat(animation: Animator) { }
 
-            override fun onAnimationCancel(animation: Animator?) { }
+            override fun onAnimationCancel(animation: Animator) { }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 forceLayoutUpdateAfterHideOtherItemFieldsPreviewExceptTagsAnimation()
             }
 

@@ -113,7 +113,7 @@ class SimpleImageInfo {
         } else {
             val c4 = inputStream.read()
             if (isTiffFile(c1, c2, c3, c4)) { //TIFF
-                val bigEndian = c1 == 'M'.toInt()
+                val bigEndian = c1 == 'M'.code
                 var ifd = 0
                 val entries: Int
                 ifd = readInt(inputStream, 4, bigEndian)
@@ -156,15 +156,15 @@ class SimpleImageInfo {
         }
     }
 
-    private fun isGifFile(c1: Int, c2: Int, c3: Int) = c1 == 'G'.toInt() && c2 == 'I'.toInt() && c3 == 'F'.toInt()
+    private fun isGifFile(c1: Int, c2: Int, c3: Int) = c1 == 'G'.code && c2 == 'I'.code && c3 == 'F'.code
 
     private fun isJpegFile(c1: Int, c2: Int) = c1 == 0xFF && c2 == 0xD8
 
     private fun isPngFile(c1: Int, c2: Int, c3: Int) = c1 == 137 && c2 == 80 && c3 == 78
 
     private fun isTiffFile(c1: Int, c2: Int, c3: Int, c4: Int) : Boolean {
-        return (c1 == 'M'.toInt() && c2 == 'M'.toInt() && c3 == 0 && c4 == 42) ||
-                (c1 == 'I'.toInt() && c2 == 'I'.toInt() && c3 == 42 && c4 == 0)
+        return (c1 == 'M'.code && c2 == 'M'.code && c3 == 0 && c4 == 42) ||
+                (c1 == 'I'.code && c2 == 'I'.code && c3 == 42 && c4 == 0)
     }
 
     private fun isIconFileWithBitmap(c1: Int, c2: Int, c3: Int, c4: Int, c5: Int, c6: Int): Boolean {
@@ -181,7 +181,7 @@ class SimpleImageInfo {
         var ret = 0
         var sv = if (bigEndian) (noOfBytes - 1) * 8 else 0
         val cnt = if (bigEndian) -8 else 8
-        for (i in 0..noOfBytes - 1) {
+        for (i in 0 until noOfBytes) {
             ret = ret or (inputStream.read() shl sv)
             sv += cnt
         }

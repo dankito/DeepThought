@@ -1,12 +1,9 @@
 apply plugin: 'kotlin'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 
 dependencies {
-    compile project(':Utils')
-    compile project(':DataManager')
+    implementation project(':Utils')
+    implementation project(':DataManager')
 
-    compile "com.norconex.language:langdetect:$norconexVersion"
+    implementation "com.norconex.language:langdetect:$norconexVersion"
 }

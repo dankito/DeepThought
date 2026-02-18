@@ -1,12 +1,9 @@
 apply plugin: 'kotlin'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    compile project(':Utils')
-    compile project(':DataManager')
-    compile project(':SyncManager')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    api project(':Utils')
+    api project(':DataManager')
+    api project(':SyncManager')
 }

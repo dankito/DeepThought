@@ -115,7 +115,7 @@ class EditSourceActivity : BaseActivity() {
         showParameters(getParameters() as? EditSourceActivityParameters)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
         outState?.let {
@@ -134,30 +134,28 @@ class EditSourceActivity : BaseActivity() {
         }
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        savedInstanceState?.let {
-            savedInstanceState.getString(SOURCE_ID_BUNDLE_EXTRA_NAME)?.let { sourceId -> showSource(sourceId) }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        savedInstanceState.getString(SOURCE_ID_BUNDLE_EXTRA_NAME)?.let { sourceId -> showSource(sourceId) }
 
-            // TODO: also restore selected Series
-            restoreStateFromDisk(savedInstanceState, UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME, Source::class.java)?.let { showSource(it) }
+        // TODO: also restore selected Series
+        restoreStateFromDisk(savedInstanceState, UNPERSISTED_SOURCE_BUNDLE_EXTRA_NAME, Source::class.java)?.let { showSource(it) }
 
-            savedInstanceState.getString(ORIGINALLY_SET_SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
-                this.originallySetSeries = seriesService.retrieve(originallySetSeriesId)
-                lytEditSourceSeries.setOriginalSeriesToEdit(originallySetSeries, this) { setSeriesToEdit(it) }
-            }
-
-            val seriesId = savedInstanceState.getString(SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME)
-            if(seriesId != null) {
-                seriesService.retrieve(seriesId)?.let { series ->
-                    lytEditSourceSeries.seriesChanged(series)
-                }
-            }
-            else {
-                lytEditSourceSeries.seriesChanged(null)
-            }
-
-            updateDidSourceChangeOnUiThread()
+        savedInstanceState.getString(ORIGINALLY_SET_SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME)?.let { originallySetSeriesId ->
+            this.originallySetSeries = seriesService.retrieve(originallySetSeriesId)
+            lytEditSourceSeries.setOriginalSeriesToEdit(originallySetSeries, this) { setSeriesToEdit(it) }
         }
+
+        val seriesId = savedInstanceState.getString(SOURCE_SERIES_ID_BUNDLE_EXTRA_NAME)
+        if(seriesId != null) {
+            seriesService.retrieve(seriesId)?.let { series ->
+                lytEditSourceSeries.seriesChanged(series)
+            }
+        }
+        else {
+            lytEditSourceSeries.seriesChanged(null)
+        }
+
+        updateDidSourceChangeOnUiThread()
 
         super.onRestoreInstanceState(savedInstanceState) // important: Call super method after restoring source so that all EditEntityFields with their modified values don't get overwritten by original source's values
     }

@@ -1,16 +1,13 @@
 apply plugin: 'kotlin'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 
 dependencies {
-    compile project(':NewsReader')
+    implementation project(':NewsReader')
 
-    compile("com.rometools:rome-fetcher:$romeVersion", {
+    implementation("com.rometools:rome-fetcher:$romeVersion", {
       exclude group: 'commons-logging', module: 'commons-logging'
     })
 
 
-    testCompile "junit:junit:$junitVersion"
+    testImplementation "junit:junit:$junitVersion"
 }

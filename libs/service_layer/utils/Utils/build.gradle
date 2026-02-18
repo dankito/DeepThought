@@ -1,23 +1,20 @@
 apply plugin: 'kotlin'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 
 dependencies {
-    compile project(':DataModel')
+    api project(':DataModel')
 
-    compile "net.dankito.utils:java-utils:$javaUtilsVersion"
+    api "net.dankito.utils:java-utils:$javaUtilsVersion"
 
-    compile "org.jsoup:jsoup:$jsoupVersion"
+    api "org.jsoup:jsoup:$jsoupVersion"
 
 
-    compile "com.github.axet:wget:$wgetVersion", {
+    implementation "com.github.axet:wget:$wgetVersion", {
         exclude group: 'com.thoughtworks.xstream', module: 'xstream'
     }
 
 
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
 
 }

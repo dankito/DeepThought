@@ -1,21 +1,18 @@
 apply plugin: 'kotlin'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 
 dependencies {
-    compile project(':Utils')
+    api project(':Utils')
 
-    compile "net.dankito.readability4j:readability4j:1.0.3", {
+    implementation "net.dankito.readability4j:readability4j:1.0.3", {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
     }
 
-    testCompile ("junit:junit:$junitVersion", {
+    testImplementation ("junit:junit:$junitVersion", {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
     })
-    testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
-    testCompile "org.assertj:assertj-core:$assertJVersion"
+    testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
 }
 
 

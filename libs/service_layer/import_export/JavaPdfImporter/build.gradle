@@ -1,11 +1,8 @@
 apply plugin: 'kotlin'
 
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
-
 
 dependencies {
-    compile project(':PdfImporterBase')
+    api project(':PdfImporterBase')
 
-    compile "org.apache.pdfbox:pdfbox:$pdfBoxVersion"
+    implementation "org.apache.pdfbox:pdfbox:$pdfBoxVersion"
 }

@@ -120,11 +120,12 @@ open class EditEntityField : RelativeLayout {
                 showSecondaryInformationOnUiThread()
             }
 
-            val secondaryInformation = bundle.getString(SECONDARY_INFORMATION_VALUE_BUNDLE_EXTRA_NAME)
-            setEditTextSecondaryInformationValueOnUiThread(secondaryInformation)
-            postDelayed({ // don't know why but simply calling setEditTextSecondaryInformationValueOnUiThread() doesn't work, has to be done delayed
+            bundle.getString(SECONDARY_INFORMATION_VALUE_BUNDLE_EXTRA_NAME)?.let { secondaryInformation ->
                 setEditTextSecondaryInformationValueOnUiThread(secondaryInformation)
-            }, 250)
+                postDelayed({ // don't know why but simply calling setEditTextSecondaryInformationValueOnUiThread() doesn't work, has to be done delayed
+                    setEditTextSecondaryInformationValueOnUiThread(secondaryInformation)
+                }, 250)
+            }
         }
     }
 

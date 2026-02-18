@@ -14,4 +14,12 @@
     <!-- Allows changing locales -->
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
 
+
+    <application>
+        <activity
+            android:name="com.squareup.leakcanary.internal.DisplayLeakActivity"
+            android:exported="true">
+        </activity>
+    </application>
+
 </manifest>

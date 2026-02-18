@@ -1,16 +1,13 @@
 apply plugin: 'kotlin'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 
 dependencies {
-    compile project(':NewsReader')
+    api project(':NewsReader')
 
-    testCompile ("junit:junit:$junitVersion", {
+    testImplementation ("junit:junit:$junitVersion", {
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
     })
-    testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
+    testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
 }
 
 

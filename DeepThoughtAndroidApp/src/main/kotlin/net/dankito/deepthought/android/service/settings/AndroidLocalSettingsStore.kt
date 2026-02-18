@@ -15,7 +15,7 @@ class AndroidLocalSettingsStore(private val context: Context) : LocalSettingsSto
 
 
     override fun readValueFromStore(key: String, defaultValue: String): String {
-        return preferences.getString(key, defaultValue)
+        return preferences.getString(key, defaultValue)!!
     }
 
     override fun saveValueToStore(key: String, value: String?) {

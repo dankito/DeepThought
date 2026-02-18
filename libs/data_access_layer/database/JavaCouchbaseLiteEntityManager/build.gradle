@@ -1,11 +1,8 @@
 apply plugin: 'kotlin'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 
 dependencies {
-    compile project(':CouchbaseLiteEntityManagerBase')
+    implementation project(':CouchbaseLiteEntityManagerBase')
 
-    compile 'com.couchbase.lite:couchbase-lite-java:' + couchbaseLiteVersion
+    implementation 'com.couchbase.lite:couchbase-lite-java:' + couchbaseLiteVersion
 }

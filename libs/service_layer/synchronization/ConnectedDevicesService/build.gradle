@@ -1,12 +1,9 @@
 apply plugin: 'kotlin'
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 
 dependencies {
-    compile project(':DataManager')
-    compile project(':DevicesDiscoverer')
-    compile project(':ClientCommunicator')
-    compile project(':SyncManager')
+    api project(':DataManager')
+    api project(':DevicesDiscoverer')
+    api project(':ClientCommunicator')
+    api project(':SyncManager')
 }

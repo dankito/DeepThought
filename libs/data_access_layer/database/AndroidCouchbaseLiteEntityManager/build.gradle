@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 
 android {
+    namespace "net.dankito.data_access.database"
+
     compileSdkVersion androidCompileSdkVersion
     buildToolsVersion androidBuildToolsVersion
 
@@ -35,7 +37,7 @@ android {
 }
 
 dependencies {
-    compile project(':CouchbaseLiteEntityManagerBase')
+    implementation project(':CouchbaseLiteEntityManagerBase')
 
-    compile 'com.couchbase.lite:couchbase-lite-android:' + couchbaseLiteVersion
+    implementation 'com.couchbase.lite:couchbase-lite-android:' + couchbaseLiteVersion
 }
