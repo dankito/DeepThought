@@ -284,6 +284,10 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
     private fun getAllOnOnePageLink(document: Document, articleUrl: String): String? {
+        document.body().select("#pagination-all-on-one-page").first()?.let { allOnOnePageAnchor ->
+            return makeLinkAbsolute(allOnOnePageAnchor.attr("href"), articleUrl)
+        }
+
         document.body().select(".article-pages-summary__onepage").first()?.let { allOnOnePageAnchor ->
             return makeLinkAbsolute(allOnOnePageAnchor.attr("href"), articleUrl)
         }
