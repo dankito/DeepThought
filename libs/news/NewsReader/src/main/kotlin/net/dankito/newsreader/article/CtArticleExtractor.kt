@@ -66,7 +66,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
             return
         }
 
-        document.body().select("article").first()?.let { articleElement ->
+        document.body().select("article.article-layout").first()?.let { articleElement ->
             parseMobileSite(url, articleElement, extractionResult)
         }
 
@@ -213,7 +213,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
 
         val source = Source(title, url)
 
-        article.select("figure.aufmacherbild img").first()?.let {
+        article.select("figure img").first()?.let {
             source.previewImageUrl = makeLinkAbsolute(it.attr("src"), url)
         }
         article.select("time").first()?.let {
