@@ -182,8 +182,12 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
     }
 
 
-    private fun createSource(articleUrl: String, sectionElement: Element): Source {
+    private fun createSource(articleUrl: String, sectionElement: Element): Source? {
         val headerElement = sectionElement.select("header").first()
+        if (headerElement == null) {
+            // for "Dieser Artikel ist noch nicht erschienen." `sectionElement.select("header").first()` is null
+            return null
+        }
 
         val title = headerElement.select("h1").text()
 
