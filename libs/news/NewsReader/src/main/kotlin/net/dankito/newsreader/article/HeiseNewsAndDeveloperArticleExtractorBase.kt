@@ -178,7 +178,8 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         contentElement.select("h1, time, span.author, a.comments, .comment, .btn-toolbar, .whatsbroadcast-toolbar, #whatsbroadcast, " +
                 ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, .ad_container, .ad_content, " +
                 ".akwa-ad-container, .akwa-ad-container--native, a-ad, .pvgs, .a-pvgs, .a-pvg, " +
-                "a.comment-button, figure.branding, [data-component='RecommendationBox'], a-gift, .giftlink-teaser").remove()
+                "a.comment-button, figure.branding, [data-component='RecommendationBox'], a-gift, .giftlink-teaser, " +
+                ".notice-banner").remove()
 
         removeEmptyParagraphs(contentElement, "video")
 
