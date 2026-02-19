@@ -206,7 +206,7 @@ class CtArticleExtractor(webClient: IWebClient) : ArticleExtractorBase(webClient
         val source = extractMobileArticleSource(article, url)
 
         article.select("h1, time, span.author, a.comments, .comment, .btn-toolbar .whatsbroadcast-toolbar, #whatsbroadcast, " +
-                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung").remove()
+                ".btn-group, .whatsbroadcast-group, .shariff, .ISI_IGNORE, .article_meta, .widget-werbung, a-analytics").remove()
         val content = article.html()
 
         extractionResult.setExtractedContent(Item(content), source)
