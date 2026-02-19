@@ -149,7 +149,8 @@ abstract class HeiseNewsAndDeveloperArticleSummaryExtractorBase(webClient: IWebC
 
     private fun isHeisePlusArticle(articleElement: Element): Boolean {
         return articleElement.selectFirst("footer svg[width=\"78\"][height=\"24\"][role=\"img\"]") != null ||
-                articleElement.selectFirst("header [data-component=\"TeaserHeadline\"] svg") != null
+                articleElement.selectFirst("header [data-component=\"TeaserHeadline\"] svg") != null ||
+                articleElement.selectFirst("header [data-component=\"TeaserHeadline\"] img[src=\"/icons/svg/logos/svg/heise_plus_blue.svg\"]") != null
     }
 
 
