@@ -25,7 +25,9 @@ abstract class HeiseNewsAndDeveloperArticleExtractorBase(webClient: IWebClient) 
         private val HeisePlusClassNames = listOf(
             "a-article-header__heiseplus-svg",
             "a-article-header__plus-svg",
-            "heise-plus-symbol"
+            "heise-plus-symbol",
+            "heise-plus-logo",
+            "a-article-header__plus-svg"
         )
 
         private val DateTimeFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
